@@ -1,0 +1,30 @@
+Fix distanceOfTimeInWords() failing tests
+
+Improve tests for Mad_Model config parsing.
+
+Overhaul validation factory
+
+Restructure association proxy so that the proxy is always loaded and the
+build(), create(), etc. methods hang on the proxy. Data load will then be lazy
+on the first call to the proxy iterator/access.
+
+Rework sendFile() so that it passes a stream resource to the response object
+and that gets streams out instead of file_get_conents()
+
+Add test for Mad_Test_Functional to ensure that session variables from the
+request object get carried over into the response object by _initResponse().
+
+Add new syntax for params, session, and cookies: $this->params['foo'] or
+$this->params->get('foo', $default)
+
+Make $model->logger work on the instance like Rails. Currently it is static
+Model::logger()
+
+Add test to verify that timestamps are updated if the attribute is null.
+
+Add test for mad_controller_request_http->getsessionid()
+
+Check handling of isset() on instance variables inside helpers
+
+Overhaul session handling. Remove the hack $_SESSION = array() from
+Mad_Controller_Base added in changeset 370.

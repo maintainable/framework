@@ -1,0 +1,23 @@
+options:
+  table: unit_tests
+  before:
+    - INSERT INTO unit_tests (id, integer_value) VALUES ('100', '100')
+  after:
+    - INSERT INTO unit_tests (id, integer_value) VALUES ('101', '101')
+  teardown:
+    - DELETE FROM unit_tests
+
+unit_test_1:
+  id:             12
+  integer_value:  12
+  string_value:   name a
+  text_value:     string a
+  float_value:    '1.2'
+  decimal_value:  '1.2'
+  datetime_value: '2005-12-23 12:34:23'
+  date_value:     '2005-12-23'
+  time_value:     '12:34:23'
+  blob_value:     some blob data
+  boolean_value:  1
+  enum_value:     a
+  email_value:    foo@example.com

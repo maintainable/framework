@@ -1,0 +1,39 @@
+<div id="layoutScrollingContent">
+    <h3>Fatal Error</h3>
+
+    <div id="errorDetails">
+      <h4 id="errorMsg">An error occurred in the application</h4>
+      <p>
+        The following information is available to help an engineer determine what caused this error.
+      </p>
+
+      <div id="errorInfo">
+        <h4>Error Type</h4>
+        <pre id="errorType"><?= @$this->error->type ?></pre>
+
+        <h4>Code</h4>
+        <pre id="errorCode"><?= @$this->error->code ?></pre>
+
+        <h4>Message</h4>
+        <pre id="errorMessage"><?= @$this->error->message ?></pre>
+
+        <h4>File</h4>
+        <pre id="errorFile"><?= @$this->error->file ?></pre>
+
+        <h4>Line</h4>
+        <pre id="errorLine"><?= @$this->error->line ?></pre>
+
+        <h4>Backtrace</h4>
+        <pre id="errorTrace"><?= @$this->error->backtrace ?></pre>
+
+        <h4>Request</h4>
+        <pre id="errorRequest"><?= @$this->error->request ?></pre>
+
+        <h4>Response</h4>
+        <pre id="errorResponse"><?= @$this->error->response ?></pre>
+
+        <h4 id="fullDumpHandle">View Full Dump</h4>
+        <pre id="fullDump"><textarea rows="10"><?= @$this->error->dump ?></textarea></pre>
+      </div>
+    </div>
+</div>

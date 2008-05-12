@@ -1,0 +1,20 @@
+development:
+  database: madmodel
+  adapter:  mysql
+  host:     localhost
+  username: root
+  password:
+
+test:
+  database: madmodel_test
+  adapter:  mysql
+  host:     localhost
+  username: root
+  password:
+
+production:
+  database: madmodel
+  adapter:  mysql
+  host:     localhost
+  username: root
+  password:

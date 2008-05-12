@@ -1,0 +1,24 @@
+xml_rpc: 
+  id:      1
+  title:   Easier XML-RPC for PHP5
+  user_id: 1
+
+best_practices: 
+  id:      2
+  title:   Best PHP Practices
+  user_id: 1
+
+testing_js: 
+  id:      3
+  title:   Testing Javascript in Rails
+  user_id: 2
+
+prototype: 
+  id:      4
+  title:   Creating Classes with Prototype
+  user_id: 2
+
+logging: 
+  id:      5
+  title:   Rails Logging Tips
+  user_id: 1

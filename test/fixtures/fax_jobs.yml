@@ -1,0 +1,7 @@
+fax_job_1: 
+  id:        1
+  page_size: 8x10
+
+fax_job_2: 
+  id:        2
+  page_size: 8x10

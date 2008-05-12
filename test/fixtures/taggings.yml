@@ -1,0 +1,14 @@
+xml_rpc_php_tag: 
+  id:         1
+  article_id: 1 
+  tag_id:     2
+
+testing_js_ruby_tag: 
+  id:         2
+  article_id: 3
+  tag_id:     1
+
+testing_js_js_tag: 
+  id:         3
+  article_id: 3
+  tag_id:     3

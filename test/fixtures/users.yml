@@ -1,0 +1,17 @@
+mike: 
+  id:         1
+  name:       Mike
+  approved:   1
+  created_at: '<?php echo date("Y-m-d H:i:s", strtotime("-1 day")) ?>'
+  created_on: '<?php echo date("Y-m-d",       strtotime("-1 day")) ?>'
+  updated_at: '<?php echo date("Y-m-d H:i:s", strtotime("-1 day")) ?>'
+  updated_on: '<?php echo date("Y-m-d",       strtotime("-1 day")) ?>'
+
+derek:
+  id:         2
+  name:       Derek
+  approved:   1
+  created_at: '<?php echo date("Y-m-d H:i:s", strtotime("-1 day")) ?>'
+  created_on: '<?php echo date("Y-m-d",       strtotime("-1 day")) ?>'
+  updated_at: '<?php echo date("Y-m-d H:i:s", strtotime("-1 day")) ?>'
+  updated_on: '<?php echo date("Y-m-d",       strtotime("-1 day")) ?>'

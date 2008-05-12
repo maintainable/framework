@@ -1,0 +1,14 @@
+fax_attachment_1: 
+  id:         1
+  fax_job_id: 1
+  article_id: 1
+
+fax_attachment_2: 
+  id:         2
+  fax_job_id: 1
+  article_id: 2
+
+fax_attachment_3: 
+  id:         3
+  fax_job_id: 2
+  article_id: 1

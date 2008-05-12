@@ -1,0 +1,9 @@
+fax_recipient_1: 
+  id:         1
+  name:       Derek
+  fax_job_id: 1
+
+fax_recipient_2: 
+  id:         2
+  name:       Mike
+  fax_job_id: 1

@@ -1,0 +1,80 @@
+options:
+  table: unit_tests
+  requires: [unit_tests]
+  teardown:
+    - DELETE FROM unit_tests
+
+unit_test_7:
+  id:             7
+  integer_value:  7
+  string_value:   name f
+  text_value:     string a
+  float_value:    '1.2'
+  decimal_value:  '1.2'
+  datetime_value: '2005-12-23 12:34:23'
+  date_value:     '2005-12-23'
+  time_value:     '12:34:23'
+  blob_value:     some blob data
+  boolean_value:  1
+  enum_value:     a
+  email_value:    foo@example.com
+
+unit_test_8:
+  id:             8
+  integer_value:  8
+  string_value:   name g
+  text_value:     string b
+  float_value:    '1.2'
+  decimal_value:  '1.2'
+  datetime_value: '2005-12-23 12:34:23'
+  date_value:     '2005-12-23'
+  time_value:     '12:34:23'
+  blob_value:     some blob data
+  boolean_value:  1
+  enum_value:     b
+  email_value:    foo@example.com
+
+unit_test_9:
+  id:             9
+  integer_value:  9
+  string_value:   name h
+  text_value:     string b
+  float_value:    '1.2'
+  decimal_value:  '1.2'
+  datetime_value: '2005-12-23 12:34:23'
+  date_value:     '2005-12-23'
+  time_value:     '12:34:23'
+  blob_value:     some blob data
+  boolean_value:  1
+  enum_value:     a
+  email_value:    foo@example.com
+
+unit_test_10:
+  id:             10
+  integer_value:  10
+  string_value:   name i
+  text_value:     string b
+  float_value:    '1.2'
+  decimal_value:  '1.2'
+  datetime_value: '2005-12-23 12:34:23'
+  date_value:     '2005-12-23'
+  time_value:     '12:34:23'
+  blob_value:     some blob data
+  boolean_value:  1
+  enum_value:     a
+  email_value:    foo@example.com
+
+unit_test_11:
+  id:             11
+  integer_value:  11
+  string_value:   name j
+  text_value:     string b
+  float_value:    '1.2'
+  decimal_value:  '1.2'
+  datetime_value: '2005-12-23 12:34:23'
+  date_value:     '2005-12-23'
+  time_value:     '12:34:23'
+  blob_value:     some blob data
+  boolean_value:  1
+  enum_value:     a
+  email_value:    foo@example.com

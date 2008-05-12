@@ -1,0 +1,9 @@
+mike_image: 
+  id:       1
+  filepath: mike.jpg
+  user_id:  1
+
+derek_image: 
+  id:       2
+  filepath: derek.jpg
+  user_id:  2

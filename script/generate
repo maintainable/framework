@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Set environment
+ */
+define('MAD_ENV', isset($_SERVER['MAD_ENV']) ? $_SERVER['MAD_ENV'] : 'development');
+require_once dirname(dirname(__FILE__)).'/config/environment.php';
+
+try {
+    new Mad_Script_Generator($argv);
+} catch (Exception $e) {
+    echo $e->getMessage();
+}

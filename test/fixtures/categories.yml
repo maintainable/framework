@@ -1,0 +1,40 @@
+php: 
+  id:        1
+  name:      PHP
+  parent_id: 0
+
+ruby: 
+  id:        2
+  name:      Ruby
+  parent_id: 0
+
+programming: 
+  id:        3
+  name:      Programming
+  parent_id: 0
+
+# test hierarchy
+root: 
+  id:        4
+  name:      Root
+  parent_id: 0
+
+lev1: 
+  id:        5
+  name:      1st Lev
+  parent_id: 4
+
+lev2: 
+  id:        6
+  name:      2nd Lev
+  parent_id: 5
+
+lev3: 
+  id:        7
+  name:      3rd Lev
+  parent_id: 6
+
+lev4: 
+  id:        8
+  name:      4th Lev
+  parent_id: 7

@@ -1,0 +1,8 @@
+== SETUP:
+
+Unit tests rely on the existence of test database tables. The tables 
+can be created using the SQL load file in db/tests/madmodel_test.sql
+
+  $ mysqladmin -u root -p create madmodel_test
+  $ mysql -u root -p -D madmodel_test < db/tests/madmodel_test.sql
+

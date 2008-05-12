@@ -1,0 +1,46 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Set environment
+ */
+define('MAD_ENV', isset($_SERVER['MAD_ENV']) ? $_SERVER['MAD_ENV'] : 'development');
+require_once dirname(dirname(__FILE__)).'/config/environment.php';
+
+print "Loading ".MAD_ENV." environment (Mad 1.0)\n";
+
+$f = fopen('php://stdin', 'r');
+
+$buffer = '';
+while (true) {
+	print '>> ';
+	$input = chop(fgets($f, 1024));
+	if ($input == 'quit' || $input == 'exit') { fclose($f); exit; }
+
+    // buffer the input
+	$buffer .= " $input";
+
+    // @todo - use a regexp to make sure brace char is not in a string
+    $opening = substr_count($buffer, '{');
+    $closing = substr_count($buffer, '}');
+    
+    // evaluate expression if we've closed all braces
+    if ($closing >= $opening && $buffer != ' ') {
+        try {
+            $result = 'null';
+            if (!strstr($buffer, '{')) {
+                eval("\$result = $buffer");
+            } else {
+                eval($buffer);
+            }
+            // print result of expression
+        	print "=> $result\n";
+
+        } catch (Exception $e) {
+            print get_class($e).": ".$e->getMessage()."\n".
+                  '        from: '.$e->getFile().':'.$e->getLine()."\n";
+                  
+        }
+    	$buffer = '';
+    }
+}
