@@ -108,7 +108,7 @@ class Mad_Model_ConnectionAdapter_Abstract_TableDefinition implements ArrayAcces
         $natives = $this->_native();
         $opt = $options;
         if (isset($opt['limit']) || isset($natives[$type])) {
-            $nativeLimit = $natives[$type]['limit'];
+            $nativeLimit = isset($natives[$type]['limit']) ? $natives[$type]['limit'] : null;
             $column->setLimit(isset($opt['limit']) ? $opt['limit'] : $nativeLimit);
         }
         $column->setDefault(isset($opt['default']) ? $opt['default'] : null);
