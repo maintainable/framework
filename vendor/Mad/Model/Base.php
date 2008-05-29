@@ -226,8 +226,8 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         $this->errors     = new Mad_Model_Errors($this);
 
         // init table/fields
-        $this->_tableName  = $this->resetTableName();
-        $this->_primaryKey = $this->resetPrimaryKey();
+        $this->_tableName  = $this->tableName();
+        $this->_primaryKey = $this->primaryKey();
         $this->_attributes = $this->_attributesFromColumnDefinition();
 
         // Initialize relationships/data-validation from subclass
@@ -587,7 +587,11 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */
     public function tableName()
     {
-        return $this->_tableName;
+        if (isset($this->_tableName)) {
+            return $this->_tableName;
+        } else {
+            return $this->resetTableName();
+        }
     }
     
     /**
@@ -606,7 +610,11 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */
     public function primaryKey()
     {
-        return $this->_primaryKey;
+        if (isset($this->_primaryKey)) {
+            return $this->_primaryKey;
+        } else {
+            return $this->resetPrimaryKey();
+        }
     }
     
     /**
