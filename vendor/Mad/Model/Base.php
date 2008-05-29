@@ -225,13 +225,13 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         $this->connection = $this->retrieveConnection();
         $this->errors     = new Mad_Model_Errors($this);
 
+        // Initialize relationships/data-validation from subclass
+        $this->_initialize();
+
         // init table/fields
         $this->_tableName  = $this->tableName();
         $this->_primaryKey = $this->primaryKey();
         $this->_attributes = $this->_attributesFromColumnDefinition();
-
-        // Initialize relationships/data-validation from subclass
-        $this->_initialize();
 
         // set values by attribute list
         if (isset($attributes)) {
