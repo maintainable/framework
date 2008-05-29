@@ -39,10 +39,9 @@ class Notifier extends Mad_Mailer_Base
         $this->headers      = array('Organization' => 'Maintainable, LLC');
     }
     
-    public function sendWithAttachments($user) 
+    public function sendWithAttachments() 
     {
-        $this->subject      = "Confirmation for $user->name";
-        $this->body['user'] = $user;
+        $this->subject      = "Confirmation for test";
         $this->body['url']  = 'http://maintainable.com';
 
         $this->recipients   = 'derek@maintainable.com';

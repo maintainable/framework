@@ -80,7 +80,7 @@ class Mad_Mailer_BaseTest extends Mad_Test_Unit
     public function testSendWithAttachments()
     {
         $n = new Notifier();
-        $result = $n->createSendWithAttachments(User::find(1));
+        $result = $n->createSendWithAttachments();
         
         $attachments = $n->getAttachments();
         $attachment = current($attachments);
@@ -91,9 +91,9 @@ class Mad_Mailer_BaseTest extends Mad_Test_Unit
 
         
         // result has both headers/body
-        $this->assertContains('Dear Mike,', $result);
+        $this->assertContains('Dear Derek,', $result);
         $this->assertEquals('derek@maintainable.com', $n->getRecipients());
-        $this->assertEquals('Confirmation for Mike',  $n->getSubject());
+        $this->assertEquals('Confirmation for test',  $n->getSubject());
 
         // headers
         $this->assertContains('Date:',                      $n->getHeaders());
@@ -102,8 +102,8 @@ class Mad_Mailer_BaseTest extends Mad_Test_Unit
 
         // body
         $this->assertContains('Content-Type: text/plain; charset="utf-8"', $n->getBody());
-        $this->assertContains('Dear Mike,',              $n->getBody());
-        $this->assertContains('http://maintainable.com', $n->getBody());
+        $this->assertContains('Dear Derek,',             $n->getBody());
+        $this->assertContains('The Maintainable Team',   $n->getBody());
         
         // attachments
         $this->assertContains('Content-Transfer-Encoding: base64',                            $n->getBody());
