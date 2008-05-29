@@ -379,8 +379,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
                                    'integer_value' => 1000,
                                    'string_value'  => 'My Name'));
         
-        $values = "'100', '1000', 'My Name', '', '0.0', '0.0', ".
-                  "'0000-00-00 00:00:00', '0000-00-00', '00:00:00', '', '0', 'a', ''";
+        $values = "'100', '1000', 'My Name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL";
         $this->assertEquals($values, $test->getInsertValuesStr());
     }
 
@@ -391,8 +390,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
                                    'integer_value' => 1000,
                                    'string_value'  => "Derek's Name"));
 
-        $values = "'100', '1000', 'Derek\'s Name', '', '0.0', '0.0', ".
-                  "'0000-00-00 00:00:00', '0000-00-00', '00:00:00', '', '0', 'a', ''";
+        $values = "'100', '1000', 'Derek\'s Name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL";
         $this->assertEquals($values, $test->getInsertValuesStr());
     }
 
@@ -730,7 +728,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     {
         // id value is null since we didn't select it
         $tests = UnitTest::find('all', array('select' => 'id'));
-        $this->assertEquals('0', $tests[0]->integer_value);
+        $this->assertNull($tests[0]->integer_value);
     }
 
     // test finding data using ORDER BY
@@ -869,7 +867,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     {
         // id value is null since we didn't select it
         $test = UnitTest::find('first', array('select' => 'id'));
-        $this->assertEquals('0', $test->integer_value);
+        $this->assertNull($test->integer_value);
     }
 
     // test finding first record using ORDER BY
@@ -1197,10 +1195,10 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $user = new User;
 
         // all magic columns are null
-        $this->assertEquals('0000-00-00 00:00:00', $user->created_at);
-        $this->assertEquals('0000-00-00',          $user->created_on);
-        $this->assertEquals('0000-00-00 00:00:00', $user->updated_at);
-        $this->assertEquals('0000-00-00',         $user->updated_on);
+        $this->assertNull($user->created_at);
+        $this->assertNull($user->created_on);
+        $this->assertNull($user->updated_at);
+        $this->assertNull($user->updated_on);
 
         $user->save();
 

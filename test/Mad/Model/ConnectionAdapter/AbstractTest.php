@@ -339,7 +339,6 @@ class Mad_Model_ConnectionAdapter_AbstractTest extends Mad_Test_Unit
 
     public function testCreateTableTemporary()
     {
-        $this->_createTestTable('sports');
         $this->_createTestTable('sports', array('temporary' => true));
 
         $sql = "SELECT id FROM sports WHERE id = 1";
@@ -595,7 +594,7 @@ class Mad_Model_ConnectionAdapter_AbstractTest extends Mad_Test_Unit
         "  `name` varchar(255) default NULL,\n".
         "  `is_college` tinyint(1) default NULL,\n".
         "  PRIMARY KEY  (`id`)\n".
-        ") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+        ") ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;";
 
         $this->assertEquals($expected, $structure);
 

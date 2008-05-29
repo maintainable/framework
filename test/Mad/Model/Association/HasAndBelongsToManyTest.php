@@ -333,9 +333,9 @@ class Mad_Model_Association_HasAndBelongsToManyTest extends Mad_Test_Unit
     {
         $this->fixtures('categories', 'articles', 'articles_categories');
 
-        $article = new Article(array('title' => 'Article A'));
-        $category1 = new Category(array('name' => 'Category A'));
-        $category2 = new Category(array('name' => 'Category B'));
+        $article = new Article(array('title' => 'Article A', 'user_id' => 0));
+        $category1 = new Category(array('name' => 'Category A', 'parent_id' => 0));
+        $category2 = new Category(array('name' => 'Category B', 'parent_id' => 0));
         $article->categories = array($category1, $category2);
 
         $this->assertEquals($category1, $article->categories[0]);
@@ -366,8 +366,8 @@ class Mad_Model_Association_HasAndBelongsToManyTest extends Mad_Test_Unit
         $article = Article::find($this->articles('prototype')->id);
         $this->assertTrue(count($article->categories) > 0);
 
-        $category1 = new Category(array('name' => 'Category A'));
-        $category2 = new Category(array('name' => 'Category B'));
+        $category1 = new Category(array('name' => 'Category A', 'parent_id' => 0));
+        $category2 = new Category(array('name' => 'Category B', 'parent_id' => 0));
         $article->categories = array($category1, $category2);
 
         $this->assertEquals($category1, $article->categories[0]);
@@ -449,7 +449,7 @@ class Mad_Model_Association_HasAndBelongsToManyTest extends Mad_Test_Unit
     {
         $this->fixtures('categories', 'articles', 'articles_categories');
 
-        $article = new Article(array('title' => 'Foo'));
+        $article = new Article(array('title' => 'Foo', 'user_id' => 0));
         $article->categoryIds = array($this->categories('ruby')->id, $this->categories('programming')->id);
 
         $this->assertEquals($this->categories('ruby')->id,        $article->categoryIds[0]);
@@ -514,9 +514,9 @@ class Mad_Model_Association_HasAndBelongsToManyTest extends Mad_Test_Unit
     {
         $this->fixtures('categories', 'articles', 'articles_categories');
 
-        $article = new Article(array('title' => 'Article A'));
-        $category1 = new Category(array('name' => 'Category A'));
-        $category2 = new Category(array('name' => 'Category B'));
+        $article = new Article(array('title' => 'Article A', 'user_id' => 0));
+        $category1 = new Category(array('name' => 'Category A', 'parent_id' => 0));
+        $category2 = new Category(array('name' => 'Category B', 'parent_id' => 0));
 
         $article->addCategory($category1);
         $article->addCategory($category2);

@@ -27,29 +27,29 @@ CREATE TABLE column_types (
   enum_col_nn      enum('a', 'b') NOT NULL,
 
   PRIMARY KEY  (id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS unit_tests;
 CREATE TABLE unit_tests (
   id             int(11) auto_increment,
-  integer_value  int(11)      NOT NULL,
-  string_value   varchar(255) NOT NULL,
-  text_value     text         NOT NULL,
-  float_value    float(2,1)   NOT NULL,
-  decimal_value  decimal(2,1) NOT NULL,
-  datetime_value datetime     NOT NULL,
-  date_value     date         NOT NULL,
-  time_value     time         NOT NULL,
-  blob_value     blob         NOT NULL,
-  boolean_value  tinyint(1)   NOT NULL,
-  enum_value     enum('a', 'b') NOT NULL,
-  email_value    varchar(255) NOT NULL,
+  integer_value  int(11),
+  string_value   varchar(255),
+  text_value     text,
+  float_value    float(2,1),
+  decimal_value  decimal(2,1),
+  datetime_value datetime,
+  date_value     date,
+  time_value     time,
+  blob_value     blob,
+  boolean_value  tinyint(1),
+  enum_value     enum('a', 'b'),
+  email_value    varchar(255),
   PRIMARY KEY (id), 
   KEY string_value (string_value),
   UNIQUE KEY integer_value (integer_value),
   KEY integer_string (integer_value, string_value)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS articles; 
@@ -59,7 +59,7 @@ CREATE TABLE articles (
   user_id int(11)      NOT NULL,
   PRIMARY KEY (id), 
   KEY user_id (user_id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS articles_categories;
 CREATE TABLE articles_categories (
@@ -69,7 +69,7 @@ CREATE TABLE articles_categories (
   PRIMARY KEY (id), 
   KEY article_id (article_id),
   KEY category_id (category_id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS categories; 
 CREATE TABLE categories (
@@ -77,14 +77,14 @@ CREATE TABLE categories (
   name   varchar(255)  NOT NULL,
   parent_id int(11)    NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS tags; 
 CREATE TABLE tags (
   id    int(11) auto_increment,
   name  varchar(255) NOT NULL default '',
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS taggings; 
 CREATE TABLE taggings (
@@ -92,7 +92,7 @@ CREATE TABLE taggings (
   tag_id     int(11) NOT NULL,
   article_id int(11) NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS comments; 
 CREATE TABLE comments (
@@ -102,7 +102,7 @@ CREATE TABLE comments (
   user_id    int(11) NOT NULL,
   PRIMARY KEY (id), 
   KEY article_id (article_id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
@@ -116,7 +116,7 @@ CREATE TABLE users (
   updated_at datetime NOT NULL,
   updated_on date NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS avatars; 
 CREATE TABLE avatars (
@@ -125,7 +125,7 @@ CREATE TABLE avatars (
   filepath varchar(255) NOT NULL,
   PRIMARY KEY (id),
   KEY user_id (user_id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- namespaced
@@ -134,7 +134,7 @@ CREATE TABLE fax_jobs (
   id        int(11) auto_increment, 
   page_size varchar(255) NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS fax_recipients;
 CREATE TABLE fax_recipients (
@@ -142,7 +142,7 @@ CREATE TABLE fax_recipients (
   name       varchar(255) NOT NULL,
   fax_job_id int(11) NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS fax_attachments;
 CREATE TABLE fax_attachments (
@@ -151,4 +151,4 @@ CREATE TABLE fax_attachments (
   article_id int(11) NOT NULL default '0',
   PRIMARY KEY  (id),
   UNIQUE KEY index_fax_attachments_on_fax_job_id_and_article_id (fax_job_id, article_id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
