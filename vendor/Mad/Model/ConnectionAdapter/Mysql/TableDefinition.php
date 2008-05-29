@@ -22,7 +22,9 @@ class Mad_Model_ConnectionAdapter_Mysql_TableDefinition extends Mad_Model_Connec
      */
     public function end()
     {
-        $this->_options['options'] = 'ENGINE=InnoDB';
+        if (empty($this->_options['temporary'])) {
+            $this->_options['options'] = 'ENGINE=InnoDB';
+        }
         return parent::end();
     }
 }
