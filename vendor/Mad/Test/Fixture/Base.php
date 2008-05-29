@@ -88,7 +88,7 @@ class Mad_Test_Fixture_Base
      * @var string
      */
     protected $_ymlName = null;
-
+    
     /**
      * The yml records to load for this fixture
      * @var array
@@ -118,11 +118,15 @@ class Mad_Test_Fixture_Base
      * @param   string  $ymlName
      * @param   boolean $save
      */
-    public function __construct(Mad_Model_ConnectionAdapter_Abstract $conn, $ymlName)
+    public function __construct(Mad_Model_ConnectionAdapter_Abstract $conn, $ymlName, $fixturesPath=null)
     {
         $this->_connection = $conn;
         $this->_ymlName = $ymlName;
-        $this->_parseYml($ymlName);
+
+        if (empty($fixturesPath)) { $fixturesPath = MAD_ROOT.'/test/fixtures'; }
+        $this->_fixturesPath = $fixturesPath;
+        
+        $this->_parseYml($ymlName, $fixturesPath);
 
         // Remember which yaml files have been parsed for load.
         // Helps us to eliminate duplicate loads/teardowns
@@ -305,11 +309,11 @@ class Mad_Test_Fixture_Base
      * Parse the fixture data from the given array. This will
      * take the yaml file and validate and set the records/options.
      */
-    private function _parseYml($ymlName)
+    private function _parseYml($ymlName, $fixturesPath)
     {
         // only parse if not in cache
         if (!isset(self::$_ymlCache[$ymlName])) {
-            $fixtureFile = MAD_ROOT.'/test/fixtures/'.$ymlName.'.yml';
+            $fixtureFile = "{$fixturesPath}/{$ymlName}.yml";
 
             // Parse yml file
             if (!file_exists($fixtureFile)) {
@@ -386,7 +390,7 @@ class Mad_Test_Fixture_Base
     private function _insertRow($tableName, $attributes)
     {
         foreach ($attributes as $col => $value) {
-            $cols[] = $col;
+            $cols[] = $this->_connection->quoteColumnName($col);
             $vals[] = $this->_connection->quote($value);
         }
         $colStr   = implode(', ', $cols);
