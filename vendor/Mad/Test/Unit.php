@@ -71,6 +71,7 @@ abstract class Mad_Test_Unit extends PHPUnit_Framework_TestCase
             throw new Mad_Test_Exception("Call to undefined method '$name'");
         }
         $helper = new MadTestHelper;
+        $helper->testInstance = $this;
         if (!method_exists($helper, $name)) {
             throw new Mad_Test_Exception("Call to undefined method '$name'");
         }
