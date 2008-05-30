@@ -921,7 +921,19 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */
     public function getColumnStr($tblAlias=null, $colAlias=true)
     {
-        return join(', ', $this->getColumns($tblAlias, $colAlias));
+        foreach ($this->getColumns($tblAlias, $colAlias) as $col) {
+            $parts = explode('.', $col);
+            // has table alias
+            if (isset($parts[1])) {
+                $quoted[] = $this->connection->quoteColumnName($parts[0]).'.'.
+                            $this->connection->quoteColumnName($parts[1]);
+            // column only
+            } else {
+                $quoted[] = $this->connection->quoteColumnName($parts[0]);
+            }
+        }
+
+        return join(', ', $quoted);
     }
 
     /**

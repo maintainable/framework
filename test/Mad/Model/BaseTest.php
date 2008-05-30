@@ -356,9 +356,9 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     public function testGetColumnStr()
     {
         $test = new UnitTest();
-        $expected = 'id, integer_value, string_value, text_value, float_value, '.
-                    'decimal_value, datetime_value, date_value, time_value, '.
-                    'blob_value, boolean_value, enum_value, email_value';
+        $expected = '`id`, `integer_value`, `string_value`, `text_value`, `float_value`, '.
+                    '`decimal_value`, `datetime_value`, `date_value`, `time_value`, '.
+                    '`blob_value`, `boolean_value`, `enum_value`, `email_value`';
         $this->assertEquals($expected, $test->getColumnStr());
     }
 
@@ -366,9 +366,9 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     public function testGetColumnStrAlias()
     {
         $test = new UnitTest();
-        $expected = 't.id, t.integer_value, t.string_value, t.text_value, t.float_value, '.
-                    't.decimal_value, t.datetime_value, t.date_value, t.time_value, '.
-                    't.blob_value, t.boolean_value, t.enum_value, t.email_value';
+        $expected = '`t`.`id`, `t`.`integer_value`, `t`.`string_value`, `t`.`text_value`, `t`.`float_value`, '.
+                    '`t`.`decimal_value`, `t`.`datetime_value`, `t`.`date_value`, `t`.`time_value`, '.
+                    '`t`.`blob_value`, `t`.`boolean_value`, `t`.`enum_value`, `t`.`email_value`';
         $this->assertEquals($expected, $test->getColumnStr('t'));
     }
 
