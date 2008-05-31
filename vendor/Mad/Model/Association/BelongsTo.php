@@ -85,6 +85,7 @@ class Mad_Model_Association_BelongsTo extends Mad_Model_Association_Proxy
             $table   = $this->getAssocTable();
             $pkName  = $this->getPkName();
             $pkValue = $this->getPkValue();
+            $pkValue = !empty($pkValue) ? $pkValue : "0";
 
             // find Options
             $options = array('conditions' => "$table.$pkName = :value");
