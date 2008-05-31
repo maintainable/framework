@@ -286,12 +286,37 @@ class Mad_Model_Collection implements ArrayAccess, Iterator, Countable
     public function offsetUnset($offset) {}
 
     /**
-     * For each object in the collection, retrieve $property and
-     * return all in an array.
+     * Iterate over each object in this collection, either accessing
+     * a property or calling a method, and return all of the
+     * results in an array.
+     *
+     * The first argument ($property) is interpreted as a property name.  
+     * However, if the first argument ends with "()" then it will be
+     * interpreted as a method and varargs be passed to that method.
+     *
+     * @param  string  $property        Property to access on each member
+     * @return array                    Results collected
      */
     public function collect($property) {
         $values = array();
-        foreach($this as $member) { $values[] = $member->$property; }
+
+        if (substr($property, -2, 2) == '()') {
+            // method call
+            $method = rtrim($property, '()');
+            $args = func_get_args();
+            array_shift($args);
+
+            foreach ($this as $member) { 
+                $callback = array($member, $method);
+                $values[] = call_user_func_array($callback, $args);
+            }
+        } else {
+            // property access
+            foreach ($this as $member) {
+                $values[] = $member->$property;
+            }
+        }
+    
         return $values;
     }
 
