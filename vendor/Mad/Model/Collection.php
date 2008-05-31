@@ -285,6 +285,15 @@ class Mad_Model_Collection implements ArrayAccess, Iterator, Countable
      */
     public function offsetUnset($offset) {}
 
+    /**
+     * For each object in the collection, retrieve $property and
+     * return all in an array.
+     */
+    public function collect($property) {
+        $values = array();
+        foreach($this as $member) { $values[] = $member->$property; }
+        return $values;
+    }
 
     /**
      * Initialize result set into object collection
