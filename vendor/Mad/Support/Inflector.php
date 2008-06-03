@@ -91,6 +91,7 @@ class Mad_Support_Inflector
         }
 
         $singularRules = array(
+            '/(s)tatus$/i'          => '\1\2tatus',
             '/(s)tatuses$/'         => '\1\2tatus',
             '/(matr)ices$/'         =>'\1ix',
             '/(vert|ind)ices$/'     => '\1ex',
