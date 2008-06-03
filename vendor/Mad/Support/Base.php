@@ -28,6 +28,9 @@ class Mad_Support_Base
         if (! in_array('view', $wrappers)) {
             stream_wrapper_register('view', 'Mad_View_Stream');
         }
+        
+        // throw exceptions on all errors
+		set_error_handler(array('Mad_Support_Base', 'errorHandler'));
     }
 
     /**
@@ -95,6 +98,31 @@ class Mad_Support_Base
         }
         return $hash;
     }
+	
+	/**
+	 * No notices or errors from PHP are ever acceptable in our
+	 * applications.  This error handler is registered with PHP
+	 * and throws all notices and errors from PHP as exceptions.  
+	 * This allows us to report and handle them the same as all
+	 * other exceptions used by the framework.
+	 *
+	 * @param  integer  $errno    Error number
+	 * @param  string   $errstr   Message describing the error
+	 * @param  string   $errfile  Path to file where error occurred
+	 * @param  integer  $errline  Line number where error occurred in file
+	 * @return void
+	 * @throws Mad_Support_Exception
+	 */
+	public static function errorHandler($errno, $errstr, $errfile, $errline)
+	{
+	    if (ini_get('error_reporting') == 0) {
+            // silence operator ("@") was used
+	        return;
+	    }
+	    
+	    $message = "(PHP Error) $errstr in $errfile:$errline";
+        throw new Mad_Support_Exception($message, $errno);
+	}
     
     public static function chop($str)
     {
