@@ -109,6 +109,28 @@ class Mad_Support_BaseTest extends Mad_Test_Unit
         }
     }
 
+    public function testErrorHandlerThrowsPhpErrorAsMadSupportException()
+    {
+		set_error_handler(array('Mad_Support_Base', 'errorHandler'));
+
+        try {
+            trigger_error("rethrown", E_USER_ERROR);
+            restore_error_handler();
+            $this->fail();
+        } catch (Mad_Support_Exception $e) {
+            $this->assertRegExp('/rethrown/', $e->getMessage());
+        }
+
+        restore_error_handler();
+    }
+
+    public function testErrorHandlerDoesNotThrowSilencedErrors()
+    {
+		set_error_handler(array('Mad_Support_Base', 'errorHandler'));
+        @trigger_error("should never be thrown", E_USER_ERROR);
+        restore_error_handler();
+    }
+
     // @see String#chop
     public function testChop()
     {
