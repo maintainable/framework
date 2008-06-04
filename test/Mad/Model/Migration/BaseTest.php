@@ -4,7 +4,7 @@
  * @package    Mad_Model
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential 
+ * @license    http://maintainable.com/framework-license.txt 
  */
 
 /**
@@ -25,7 +25,7 @@ require_once dirname(dirname(dirname(dirname(__FILE__)))).'/fixtures/migrations_
  * @package    Mad_Model
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential
+ * @license    http://maintainable.com/framework-license.txt
  */
 class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
 {

@@ -4,7 +4,7 @@
  * @package    Mad_View
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential 
+ * @license    http://maintainable.com/framework-license.txt 
  */
 
 /**
@@ -29,7 +29,7 @@ class Mad_View_Helper_JavascriptGeneratorTest_MockUrlHelper extends Mad_View_Hel
  * @package    Mad_View
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential
+ * @license    http://maintainable.com/framework-license.txt
  */
 class Mad_View_Helper_JavascriptGeneratorTest extends Mad_Test_Unit
 {

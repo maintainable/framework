@@ -4,7 +4,7 @@
  * @package    Mad_Test
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential 
+ * @license    http://maintainable.com/framework-license.txt 
  */
 
 /**
@@ -20,7 +20,7 @@ if (!defined('MAD_ROOT')) {
  * @package    Mad_Test
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential
+ * @license    http://maintainable.com/framework-license.txt
  */
 class Mad_Test_Fixture_BaseTest extends Mad_Test_Unit
 {

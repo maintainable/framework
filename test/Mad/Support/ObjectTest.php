@@ -4,7 +4,7 @@
  * @package    Support
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential 
+ * @license    http://maintainable.com/framework-license.txt 
  */
 
 /**
@@ -21,7 +21,7 @@ if (!defined('MAD_ROOT')) {
  * @package    Support
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential
+ * @license    http://maintainable.com/framework-license.txt
  */
 class Mad_Support_ObjectTest extends Mad_Test_Unit
 {

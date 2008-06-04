@@ -4,7 +4,7 @@
  * @package    Mad_Controller
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential
+ * @license    http://maintainable.com/framework-license.txt
  */
 
 /**
@@ -23,7 +23,7 @@ if (!defined('MAD_ROOT')) {
  * @package    Mad_Controller
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential
+ * @license    http://maintainable.com/framework-license.txt
  */
 class Mad_Controller_Response_HttpTest extends Mad_Test_Unit
 {

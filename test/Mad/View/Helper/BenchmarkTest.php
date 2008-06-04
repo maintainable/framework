@@ -4,7 +4,7 @@
  * @package    Mad_View
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential 
+ * @license    http://maintainable.com/framework-license.txt 
  */
 
 /**
@@ -21,7 +21,7 @@ if (!defined('MAD_ROOT')) {
  * @package    Mad_View
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential
+ * @license    http://maintainable.com/framework-license.txt
  */
 class Mad_View_Helper_BenchmarkTest extends Mad_Test_Unit
 {
