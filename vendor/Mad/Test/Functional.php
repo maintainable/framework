@@ -896,12 +896,16 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
     protected function _convertSelectToTag($selector, $content=true)
     {
         $selector = trim(preg_replace("/\s+/", " ", $selector));
-        $selector = preg_replace('/("[^"]+)\s([^"]+")/', "$1*space*$2", $selector);
+
+        // substitute spaces within a attribute value
+        while (preg_match('/\[[^\]]+"[^"]+\s[^"]+"\]/', $selector)) {
+            $selector = preg_replace('/(\[[^\]]+"[^"]+)\s([^"]+"\])/', "$1__SPACE__$2", $selector);
+        }
         $elements = strstr($selector, ' ') ? explode(' ', $selector) : array($selector);
 
         $previousTag = array();
         foreach (array_reverse($elements) as $element) {
-            $element = str_replace('*space*', ' ', $element);
+            $element = str_replace('__SPACE__', ' ', $element);
 
             // child selector
             if ($element == '>') {

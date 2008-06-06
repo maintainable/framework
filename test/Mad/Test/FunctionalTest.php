@@ -1145,6 +1145,18 @@ class Mad_Test_FunctionalTest extends Mad_Test_Functional
                                                 'attributes' => array('value' => 'foo bar')));
         $this->assertEquals($tag, $converted);
     }
+
+    // selector based on element attribute with multiple spaces
+    public function testConvertAssertAttributeMultipleSpaces()
+    {
+        $selector = '[foo="bar baz"] div[value="foo bar baz"]';
+        $converted = $this->_convertSelectToTag($selector);
+        $tag      = array('attributes' => array('foo' => 'bar baz'),
+                          'descendant' => array('tag'        => 'div',
+                                                'attributes' => array('value' => 'foo bar baz')));
+        $this->assertEquals($tag, $converted);
+    }
+
    
     // selector based on element and class
     // 'div.foo'
