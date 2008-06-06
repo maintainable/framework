@@ -1,15 +1,15 @@
 <h1>
-  <?= htmlentities(get_class($this->exception)) ?>
+  <?php echo htmlentities(get_class($this->exception)) ?>
 
-  <? $params = $this->request->getPathParams(); ?>
+  <?php $params = $this->request->getPathParams(); ?>
 
-  <? if (! empty($params[':controller'])): ?>
-    in <?= htmlentities( $this->controller = $params[':controller']  ) ?><? if ($this->action = $params[':action']): ?>-&gt;<?= htmlentities($params[':action']) ?><? endif ?>
-  <? endif ?>
+  <?php if (! empty($params[':controller'])): ?>
+    in <?php echo htmlentities( $this->controller = $params[':controller']  ) ?><?php if ($this->action = $params[':action']): ?>-&gt;<?php echo htmlentities($params[':action']) ?><?php endif ?>
+  <?php endif ?>
   
 </h1>
-<pre><?= htmlentities($this->exception->getMessage()) ?></pre>
+<pre><?php echo htmlentities($this->exception->getMessage()) ?></pre>
 
-<?= $this->render(['partial' => 'trace']) ?>
+<?php echo $this->render(['partial' => 'trace']) ?>
 
-<?= $this->render(['partial' => 'request_and_response']) ?>
+<?php echo $this->render(['partial' => 'request_and_response']) ?>

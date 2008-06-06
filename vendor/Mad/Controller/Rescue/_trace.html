@@ -1,4 +1,4 @@
-<?
+<?php
   $point = array('file' => $this->exception->getFile(),
                  'line' => $this->exception->getLine(),
                  'class' => $this->controller,
@@ -8,14 +8,14 @@
   array_unshift($trace, $point);
 ?>
 
-<p><code>MAD_ROOT: <? if (defined('MAD_ROOT')): ?><?= MAD_ROOT?><? else: ?>unset<? endif ?></code></p>
+<p><code>MAD_ROOT: <?php if (defined('MAD_ROOT')): ?><?php echo MAD_ROOT?><?php else: ?>unset<?php endif ?></code></p>
 
 <div id="traces">
   <div id="Application-Trace" style="display: block;">
-    <pre><code><? $madRoot = rtrim(MAD_ROOT, '/'.DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-                  foreach($trace as $point): 
-                    $point = new Mad_Support_ArrayObject($point);
-                    echo str_replace($madRoot, '', $point['file']) .'('. $point['line'] .') in '. $point['class'] .$point['type'].$point['function'] ."\n";
-                  endforeach ?></pre>
+    <pre><code><?php $madRoot = rtrim(MAD_ROOT, '/'.DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+                     foreach($trace as $point): 
+                      $point = new Mad_Support_ArrayObject($point);
+                      echo str_replace($madRoot, '', $point['file']) .'('. $point['line'] .') in '. $point['class'] .$point['type'].$point['function'] ."\n";
+                     endforeach ?></pre>
   </div>
 </div>
