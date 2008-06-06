@@ -50,7 +50,7 @@ class Mad_View_Base
      */
     public function __construct($controller = null)
     {
-        $this->addPath('/app/views/');
+        $this->addPath('app/views/');
         $this->controller = $controller;
     }
 
@@ -92,9 +92,9 @@ class Mad_View_Base
      * <code>
      *  <?php
      *  ...
-     *  $view->addPath('/app/views/layout/');
-     *  $view->addPath('/app/views/shared/');
-     *  $view->addPath('/app/views/FooBar/');
+     *  $view->addPath('app/views/layout/');
+     *  $view->addPath('app/views/shared/');
+     *  $view->addPath('app/views/FooBar/');
      *  ...
      *  ?>
      * </code>
@@ -109,6 +109,10 @@ class Mad_View_Base
      */
     public function addPath($path)
     {
+        if ($path[0] != '/') { 
+            $path = MAD_ROOT .'/'. $path; 
+        }
+
         if (substr($path, -1) != '/') {
             $path .= '/';
         }
@@ -293,7 +297,7 @@ class Mad_View_Base
         }
 
         foreach ($this->_paths as $dir) {
-            $path = MAD_ROOT.$dir.$name;
+            $path = $dir.$name;
             if (is_readable($path)) {
                 ob_start();
                 include "view://$path";

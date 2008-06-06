@@ -210,39 +210,43 @@ abstract class Mad_Controller_Base
         $this->_initParams();
         $this->_initProxies();
 
-        $this->_viewsDir  = '/app/views/';
+        $this->_viewsDir  = 'app/views/';
         $this->_shortName = str_replace('Controller', '', $this->params[':controller']);
 
-        // templates
-        $this->_initActionMethods();
-        $this->_initViewPaths();
-        $this->_initViewHelpers();
-        $this->_initViewFilters();
+        try {
+            // templates
+            $this->_initActionMethods();
+            $this->_initViewPaths();
+            $this->_initViewHelpers();
 
-        // Initialize application logic used thru all actions
-        $this->_initializeApplication();
-        if ($this->_performed()) return $this->_response;
+            // Initialize application logic used thru all actions
+            $this->_initializeApplication();
+            if ($this->_performed()) return $this->_response;
 
-        // Initialize sub-controller logic used thru all actions
-        if (is_callable(array($this, '_initialize'))) {
-            $this->_initialize();
+            // Initialize sub-controller logic used thru all actions
+            if (is_callable(array($this, '_initialize'))) {
+                $this->_initialize();
+            }
+
+            // execute before filters, and return if we performed an action
+            $this->_executeFilters('before');
+            if ($this->_performed()) return $this->_response;
+
+            // execute action & save any changes to sessionData
+            $this->{$this->_action}();
+
+            // execute after filters, and return if we performed an action
+            $this->_executeFilters('after');
+            if ($this->_performed()) return $this->_response;
+
+            // render default if we haven't performed an action yet
+            if (!$this->_performed()) {
+                $this->render();
+            }
+        } catch (Exception $e) {
+            $this->_rescueAction($e);
         }
-
-        // execute before filters, and return if we performed an action
-        $this->_executeFilters('before');
-        if ($this->_performed()) return $this->_response;
-
-        // execute action & save any changes to sessionData
-        $this->{$this->_action}();
-
-        // execute after filters, and return if we performed an action
-        $this->_executeFilters('after');
-        if ($this->_performed()) return $this->_response;
-
-        // render default if we haven't performed an action yet
-        if (!$this->_performed()) {
-            $this->render();
-        }
+        
         return $this->_response;
     }
 
@@ -1019,6 +1023,36 @@ abstract class Mad_Controller_Base
         }
     }
 
+    /*##########################################################################
+    # Rescues
+    ##########################################################################*/
+
+    /**
+     * An exception has occurred inside an action.  Rescue it.
+     *
+     * @param  Exception $exception
+     */
+    protected function _rescueAction($exception)
+    {
+        if (MAD_ENV == 'development') {
+            $this->_rescueActionLocally($exception);
+        } else {
+            throw $e;
+        }
+    }
+
+    /**
+     * Rescue an exception locally.
+     * 
+     * @param  Exception $exception
+     */
+    protected function _rescueActionLocally($exception)
+    {
+        $renderer = new Mad_Controller_Rescue_Renderer();
+        $html = $renderer->render($exception, $this->_request, $this->_response);
+
+        $this->renderText($html);
+    }
 
     /*##########################################################################
     # Private Methods
@@ -1116,16 +1150,6 @@ abstract class Mad_Controller_Base
     {
         $controllerHelper = $this->_shortName.'Helper';
         $this->_view->addHelper(new $controllerHelper($this->_view));
-    }
-
-    /**
-     * Initialize the default filters for use in the views
-     * @todo implement this once we've removed phplib support
-     */
-    private function _initViewFilters()
-    {
-        // $this->_view->addFilter(new TrimWhitespaceFilter);
-        // $this->_view->addFilter(new GzipFilter);
     }
 
     /**

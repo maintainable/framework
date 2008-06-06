@@ -1,0 +1,17 @@
+
+<?
+  $cleanParams = $this->request->getAllParams();
+  unset($cleanParams['controller'], $cleanParams[':controller'], 
+        $cleanParams['action'],     $cleanParams[':action']);
+  $requestDump = empty($cleanParams) ? 'None' : var_export($cleanParams, true);
+?>
+
+<h2 style="margin-top: 30px">Request</h2>
+<p><b>Parameters</b>: <pre><?= htmlentities($requestDump) ?></pre></p>
+
+<p><a href="#" onclick="document.getElementById('session_dump').style.display='block'; return false;">Show session dump</a></p>
+<div id="session_dump" style="display:none"><?= htmlentities(var_export($this->request->getSession())) ?></div>
+
+
+<h2 style="margin-top: 30px">Response</h2>
+<p><b>Headers</b>: <pre><?= $this->response ? var_export($this->response->getHeaders(), true) : 'None' ?></pre></p>
