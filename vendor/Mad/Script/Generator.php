@@ -54,7 +54,7 @@ class Mad_Script_Generator extends Mad_Script_Base
     public function __construct($args)
     {
         $this->_tpl = new Mad_View_Base();
-        $this->_tpl->addPath('/vendor/Mad/Script/templates');
+        $this->_tpl->addPath('vendor/Mad/Script/templates');
 
         $filename = array_shift($args);
         $action   = !empty($args) ? array_shift($args) : null;
