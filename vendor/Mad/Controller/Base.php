@@ -1037,7 +1037,7 @@ abstract class Mad_Controller_Base
         if (MAD_ENV == 'development') {
             $this->_rescueActionLocally($exception);
         } else {
-            throw $e;
+            throw $exception;
         }
     }
 
