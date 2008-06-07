@@ -22,17 +22,27 @@ class Mad_Controller_Rescue_Renderer
     protected $_view = null;
 
     /**
+     * @var Mad_Controller_Rescue_SourceExtractor
+     */
+    protected $_extractor = null;
+
+    /**
      * Constructor.
      *
      * @var  Mad_View_Base  $view
      */
-    public function __construct($view = null)
+    public function __construct($view = null, $extractor = null)
     {
         if ($view === null) {
             $view = new Mad_View_Base();
             $view->addPath( dirname(__FILE__) );
         }
         $this->_view = $view;
+
+        if ($extractor === null) {
+            $extractor = new Mad_Controller_Rescue_SourceExtractor();
+        }
+        $this->_extractor = $extractor;
     }
 
     /**
@@ -48,9 +58,10 @@ class Mad_Controller_Rescue_Renderer
         // as interrupted template rendering, destroy it.
         while (ob_get_level()) { ob_get_clean(); }
 
-        $this->_view->exception = $exception;
-        $this->_view->request   = $request;
-        $this->_view->response  = $response;
+        $this->_view->exception  = $exception;
+        $this->_view->request    = $request;
+        $this->_view->response   = $response;
+        $this->_view->extraction = $this->extractSource($exception);
 
         // render the error page contents
         $this->_view->contents = $this->_view->render('diagnostics');
@@ -58,6 +69,11 @@ class Mad_Controller_Rescue_Renderer
         // render the error layout
         $html = $this->_view->render('layout');
         return $html;
+    }
+
+    public function extractSource($exception)
+    {
+        return $this->_extractor->extractSourceFromException($exception);
     }
 
 }

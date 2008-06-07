@@ -8,7 +8,7 @@
   array_unshift($trace, $point);
 ?>
 
-<p><code>MAD_ROOT: <?php if (defined('MAD_ROOT')): ?><?php echo MAD_ROOT?><?php else: ?>unset<?php endif ?></code></p>
+<p><code>MAD_ROOT: <?php if (defined('MAD_ROOT')): ?><?php echo MAD_ROOT ?><?php else: ?>unset<?php endif ?></code></p>
 
 <div id="traces">
   <div id="Application-Trace" style="display: block;">
@@ -19,3 +19,19 @@
                      endforeach ?></pre>
   </div>
 </div>
+
+<?php if ($this->extraction): ?>
+Extracted source (around line #<?php echo $this->extraction->line ?>):
+<pre>
+<?php
+ end($this->extraction->source);
+ $width = strlen(key($this->extraction->source));
+
+ foreach ($this->extraction->source as $line => $code) {
+   echo str_repeat(' ', $width-strlen($line)) . $line;
+   echo ': ' . htmlentities($code) ."\n";
+ }
+
+?>
+</pre>
+<?php endif ?>
