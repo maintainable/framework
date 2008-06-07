@@ -87,7 +87,8 @@ class Mad_View_Base
     ##########################################################################*/
 
     /**
-     * Add to the list of template filepaths in LIFO order.
+     * Add to the list of template filepaths in LIFO order.  Relative
+     * paths are automatically prepended with MAD_ROOT.
      *
      * <code>
      *  <?php
@@ -109,7 +110,7 @@ class Mad_View_Base
      */
     public function addPath($path)
     {
-        if ($path[0] != '/') { 
+        if (! is_readable($path)) {
             $path = MAD_ROOT .'/'. $path; 
         }
 
