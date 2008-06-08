@@ -8,7 +8,7 @@
   <?php endif ?>
   
 </h1>
-<pre><?php echo htmlentities($this->exception->getMessage()) ?></pre>
+<pre><?php echo htmlentities($this->message) ?></pre>
 
 <?php echo $this->render(['partial' => 'trace']) ?>
 

@@ -5,14 +5,17 @@
     <pre><code><?php 
                   foreach($this->trace as $i => $frame) {
                     $glue = ($i==0) ? ' in ' : ': ';
-                    echo "{$frame->file}({$frame->line})$glue{$frame->method}\n";
+                    echo "{$frame->fileStripped}({$frame->line})$glue{$frame->method}\n";
                   }  
                ?></pre>
   </div>
 </div>
 
 <?php if ($this->extraction): ?>
-Extracted source (around line #<?php echo $this->extraction->line ?>):
+
+Extracted source (around 
+<a href="<?php echo $this->trace[0]->url ?>">line #<?php echo $this->extraction->line ?></a>)
+
 <pre>
 <?php
  end($this->extraction->source);

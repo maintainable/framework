@@ -17,7 +17,7 @@
 class Mad_Support_PhpError extends Mad_Support_Exception
 {
     /**
-     * Get a title of for this exception suitable for
+     * Get a title for this exception suitable for
      * displaying to the user on an error page.
      *
      * @return string

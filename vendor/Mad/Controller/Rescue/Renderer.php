@@ -58,13 +58,21 @@ class Mad_Controller_Rescue_Renderer
         // as interrupted template rendering, destroy it.
         while (ob_get_level()) { ob_get_clean(); }
 
+        // title
         if ($exception instanceof Mad_Support_Exception) {
             $title = $exception->getTitle();
         } else {
             $title = get_class($exception);
         }
 
+        // message
+        if (! strlen($message = $exception->getMessage())) {
+            $message = "<no message>";
+        }
+
+        // assignments
         $this->_view->title      = $title;
+        $this->_view->message    = $message;
         $this->_view->exception  = $exception;
         $this->_view->trace      = $this->formatTrace($exception);
         $this->_view->request    = $request;
@@ -118,11 +126,13 @@ class Mad_Controller_Rescue_Renderer
         // occurred, so we prepend it to get a full trace.
         if (isset($out[0])) {
             $frame = clone $out[0];
-            $frame->file = $this->stripPath( $exception->getFile() );
+            $frame->file = $exception->getFile();
+            $frame->fileStripped = $this->stripPath( $exception->getFile() );
             $frame->line = $exception->getLine();
+            $frame->url = $this->linkTo($frame->file, $frame->line);
             array_unshift($out, $frame);
         }
-        
+  
         return $out;
     }
 
@@ -135,19 +145,16 @@ class Mad_Controller_Rescue_Renderer
      */
     public function formatFrame($frame) 
     {
-        if (isset($frame['file'])) {
-            $file = $this->stripPath($frame['file']);
-        } else {
-            $file = 'Unknown file';
-        }
-
-        $line = isset($frame['line']) ? $frame['line'] : '?';
+        $file = isset($frame['file'])  ? $frame['file'] : 'Unknown file';
+        $line = isset($frame['line'])  ? $frame['line'] : '?';
 
         $method  = isset($frame['class'])    ? $frame['class']    : '';
         $method .= isset($frame['type'])     ? $frame['type']     : '';
         $method .= isset($frame['function']) ? $frame['function'] : '';
         
-        return (object)array('file' => $file, 
+        return (object)array('file' => $file,
+                             'fileStripped' => $this->stripPath($file),
+                             'url'  => $this->linkTo($file, $line),
                              'line' => $line, 
                              'method' => $method);
     }
@@ -162,10 +169,37 @@ class Mad_Controller_Rescue_Renderer
     {
         $mad_root = rtrim(MAD_ROOT, '/'.DIRECTORY_SEPARATOR) . '/';
         $path = str_replace($mad_root, '', $path);
-        $path = preg_replace('!^mad\w+://!', '', $path);
+        $path = $this->stripMadProtocols($path);
         return $path;
     }
 
+    /**
+     * Strip the Mad protocols like madview:// from the path
+     * to make it more readable.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    public function stripMadProtocols($path) {
+        return preg_replace('!^mad\w+://!', '', $path);
+    }
+
+    /**
+     * Link to $line number in source file at $path.
+     *
+     * @param  string   $path  Path to source code
+     * @param  integer  $line  Line number in source
+     * @return string          URL
+     */
+    public function linkTo($path, $line)
+    {
+        $url = 'file://' . $this->stripMadProtocols($path);
+
+        if (PHP_OS == 'Darwin') {
+            $url = "txmt://open/?url=$url&line=$line";
+        }
+
+        return $url;
+    }
+
 }
-
-
