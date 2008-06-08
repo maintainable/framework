@@ -301,7 +301,7 @@ class Mad_View_Base
             $path = $dir.$name;
             if (is_readable($path)) {
                 ob_start();
-                include "view://$path";
+                include "madview://$path";
                 $buffer = ob_get_clean();
                 return $buffer;
             }

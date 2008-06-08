@@ -20,17 +20,15 @@ class Mad_Support_Base
     public static function initialize()
     {
         $wrappers = stream_get_wrappers();
-
-        if (! in_array('model', $wrappers)) {
-            stream_wrapper_register('model', 'Mad_Model_Stream');
+        if (! in_array('madmodel', $wrappers)) {
+            stream_wrapper_register('madmodel', 'Mad_Model_Stream');
         }
 
-        if (! in_array('view', $wrappers)) {
-            stream_wrapper_register('view', 'Mad_View_Stream');
+        if (! in_array('madview', $wrappers)) {
+            stream_wrapper_register('madview', 'Mad_View_Stream');
         }
         
-        // throw exceptions on all errors
-		set_error_handler(array('Mad_Support_Base', 'errorHandler'));
+        Mad_Support_PhpErrorHandler::install();
     }
 
     /**
@@ -44,7 +42,7 @@ class Mad_Support_Base
 
         // filter models through Mad_Model_Stream
         if (self::modelExists($class)) {
-            $filepath = "model://".MAD_ROOT."/app/models/$filepath";
+            $filepath = "madmodel://".MAD_ROOT."/app/models/$filepath";
         }
         require_once $filepath;
     }

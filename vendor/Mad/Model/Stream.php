@@ -39,7 +39,7 @@ class Mad_Model_Stream
     public function stream_open($path, $mode, $options, &$opened_path)
     {
         // get the model script source
-        $path = str_replace('model://', '', $path);
+        $path = str_replace('madmodel://', '', $path);
         $this->data = file_get_contents($path);
 
         /**

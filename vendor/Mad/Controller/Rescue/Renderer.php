@@ -58,7 +58,15 @@ class Mad_Controller_Rescue_Renderer
         // as interrupted template rendering, destroy it.
         while (ob_get_level()) { ob_get_clean(); }
 
+        if ($exception instanceof Mad_Support_Exception) {
+            $title = $exception->getTitle();
+        } else {
+            $title = get_class($exception);
+        }
+
+        $this->_view->title      = $title;
         $this->_view->exception  = $exception;
+        $this->_view->trace      = $this->formatTrace($exception);
         $this->_view->request    = $request;
         $this->_view->response   = $response;
         $this->_view->extraction = $this->extractSource($exception);
@@ -71,9 +79,93 @@ class Mad_Controller_Rescue_Renderer
         return $html;
     }
 
+    /**
+     * Extract the source code around where $exception occurred.
+     *
+     * @param  Exception  $exception  PHP exception
+     * @return array                  line number => source code
+     */
     public function extractSource($exception)
     {
         return $this->_extractor->extractSourceFromException($exception);
     }
 
+    /**
+     * Build a more readable traceback from an $exception. 
+     * 
+     * @see formatFrame()
+     *
+     * @param  Exception        $exception  PHP exception
+     * @return array<stdClass>              Array of frames
+     */
+    public function formatTrace($exception)
+    {
+        // PHP's Exception class declares getTrace() as final, but
+        // some exceptions need to doctor the trace.
+        if ($exception instanceof Mad_Support_Exception) {
+            $trace = $exception->getDoctoredTrace();
+        } else {
+            $trace = $exception->getTrace();
+        }
+        
+        // build an array of objects for the trace frames
+        $out = array();
+        foreach ($trace as $frame) {
+            $out[] = $this->formatFrame($frame);
+        }
+        
+        // PHP's trace doesn't include the line where the error 
+        // occurred, so we prepend it to get a full trace.
+        if (isset($out[0])) {
+            $frame = clone $out[0];
+            $frame->file = $this->stripPath( $exception->getFile() );
+            $frame->line = $exception->getLine();
+            array_unshift($out, $frame);
+        }
+        
+        return $out;
+    }
+
+    /**
+     * Given a single frame from a PHP exception trace, return an
+     * object for that frame with properties $file, $line, and $method.
+     *
+     * @param  array  $frame  PHP trace fram
+     * @return object         Equivalent object
+     */
+    public function formatFrame($frame) 
+    {
+        if (isset($frame['file'])) {
+            $file = $this->stripPath($frame['file']);
+        } else {
+            $file = 'Unknown file';
+        }
+
+        $line = isset($frame['line']) ? $frame['line'] : '?';
+
+        $method  = isset($frame['class'])    ? $frame['class']    : '';
+        $method .= isset($frame['type'])     ? $frame['type']     : '';
+        $method .= isset($frame['function']) ? $frame['function'] : '';
+        
+        return (object)array('file' => $file, 
+                             'line' => $line, 
+                             'method' => $method);
+    }
+
+    /**
+     * Given a $path, strip the MAD_ROOT and Mad stream wrapper protocol.
+     *
+     * @param  string  $path  Path to strip
+     * @return string         Stripped path
+     */     
+    public function stripPath($path)
+    {
+        $mad_root = rtrim(MAD_ROOT, '/'.DIRECTORY_SEPARATOR) . '/';
+        $path = str_replace($mad_root, '', $path);
+        $path = preg_replace('!^mad\w+://!', '', $path);
+        return $path;
+    }
+
 }
+
+

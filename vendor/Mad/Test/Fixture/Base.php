@@ -322,7 +322,7 @@ class Mad_Test_Fixture_Base
 
             // dynamic fixtures
             ob_start();
-            include "view://$fixtureFile";
+            include "madview://$fixtureFile";
             $fixtureData = ob_get_clean();
             $records = Horde_Yaml::load($fixtureData);
 

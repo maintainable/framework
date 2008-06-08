@@ -53,14 +53,13 @@ class Mad_View_Stream
      */
     private $stat;
 
-
     /**
      * Opens the script file and converts markup.
      */
     public function stream_open($path, $mode, $options, &$opened_path)
     {
         // get the view script source
-        $path = str_replace('view://', '', $path);
+        $path = str_replace('madview://', '', $path);
         $this->data = file_get_contents($path);
         $this->processed = false;
 
