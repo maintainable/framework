@@ -12,7 +12,7 @@
  * @package    Mad_View
  * @subpackage Helper
  * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    Proprietary and Confidential
+ * @license    http://maintainable.com/framework-license.txt
  */
 class Mad_View_Helper_Model extends Mad_View_Helper_Base
 {
