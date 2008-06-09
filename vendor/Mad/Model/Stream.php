@@ -218,8 +218,6 @@ class Mad_Model_Stream
     } 
 $4';
         $pattern = "/(.*class) (.*) (extends.*)(}[^}]+?)$/s";
-        if (!strstr($this->data, '__construct')) {
-            $this->data = preg_replace($pattern, $replace, $this->data);
-        }
+        $this->data = preg_replace($pattern, $replace, $this->data);
     }
 }
