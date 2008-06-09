@@ -111,7 +111,7 @@ class Mad_Support_BaseTest extends Mad_Test_Unit
 
     public function testErrorHandlerThrowsPhpErrorAsMadSupportException()
     {
-		set_error_handler(array('Mad_Support_Base', 'errorHandler'));
+        Mad_Support_PhpErrorHandler::install();
 
         try {
             trigger_error("rethrown", E_USER_ERROR);
@@ -126,7 +126,7 @@ class Mad_Support_BaseTest extends Mad_Test_Unit
 
     public function testErrorHandlerDoesNotThrowSilencedErrors()
     {
-		set_error_handler(array('Mad_Support_Base', 'errorHandler'));
+        Mad_Support_PhpErrorHandler::install();
         @trigger_error("should never be thrown", E_USER_ERROR);
         restore_error_handler();
     }

@@ -41,15 +41,32 @@ class Mad_Support_Base
     }
 
     /**
-     * Check if a model exists
-     * @param   string  $class
+     * Is $class one of the models in the app/models directory?
+     *
+     * @param   string   $class  Class name, possibly a model
+     * @return  boolean          Is it a model?
      */
     public static function modelExists($class)
     {
-        $filepath  = str_replace('_', '/', $class).".php";
-        $modelPath = MAD_ROOT."/app/models/$filepath";
+        static $pathnames = array();
 
-        return !strstr($class, 'Mad_') && file_exists($modelPath);
+        // build array of pathnames for all models in app/models
+        if (empty($pathnames)) {
+            $path = MAD_ROOT . '/app/models';
+            foreach(new RecursiveIteratorIterator(
+                     new RecursiveDirectoryIterator($path)) as $f) {
+
+                if ($f->isFile() && substr($f->getFilename(), -4) == '.php') {
+                    $pathnames[] = $f->getPathname();
+                }
+            }
+        }
+
+        // compute possible model pathname of $class
+        $pathname = MAD_ROOT . '/app/models/' 
+                  . str_replace('_', '/', $class) .'.php';
+
+        return in_array($pathname, $pathnames);
     }
     
     /**
@@ -89,31 +106,6 @@ class Mad_Support_Base
         }
         return $hash;
     }
-	
-	/**
-	 * No notices or errors from PHP are ever acceptable in our
-	 * applications.  This error handler is registered with PHP
-	 * and throws all notices and errors from PHP as exceptions.  
-	 * This allows us to report and handle them the same as all
-	 * other exceptions used by the framework.
-	 *
-	 * @param  integer  $errno    Error number
-	 * @param  string   $errstr   Message describing the error
-	 * @param  string   $errfile  Path to file where error occurred
-	 * @param  integer  $errline  Line number where error occurred in file
-	 * @return void
-	 * @throws Mad_Support_Exception
-	 */
-	public static function errorHandler($errno, $errstr, $errfile, $errline)
-	{
-	    if (ini_get('error_reporting') == 0) {
-            // silence operator ("@") was used
-	        return;
-	    }
-	    
-	    $message = "(PHP Error) $errstr in $errfile:$errline";
-        throw new Mad_Support_Exception($message, $errno);
-	}
     
     public static function chop($str)
     {
