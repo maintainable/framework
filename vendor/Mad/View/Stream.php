@@ -122,12 +122,14 @@ class Mad_View_Stream
         /* Convert ['foo' => 'bar'] to array('foo' => 'bar'). Also works for
          * nested arrays: ['foo' => ['bar' => 'baz']].
          */
-        $find    = '/\[([^]]+?=>[^]]+?)\]{1}?/s';
-        $replace = 'array($1)';
-        $count = 0;
-        do {
-            $this->data = preg_replace($find, $replace, $this->data, -1, $count);
-        } while ($count);
+        if (strpos($this->data, '[') !== false) {
+            $find    = '/\[([^]]+?=>[^]]+?)\]{1}?/s';
+            $replace = 'array($1)';
+            $count = 0;
+            do {
+                $this->data = preg_replace($find, $replace, $this->data, -1, $count);
+            } while ($count);
+        }
         
         $this->processed = true;
     }
