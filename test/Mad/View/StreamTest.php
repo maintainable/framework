@@ -26,9 +26,7 @@ class Mad_View_StreamTest extends Mad_Test_Unit
 {
     public function setUp()
     {
-        if (! in_array('madview', stream_get_wrappers())) {
-            stream_wrapper_register('madview', 'Mad_View_Stream');
-        }
+        Mad_View_Stream::install();
     }
 
 

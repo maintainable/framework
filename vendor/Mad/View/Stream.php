@@ -55,16 +55,14 @@ class Mad_View_Stream
 
 
     /**
-     * Install this stream wrapper as $protocol.
-     *
-     * @param  string  $protocol  
+     * Install this stream wrapper.
      */
-    public static function install($protocol = 'madview')
+    public static function install()
     {
         $wrappers = stream_get_wrappers();
 
-        if (! in_array($protocol, $wrappers)) {
-            stream_wrapper_register($protocol, 'Mad_View_Stream');
+        if (! in_array('madview', $wrappers)) {
+            stream_wrapper_register('madview', 'Mad_View_Stream');
         }
     }
 

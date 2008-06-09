@@ -34,16 +34,14 @@ class Mad_Model_Stream
 
 
     /**
-     * Install this stream wrapper as $protocol.
-     *
-     * @param  string  $protocol  
+     * Install this stream wrapper.
      */
-    public static function install($protocol = 'madmodel')
+    public static function install()
     {
         $wrappers = stream_get_wrappers();
 
-        if (! in_array($protocol, $wrappers)) {
-            stream_wrapper_register($protocol, 'Mad_Model_Stream');
+        if (! in_array('madmodel', $wrappers)) {
+            stream_wrapper_register('madmodel', 'Mad_Model_Stream');
         }
     }
 
