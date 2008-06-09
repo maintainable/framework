@@ -167,8 +167,7 @@ class Mad_Controller_Rescue_Renderer
      */     
     public function stripPath($path)
     {
-        $mad_root = rtrim(MAD_ROOT, '/'.DIRECTORY_SEPARATOR) . '/';
-        $path = str_replace($mad_root, '', $path);
+        $path = str_replace(MAD_ROOT . DIRECTORY_SEPARATOR, '', $path);
         $path = $this->stripMadProtocols($path);
         return $path;
     }
