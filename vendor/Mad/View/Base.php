@@ -101,16 +101,17 @@ class Mad_View_Base
      * </code>
      *
      * This would look for the template file in the order:
-     *  1. /app/views/FooBar/template.html
-     *  2. /app/views/shared/template.html
-     *  3. /app/views/layout/template.html
+     *  1. {MAD_ROOT}/app/views/FooBar/template.html
+     *  2. {MAD_ROOT}/app/views/shared/template.html
+     *  3. {MAD_ROOT}/app/views/layout/template.html
      *
      * @see     Mad_Controller_Base::_initViewPaths();
-     * @param   string  $path
+     * @param   string   $path
+     * @param   boolean  $relative  Is $path relative to MAD_ROOT?
      */
-    public function addPath($path)
+    public function addPath($path, $relative = true)
     {
-        if (! is_readable($path)) {
+        if ($relative) {
             $path = MAD_ROOT .'/'. $path; 
         }
 

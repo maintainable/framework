@@ -35,7 +35,7 @@ class Mad_Controller_Rescue_Renderer
     {
         if ($view === null) {
             $view = new Mad_View_Base();
-            $view->addPath( dirname(__FILE__) );
+            $view->addPath( dirname(__FILE__), $relative = false );
         }
         $this->_view = $view;
 
