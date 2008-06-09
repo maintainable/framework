@@ -50,9 +50,11 @@ class Mad_Support_Base
     {
         static $pathnames = array();
 
+        $path = MAD_ROOT . DIRECTORY_SEPARATOR 
+              . 'app' . DIRECTORY_SEPARATOR . 'models';
+
         // build array of pathnames for all models in app/models
         if (empty($pathnames)) {
-            $path = MAD_ROOT . '/app/models';
             foreach(new RecursiveIteratorIterator(
                      new RecursiveDirectoryIterator($path)) as $f) {
 
@@ -63,8 +65,8 @@ class Mad_Support_Base
         }
 
         // compute possible model pathname of $class
-        $pathname = MAD_ROOT . '/app/models/' 
-                  . str_replace('_', '/', $class) .'.php';
+        $pathname = $path . DIRECTORY_SEPARATOR
+                  . str_replace('_', DIRECTORY_SEPARATOR, $class) .'.php';
 
         return in_array($pathname, $pathnames);
     }
