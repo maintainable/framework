@@ -35,7 +35,7 @@ class Mad_Support_PhpError extends Mad_Support_Exception
             case E_STRICT:          $title = 'Strict Notice';    break;
             default:
                 if (defined('E_RECOVERABLE_ERROR') && 
-                                $errno == E_RECOVERABLE_ERROR) {
+                                $this->code == E_RECOVERABLE_ERROR) {
                     $title = 'Recoverable Error';
                 } else {
                     $title = 'Unknown Error';
