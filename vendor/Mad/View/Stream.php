@@ -115,9 +115,11 @@ class Mad_View_Stream
         }
 
         // Convert @$this->varName to htmlentities($this->varName, ENT_QUOTES, 'utf-8')
-        $find    = '/@\$([a-z0-9_\[\]\->\']*)/i';
-        $replace = 'htmlentities($$1, ENT_QUOTES, \'utf-8\')';
-        $this->data = preg_replace($find, $replace, $this->data);
+        if (strpos($this->data, '@') !== false) {
+            $find    = '/@\$([a-z0-9_\[\]\->\']*)/i';
+            $replace = 'htmlentities($$1, ENT_QUOTES, \'utf-8\')';
+            $this->data = preg_replace($find, $replace, $this->data);
+        }
 
         /* Convert ['foo' => 'bar'] to array('foo' => 'bar'). Also works for
          * nested arrays: ['foo' => ['bar' => 'baz']].
