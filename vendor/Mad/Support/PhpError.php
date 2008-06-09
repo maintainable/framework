@@ -37,6 +37,9 @@ class Mad_Support_PhpError extends Mad_Support_Exception
                 if (defined('E_RECOVERABLE_ERROR') && 
                                 $this->code == E_RECOVERABLE_ERROR) {
                     $title = 'Recoverable Error';
+                } else if (defined('E_DEPRECATED') &&
+                                $this->code == E_DEPRECATED) {
+                    $title = 'Deprecated Notice';
                 } else {
                     $title = 'Unknown Error';
                 }

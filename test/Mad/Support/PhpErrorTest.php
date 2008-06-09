@@ -90,6 +90,16 @@ class Mad_Support_PhpErrorTest extends Mad_Test_Unit
         $this->assertEquals('PHP Recoverable Error', $e->getTitle());
     }
     
+    public function testSetsTitleForDeprecatedNotice()
+    {
+        if (! defined('E_DEPRECATED')) {
+            define('E_DEPRECATED', 8192);
+        }
+        
+        $e = new Mad_Support_PHPError('', E_DEPRECATED);
+        $this->assertEquals('PHP Deprecated Notice', $e->getTitle());
+    }
+    
     public function testSetsTitleForUnknownError()
     {
         $e = new Mad_Support_PHPError('', -1);
