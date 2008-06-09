@@ -19,15 +19,8 @@ class Mad_Support_Base
      */
     public static function initialize()
     {
-        $wrappers = stream_get_wrappers();
-        if (! in_array('madmodel', $wrappers)) {
-            stream_wrapper_register('madmodel', 'Mad_Model_Stream');
-        }
-
-        if (! in_array('madview', $wrappers)) {
-            stream_wrapper_register('madview', 'Mad_View_Stream');
-        }
-        
+        Mad_Model_Stream::install();
+        Mad_View_Stream::install();
         Mad_Support_PhpErrorHandler::install();
     }
 

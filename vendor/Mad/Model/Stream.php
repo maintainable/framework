@@ -34,6 +34,20 @@ class Mad_Model_Stream
 
 
     /**
+     * Install this stream wrapper as $protocol.
+     *
+     * @param  string  $protocol  
+     */
+    public static function install($protocol = 'madmodel')
+    {
+        $wrappers = stream_get_wrappers();
+
+        if (! in_array($protocol, $wrappers)) {
+            stream_wrapper_register($protocol, 'Mad_Model_Stream');
+        }
+    }
+
+    /**
      * Opens the script file and converts markup.
      */
     public function stream_open($path, $mode, $options, &$opened_path)

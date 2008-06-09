@@ -53,6 +53,21 @@ class Mad_View_Stream
      */
     private $stat;
 
+
+    /**
+     * Install this stream wrapper as $protocol.
+     *
+     * @param  string  $protocol  
+     */
+    public static function install($protocol = 'madview')
+    {
+        $wrappers = stream_get_wrappers();
+
+        if (! in_array($protocol, $wrappers)) {
+            stream_wrapper_register($protocol, 'Mad_View_Stream');
+        }
+    }
+
     /**
      * Opens the script file and converts markup.
      */
