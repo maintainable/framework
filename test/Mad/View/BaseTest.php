@@ -30,7 +30,7 @@ class Mad_View_BaseTest extends Mad_Test_Unit
     public function setUp()
     {
         $this->_view = new Mad_View_Base();
-        $this->_view->addPath('/test/Mad/View/views/');
+        $this->_view->addPath('test/Mad/View/views/');
     }
 
     /*##########################################################################
@@ -60,20 +60,21 @@ class Mad_View_BaseTest extends Mad_Test_Unit
     // test adding a template path
     public function testAddTemplatePath()
     {
-        $this->_view->addPath('/app/views/shared/');
-        $expected = array('/app/views/shared/',
-                          '/test/Mad/View/views/',
-                          '/app/views/');
+        $this->_view->addPath('app/views/shared/');
+        
+        $expected = array(MAD_ROOT . '/app/views/shared/',
+                          MAD_ROOT . '/test/Mad/View/views/',
+                          MAD_ROOT . '/app/views/');
         $this->assertEquals($expected, $this->_view->getPaths());
     }
 
     // test adding a template path
     public function testAddTemplatePathAddSlash()
     {
-        $this->_view->addPath('/app/views/shared');
-        $expected = array('/app/views/shared/',
-                          '/test/Mad/View/views/',
-                          '/app/views/');
+        $this->_view->addPath('app/views/shared');
+        $expected = array(MAD_ROOT . '/app/views/shared/',
+                          MAD_ROOT . '/test/Mad/View/views/',
+                          MAD_ROOT . '/app/views/');
         $this->assertEquals($expected, $this->_view->getPaths());
     }
 
@@ -110,7 +111,7 @@ class Mad_View_BaseTest extends Mad_Test_Unit
         $this->assertEquals($expected, $this->_view->render('testRender'));
 
         // after we specify the 'subdir' path, it should read from subdir path first
-        $this->_view->addPath('/test/Mad/View/views/subdir/');
+        $this->_view->addPath('test/Mad/View/views/subdir/');
         $expected = "<div>subdir test</div>";
         $this->assertEquals($expected, $this->_view->render('testRender'));
     }

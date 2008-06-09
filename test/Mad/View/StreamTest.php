@@ -26,8 +26,8 @@ class Mad_View_StreamTest extends Mad_Test_Unit
 {
     public function setUp()
     {
-        if (! in_array('view', stream_get_wrappers())) {
-            stream_wrapper_register('view', 'Mad_View_Stream');
+        if (! in_array('madview', stream_get_wrappers())) {
+            stream_wrapper_register('madview', 'Mad_View_Stream');
         }
     }
 
@@ -131,7 +131,7 @@ class Mad_View_StreamTest extends Mad_Test_Unit
         $tmpnam = tempnam("/tmp", "view");
         file_put_contents($tmpnam, $data);
 
-        $stream = fopen("view://$tmpnam", 'r');
+        $stream = fopen("madview://$tmpnam", 'r');
 
         $meta = stream_get_meta_data($stream);       
         $obj = $meta['wrapper_data'];

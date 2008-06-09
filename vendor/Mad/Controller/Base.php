@@ -288,11 +288,11 @@ abstract class Mad_Controller_Base
     {
         foreach ($this->_view->getPaths() as $dir) {
             $path = $dir.$this->_action.'.html';
-            if (is_readable(MAD_ROOT.$path)) {
+            if (is_readable($path)) {
                 $templates[] = $path;
             }
             $layout = $dir.$this->_layoutName.'.html';
-            if ($this->usesLayout() && is_readable(MAD_ROOT.$layout)) {
+            if ($this->usesLayout() && is_readable($layout)) {
                 $templates[] = $layout;
             }
         }

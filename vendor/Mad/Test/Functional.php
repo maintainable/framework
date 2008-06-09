@@ -434,7 +434,7 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
         $templates = $this->controller->getTemplates();
         $msg = isset($msg) ? $msg : "$templateName is not in the list of templates used to render ".
                                     "this page: (".implode(', ', $templates).")";
-        $this->assertContains($templateName, $templates, $msg);
+        $this->assertContains(MAD_ROOT . $templateName, $templates, $msg);
     }
 
     /**

@@ -60,8 +60,8 @@ class Mad_Controller_BaseTest extends Mad_Test_Functional
     {
         $this->get('/unit_test/test_action/');
 
-        $expected = array('/app/views/UnitTest/testAction.html',
-                          '/app/views/layouts/application.html');
+        $expected = array(MAD_ROOT . '/app/views/UnitTest/testAction.html',
+                          MAD_ROOT . '/app/views/layouts/application.html');
         $this->assertEquals($expected, $this->controller->getTemplates());
     }
 
