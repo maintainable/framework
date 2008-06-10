@@ -84,7 +84,8 @@ class Mad_Controller_Dispatcher
         $t->start();
 
         $environ = array();
-        foreach (array('HTTP_HOST', 'SERVER_NAME', 'HTTPS') as $k) { 
+        $keys = array('HTTP_HOST', 'SERVER_NAME', 'HTTPS', 'REQUEST_METHOD');
+        foreach ($keys as $k) { 
             $environ[$k] = $request->getServer($k); 
         }
         $this->_mapper->environ = $environ;
