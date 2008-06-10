@@ -70,6 +70,21 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals($test->getAttributes(), $test2->getAttributes());
     }
 
+    public function testToParamWithEmptyPrimaryKeyReturnsNull()
+    {
+        $model = new UnitTest();
+        $this->assertNull($model->id);
+        $this->assertNull($model->toParam());
+    }
+
+    public function testToParamReturnsStringCoercedPrimaryKey()
+    {
+        $model = UnitTest::find($this->unit_tests('unit_test_1')->id);
+        $expected = (string)$model->id;
+        $actual   = $model->toParam();
+        $this->assertSame($expected, $actual);
+    }
+
 
     /*##########################################################################
     # Namespaces

@@ -405,6 +405,10 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         return isset($str) ? "\n".$this->_className." Object: \n".join(", \n", $str) : null;
     }
     
+    /*##########################################################################
+    # Serialization
+    ##########################################################################*/
+    
     /**
      * Serialize only needs attributes
      */
@@ -412,6 +416,20 @@ abstract class Mad_Model_Base extends Mad_Support_Object
     {
         return array('_attributes', '_attrReaders', 
                      '_attrWriters', '_attrValues');
+    }
+
+    /**
+     * Enables models to be used as URL parameters for routes automatically.
+     *
+     * @return null|string
+     */
+    public function toParam()
+    {
+        $pk = $this->primaryKey();
+
+        if ($pk && isset($this->_attributes[$pk])) {
+            return (string)$this->_attributes[$pk];
+        } 
     }
 
 
