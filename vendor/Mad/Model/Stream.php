@@ -65,9 +65,8 @@ class Mad_Model_Stream
 
         /**
          * Add the static methods but only if this model file extends Mad_Model_Base.  
-         * @todo Might need to revisit this later for STI, etc.
          */ 
-        if (strpos($this->data, 'Mad_Model_Base') !== false) {
+        if (preg_match('/extends\s+mad_model_base\s*{/i', $this->data)) {
             $this->_addStaticMethods();
         }
 
