@@ -57,7 +57,6 @@ class Mad_Controller_Request_Http
     protected $_uri;
     protected $_pathParams;
 
-
     /*##########################################################################
     # Construct/Destruct
     ##########################################################################*/
@@ -186,11 +185,20 @@ class Mad_Controller_Request_Http
     /**
      * Get the http request method:
      *  eg. GET, POST, PUT, DELETE
-     * 
+     *
      * @return  string
      */
     public function getMethod()
     {
+        $methods = array('GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'OPTIONS');
+        
+        if ($this->_method == 'POST') {
+            if (isset($this->_post['_method'])) {
+                $faked = strtoupper($this->_post['_method']);
+                if (in_array($faked, $methods)) { return $faked; }
+            }
+        }
+        
         return $this->_method;
     }
 

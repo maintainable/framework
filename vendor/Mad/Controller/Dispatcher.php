@@ -83,9 +83,10 @@ class Mad_Controller_Dispatcher
         $t = new Mad_Support_Timer;
         $t->start();
 
-        $environ = array();
-        $keys = array('HTTP_HOST', 'SERVER_NAME', 'HTTPS', 'REQUEST_METHOD');
-        foreach ($keys as $k) { 
+        // pass a subset of the request environment
+        // horde_routes_mapper for route matching
+        $environ = array('REQUEST_METHOD' => $request->getMethod());
+        foreach (array('HTTP_HOST', 'SERVER_NAME', 'HTTPS') as $k) { 
             $environ[$k] = $request->getServer($k); 
         }
         $this->_mapper->environ = $environ;
