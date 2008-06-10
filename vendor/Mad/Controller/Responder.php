@@ -69,14 +69,18 @@ class Mad_Controller_Responder
     {
         $accept = $this->_request->getServer('HTTP_ACCEPT');
         $uri    = $this->_request->getUri();
-
-        if (strstr($accept, 'text/xml') || strstr($uri, '.xml')) {
-            $this->_format = 'xml';
-        } if (strstr($accept, 'text/javascript') || strstr($uri, '.js')) {
+        
+        if (substr($uri, -3) == '.js') {
             $this->_format = 'js';
-        } else if (strstr($accept, 'text/html') || strstr($uri, '.html')) {
+        } else if (substr($uri, -4) == '.xml') {
+            $this->_format = 'xml';
+        } else if (strstr($accept, 'text/javascript')) {
+            $this->_format = 'js';
+        } else if (strstr($accept, 'text/html') || substr($uri, -5) == '.html') {
             $this->_format = 'html';
-        } 
+        } else if (strstr($accept, 'text/xml')) {
+            $this->_format = 'xml';
+        }
     }
 
 }
