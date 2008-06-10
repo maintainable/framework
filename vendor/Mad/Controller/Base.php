@@ -698,17 +698,7 @@ abstract class Mad_Controller_Base
      */
     protected function respondTo()
     {
-        $accept = $this->_request->getServer('HTTP_ACCEPT');
-        $uri    = $this->_request->getUri();
-        
-        $contentTypes = array('html' => false, 'js' => false);
-        if (strstr($accept, 'text/javascript') || strstr($uri, '.js')) {
-            $contentTypes['js'] = true;
-        } elseif (strstr($accept, 'text/html') || strstr($uri, '.html')) {
-            $contentTypes['html'] = true;
-        }
-
-        return (object)$contentTypes;
+        return new Mad_Controller_Responder($this->_request);
     }
 
     /*##########################################################################
