@@ -42,14 +42,17 @@ class Mad_Controller_UrlWriter
      */
     public function urlFor($first = array(), $second = array())
     {
-        // serialize to params & merge defaults
-        if (is_array($first) && !empty($first)) {
+        // anonymous route: serialize to params & merge defaults
+        //   urlFor(array('controller' => 'books'))
+        if (is_array($first)) {
             $first = array_merge($this->_defaults, 
                                  $this->_serializeToParams($first));
-
-        } elseif (!empty($second)) {
-            $second = array_merge($this->_defaults, 
-                                  $this->_serializeToParams($second));
+        } 
+        
+        // named route: serialize to params only (no merge)
+        //   urlFor('notes', array('action' => 'show', 'id' => 1))
+        if (is_array($second)) {
+            $second = $this->_serializeToParams($second);
         }
 
         // url generation "route memory" is not useful here
