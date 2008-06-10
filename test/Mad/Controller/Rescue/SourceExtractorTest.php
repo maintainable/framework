@@ -23,7 +23,7 @@ if (!defined('MAD_ROOT')) {
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Controller_Rescue_SourceExtractorTest extends PHPUnit_Framework_TestCase
+class Mad_Controller_Rescue_SourceExtractorTest extends Mad_Test_Unit
 {
     public function setUp()
     {
