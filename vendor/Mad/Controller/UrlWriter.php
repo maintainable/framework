@@ -22,19 +22,34 @@ class Mad_Controller_UrlWriter
     /** @var array */
     protected $_defaults;
     
+    /**
+     * Class constructor
+     *
+     * @param  array  $defaults  Defaults to merge in every call to urlFor().
+     */
     public function __construct($defaults = array())
     {
         $this->_defaults = $defaults;
         $this->_utils = Mad_Controller_Dispatcher::getInstance()->getRouteUtils();
     }
 
+    /**
+     * Generate a URL.  Same signature as Horde_Routes_Utils->urlFor().
+     *
+     * @param  $first   mixed
+     * @param  $second  mixed
+     * @return string
+     */
     public function urlFor($first = array(), $second = array())
     {
-        // merge defaults
+        // serialize to params & merge defaults
         if (is_array($first) && !empty($first)) {
-            $first = array_merge($this->_defaults, $first);
+            $first = array_merge($this->_defaults, 
+                                 $this->_serializeToParams($first));
+
         } elseif (!empty($second)) {
-            $second = array_merge($this->_defaults, $second);
+            $second = array_merge($this->_defaults, 
+                                  $this->_serializeToParams($second));
         }
 
         // url generation "route memory" is not useful here
@@ -44,4 +59,20 @@ class Mad_Controller_UrlWriter
         return $this->_utils->urlFor($first, $second);
     }
     
+    /**
+     * Serialize any objects in the collection supporting toParam() before
+     * passing the collection to Horde_Routes.
+     *
+     * @param  array  $collection
+     * @param  array   
+     */     
+    protected function _serializeToParams($collection)
+    {
+        foreach ($collection as &$value) {
+            if (is_object($value) && method_exists($value, 'toParam')) {
+                $value = $value->toParam();
+            }
+        }
+        return $collection;
+    }
 }
