@@ -178,7 +178,6 @@ class Mad_Support_Inflector
         return self::setCache($word, 'camelize'.$firstLetter, $result);
     }
 
-
     /**
      * Capitalizes all the words and replaces some characters in the string to create
      * a nicer looking title. Titleize is meant for creating pretty output. It is not
@@ -222,7 +221,12 @@ class Mad_Support_Inflector
      */
     public static function dasherize($underscoredWord)
     {
-        throw new Exception('not implemented yet');
+        if ($result = self::getCache($underscoredWord, 'dasherize')) { 
+            return $result; 
+        }
+
+        $result = str_replace('_', '-', self::underscore($underscoredWord));
+        return self::setCache($underscoredWord, 'dasherize', $result);
     }
 
 

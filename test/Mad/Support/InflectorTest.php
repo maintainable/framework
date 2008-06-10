@@ -99,8 +99,13 @@ class Mad_Support_InflectorTest extends Mad_Test_Unit
 
     public function testDasherize()
     {
-        return true;
-        $this->markTestSkipped();
+        $this->assertEquals('derek',            Mad_Support_Inflector::dasherize('Derek'));
+        $this->assertEquals('dereks-test',      Mad_Support_Inflector::dasherize('dereksTest'));
+        $this->assertEquals('dereks-test',      Mad_Support_Inflector::dasherize('DereksTest'));
+        $this->assertEquals('dereks-test',      Mad_Support_Inflector::dasherize('Dereks_Test'));
+        $this->assertEquals('dereks-name-test', Mad_Support_Inflector::dasherize('DereksName_Test'));
+        $this->assertEquals('derek',            Mad_Support_Inflector::dasherize('derek'));
+        $this->assertEquals('dereks-test',      Mad_Support_Inflector::dasherize('dereks_test'));
     }
 
     public function testHumanize()
