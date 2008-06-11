@@ -96,4 +96,35 @@ class Mad_Controller_Rescue_SourceExtractorTest extends Mad_Test_Unit
         $this->assertEquals($expected, $actual);        
     }
 
+    // convertTabsToSpaces
+    
+    public function testConvertTabsToSpacesHandlesLinesWithoutTabs()
+    {
+        $expected = array('', 'foo', ' ');
+        $actual   = $this->extractor->convertTabsToSpaces($expected);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testConvertTabsToSpacesUsesDefaultTabStopOfFour()
+    {
+        $lines    = array("\t\t", 
+                          "foo\tbar",
+                          "\tfoo");
+        $expected = array("        ",
+                          "foo bar",
+                          "    foo");
+        $actual   = $this->extractor->convertTabsToSpaces($expected);
+        $this->assertEquals($expected, $actual);
+    }
+    
+    public function testConvertTabsToSpacesAllowsTabStopToBeChanged()
+    {
+        $lines    = array("\t\t", 
+                          "foo\tbar");
+        $expected = array("  ",
+                          "foo bar",
+                          "  foo");
+        $actual   = $this->extractor->convertTabsToSpaces($expected, 2);
+        $this->assertEquals($expected, $actual);        
+    }
 }
