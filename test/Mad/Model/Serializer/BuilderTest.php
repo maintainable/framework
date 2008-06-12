@@ -71,13 +71,13 @@ class Mad_Model_Serializer_BuilderTest extends Mad_Test_Unit
             $tag->tag('age', 28, array('type' => 'integer'));
         $tag->end();
 
-        $expected = <<< EOT
+        $expected = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <user>
   <age type="integer">28</age>
 </user>
 
-EOT;
+XML;
         $this->assertEquals($expected, $builder->__toString());
     }
 }

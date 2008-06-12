@@ -28,7 +28,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     // set up new db by inserting dummy data into the db
     public function setUp()
     {
-        $this->fixtures('unit_tests');
+        $this->fixtures('unit_tests', 'users');
 
         // collection by sql results
         $results = $this->_conn->selectAll("SELECT * FROM unit_tests ORDER BY id");
@@ -96,7 +96,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
             new UnitTest(array('id' => 5)), new UnitTest(array('id' => 6))
         ); 
         $models = new Mad_Model_Collection(new UnitTest, $array);
-        
+
         $this->assertEquals($array, $models->getCollection());
     }
 
@@ -348,6 +348,150 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
         unset($this->_models[0]);
         $this->assertType('UnitTest', $this->_models[0]);
     }
+
+
+    /*##########################################################################
+    # XML
+    ##########################################################################*/
+
+    public function testToXml()
+    {
+        $array = array(
+            new User(array('id' => 1, 'name' => 'Derek DeVries')), 
+            new User(array('id' => 2, 'name' => 'Mike Naberezny'))
+        ); 
+        $collection = new Mad_Model_Collection(new User, $array);
+
+        $options = array();
+        $xml     = $collection->toXml($options);
+
+        $expected = <<< XML
+<?xml version="1.0" encoding="UTF-8"?>
+<users type="array">
+  <user>
+    <approved type="boolean">1</approved>
+    <created-at type="datetime">0000-00-00 00:00:00</created-at>
+    <created-on type="date">0000-00-00</created-on>
+    <first-name null="string"></first-name>
+    <id type="integer">1</id>
+    <name>Derek DeVries</name>
+    <updated-at type="datetime">0000-00-00 00:00:00</updated-at>
+    <updated-on type="date">0000-00-00</updated-on>
+  </user>
+  <user>
+    <approved type="boolean">1</approved>
+    <created-at type="datetime">0000-00-00 00:00:00</created-at>
+    <created-on type="date">0000-00-00</created-on>
+    <first-name null="string"></first-name>
+    <id type="integer">2</id>
+    <name>Mike Naberezny</name>
+    <updated-at type="datetime">0000-00-00 00:00:00</updated-at>
+    <updated-on type="date">0000-00-00</updated-on>
+  </user>
+</users>
+
+XML;
+        
+        $this->assertEquals($expected, $xml);
+    }
+
+    public function testToXmlAssigningRoot()
+    {
+        $array = array(
+            new User(array('id' => 1, 'name' => 'Derek DeVries')), 
+            new User(array('id' => 2, 'name' => 'Mike Naberezny'))
+        ); 
+        $collection = new Mad_Model_Collection(new User, $array);
+
+        $options = array('root' => 'people', 'indent' => false);
+        $xml     = $collection->toXml($options);
+        
+        $this->assertContains('<people type="array">', $xml);
+    }
+
+    public function testToXmlSkipInstruct()
+    {
+        $array = array(
+            new User(array('id' => 1, 'name' => 'Derek DeVries')), 
+            new User(array('id' => 2, 'name' => 'Mike Naberezny'))
+        ); 
+        $collection = new Mad_Model_Collection(new User, $array);
+
+        $options = array('skipInstruct' => true, 'indent' => false);
+        $xml     = $collection->toXml($options);
+
+        $this->assertNotContains('<?xml', $xml);
+    }
+    
+    public function testToXmlNoSkipInstruct()
+    {
+        $array = array(
+            new User(array('id' => 1, 'name' => 'Derek DeVries')), 
+            new User(array('id' => 2, 'name' => 'Mike Naberezny'))
+        ); 
+        $collection = new Mad_Model_Collection(new User, $array);
+
+        $options = array('skipInstruct' => false, 'indent' => false);
+        $xml     = $collection->toXml($options);
+
+        $this->assertContains('<?xml', $xml);
+    }
+    
+    public function testToXmlSkipTypes()
+    {
+        $array = array(
+            new User(array('id' => 1, 'name' => 'Derek DeVries')), 
+            new User(array('id' => 2, 'name' => 'Mike Naberezny'))
+        ); 
+        $collection = new Mad_Model_Collection(new User, $array);
+
+        $options = array('skipTypes' => true, 'indent' => false);
+        $xml     = $collection->toXml($options);
+
+        $this->assertContains('<users>',      $xml);
+        $this->assertContains('<created-at>', $xml);
+    }
+    
+    public function testToXmlDasherizeFalse()
+    {
+        $array = array(
+            new User(array('id' => 1, 'name' => 'Derek DeVries')), 
+            new User(array('id' => 2, 'name' => 'Mike Naberezny'))
+        ); 
+        $collection = new Mad_Model_Collection(new User, $array);
+
+        $options = array('dasherize' => false, 'indent' => false);
+        $xml     = $collection->toXml($options);
+
+        $this->assertContains('<created_at', $xml);
+    }
+    
+    public function testToXmlDasherizeTrue()
+    {
+        $array = array(
+            new User(array('id' => 1, 'name' => 'Derek DeVries')), 
+            new User(array('id' => 2, 'name' => 'Mike Naberezny'))
+        ); 
+        $collection = new Mad_Model_Collection(new User, $array);
+
+        $options = array('dasherize' => true, 'indent' => false);
+        $xml     = $collection->toXml($options);
+
+        $this->assertContains('<created-at', $xml);
+    }
+
+    public function testToXmlEmpty()
+    {
+        $array = array();
+        $collection = new Mad_Model_Collection(new User, $array);
+
+        $options = array('skipInstruct' => true, 'indent' => false);
+        $xml     = $collection->toXml($options);
+
+        $expected = '<users type="array"></users>';
+        $this->assertEquals($expected, $xml);
+    }
+
 
     /*##########################################################################
     ##########################################################################*/

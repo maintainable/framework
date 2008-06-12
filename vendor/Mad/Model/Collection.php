@@ -19,7 +19,7 @@
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Model_Collection implements ArrayAccess, Iterator, Countable
+class Mad_Model_Collection extends Mad_Support_ArrayObject implements ArrayAccess, Iterator, Countable
 {
     /**
      * The {@link Mad_Model_Base} class used to instantiate new objects
@@ -54,6 +54,9 @@ class Mad_Model_Collection implements ArrayAccess, Iterator, Countable
      */
     public function __construct(Mad_Model_Base $model, $collection=null)
     {
+        // object types in this collection
+        $this->_model = $model;
+
         // Iterate over query result
         if (!current($collection) instanceof Mad_Model_Base) {
             $this->_initResults($model, $collection);
@@ -89,6 +92,17 @@ class Mad_Model_Collection implements ArrayAccess, Iterator, Countable
         return $this->_collection;
     }
 
+    /** 
+     * Proxy to parent Mad_Support_ArrayObject#toXml, except that 
+     * we know the explicit model type. 
+     */
+    public function toXml($options = array()) 
+    {
+        if (!isset($options['root'])) {
+            $options['root'] = Mad_Support_Inflector::pluralize(get_class($this->_model));
+        }
+        return parent::toXml($options);
+    }
 
     /*##########################################################################
     # Countable Interface

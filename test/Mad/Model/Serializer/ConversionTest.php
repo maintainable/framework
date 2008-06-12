@@ -32,8 +32,8 @@ class Mad_Model_Serializer_ConversionTest extends Mad_Test_Unit
     {
         $this->fixtures('articles');
     }
-    
-    public function testTruth()
+
+    public function testFromXml()
     {
         
     }

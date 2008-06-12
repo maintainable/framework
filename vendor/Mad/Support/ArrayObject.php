@@ -148,4 +148,72 @@ class Mad_Support_ArrayObject extends ArrayObject
         foreach ($this->getIterator() as $k => $v) { $values[] = $v; }
         return $values;
     }
+    
+    /**
+     * Convert the array to XML
+     * @todo
+     */
+    public function toXml($options = array())
+    {
+        $firstClass  = get_class($this->get(0));
+        $sameClasses = true;
+        foreach ($this as $element) {
+            if (!is_callable(array($element, 'toXml'))) {
+                throw new Mad_Support_Exception("Not all elements respond to toXml");
+            }
+            if (get_class($element) != $firstClass) { $sameClasses = false; }
+        }
+
+        if (!isset($options['root'])) {
+            if ($sameClasses && $this->count() > 0) {
+                $options['root'] = Mad_Support_Inflector::pluralize($firstClass);
+            } else {
+                $options['root'] = 'records';
+            }
+        }
+        if (!isset($options['children'])) {
+            $options['children'] = Mad_Support_Inflector::singularize($options['root']);
+        }
+
+        if (!isset($options['indent']))    { $options['indent']    = 2; }
+        if (!isset($options['skipTypes'])) { $options['skipTypes'] = false; }
+
+        if (empty($options['builder'])) {
+            $options['builder'] = new Mad_Model_Serializer_Builder(
+                array('indent' => $options['indent']));
+        }
+
+        $root = $options['root'];
+        unset($options['root']);
+        
+        $children = $options['children'];
+        unset($options['children']);
+
+        if (!array_key_exists('dasherize', $options) || !empty($options['dasherize'])) {
+            $root = Mad_Support_Inflector::dasherize($root);
+        }
+        if (empty($options['skipInstruct'])) {
+            $options['builder']->instruct(); 
+        }
+
+        $opts = array_merge($options, array('root' => 'children'));
+
+        $builder = $options['builder'];
+        $attrs   = $options['skipTypes'] ? array() : array('type' => 'array');
+        
+        // no elements in array
+        if ($this->count() == 0) {
+            $builder->tag($root, '', $attrs);
+            
+        // build xml from elements
+        } else {
+            $tag = $builder->startTag($root, '', $attrs);
+                $opts['skipInstruct'] = true;
+                foreach ($this as $object) {
+                    $object->toXml($opts);
+                }
+            $tag->end();
+        }
+        return (string)$builder;
+    }
 }

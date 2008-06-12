@@ -17,8 +17,7 @@
 class Mad_Model_Serializer_Conversion
 {
     public $xmlFormatting = array(
-      "binary"   => 'formatBinary',
-      "yaml"     => 'formatYaml',
+      "binary" => 'formatBinary',
     );
     
     public $xmlParsing = array(
@@ -31,22 +30,26 @@ class Mad_Model_Serializer_Conversion
       "decimal"      => 'parseDecimal',
       "boolean"      => 'parseBoolean',
       "string"       => 'parseString',
-      "yaml"         => 'parseYaml',
       "base64Binary" => 'parseBase64Binary',
       "file"         => 'parseFile',
     );
+
     
+    // Convert from xml to attribures array
+    public function fromXml($xml)
+    {
+        
+        // @todo - replace this stub 
+        $values = array('article' => array('id' => '1', 'title' => 'Easier XML-RPC for PHP5'));
+        return $values;
+    }
+
 
     // formatting
 
     public function formatBinary($binary)
     {
-        return base64encode($binary);
-    }
-
-    public function formatYaml($yaml)
-    {
-        return $yaml;
+        return base64_encode($binary);
     }
 
 
@@ -54,52 +57,53 @@ class Mad_Model_Serializer_Conversion
 
     public function parseDate($date)
     {
-        return $date;
+        return date("Y-m-d", strtotime($date));
     }
     
     public function parseDatetime($datetime)
     {
-        return $datetime;
+        return date("Y-m-d H:i:s", strtotime($datetime));
     }
     
     public function parseInteger($integer)
     {
-        return $integer;
+        return (int)$integer;
     }
     
     public function parseFloat($float)
     {
-        return $float;
+        return (float)$float;
     }
     
     public function parseDouble($double)
     {
-        return $double;
+        return (double)$double;
     }
     
     public function parseDecimal($decimal)
     {
-        return $decimal;
+        return (float)$decimal;
     }
     
     public function parseBoolean($boolean)
     {
-        return $boolean;
+        if ($boolean == 'true') {
+            return true;
+        } elseif ($boolean == 'false') {
+            return false;
+        } else {
+            return (boolean)$boolean;
+        }
     }
-    
+
     public function parseString($string)
     {
-        return $string;
+        return (string)$string;
     }
-    
-    public function parseYaml($yaml)
-    {
-        return $yaml;
-    }
-    
+
     public function parseBase64Binary($bin)
     {
-        return $bin;
+        return base64_decode($bin);
     }
 
     public function parseFile($file)
@@ -107,4 +111,16 @@ class Mad_Model_Serializer_Conversion
         return $file;
     }
 
+
+    // Protected
+    
+    protected function _typecastXmlValue($value)
+    {
+
+    }
+
+    protected function _undasherizeKeys($params)
+    {
+
+    }
 }

@@ -148,6 +148,71 @@ class Mad_Model_ErrorsTest extends Mad_Test_Unit
                           "Text value Bar 2", "Date value Baz");
         $this->assertEquals($expected, $this->_errors->fullMessages());
     }
+
+
+    public function testErrorsToXml()
+    {
+        $this->_errors->add('string_value', "can't be blank");
+        $this->_errors->add('text_value',   "must be unique");
+
+        $expected = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<errors>
+  <error>String value can't be blank</error>
+  <error>Text value must be unique</error>
+</errors>
+
+XML;
+        $xml = $this->_errors->toXml();
+        $this->assertEquals($expected, $xml);
+    }
+
+    public function testErrorsToXmlNoIndent()
+    {
+        $this->_errors->add('string_value', "can't be blank");
+        $this->_errors->add('text_value',   "must be unique");
+
+        $expected = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
+                    '<errors>'.
+                      '<error>String value can\'t be blank</error>'.
+                      '<error>Text value must be unique</error>'.
+                    '</errors>';
+        $xml = $this->_errors->toXml(array('indent' => false));
+        $this->assertEquals($expected, $xml);
+    }
+
+    public function testErrorsToXmlAssignRoot()
+    {
+        $this->_errors->add('string_value', "can't be blank");
+        $this->_errors->add('text_value',   "must be unique");
+
+        $expected = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<foo>
+  <error>String value can't be blank</error>
+  <error>Text value must be unique</error>
+</foo>
+
+XML;
+        $xml = $this->_errors->toXml(array('root' => 'foo'));
+        $this->assertEquals($expected, $xml);
+    }
+
+    public function testErrorsToXmlSkipInstruct()
+    {
+        $this->_errors->add('string_value', "can't be blank");
+        $this->_errors->add('text_value',   "must be unique");
+
+        $expected = <<<XML
+<errors>
+  <error>String value can't be blank</error>
+  <error>Text value must be unique</error>
+</errors>
+
+XML;
+        $xml = $this->_errors->toXml(array('skipInstruct' => true));
+        $this->assertEquals($expected, $xml);
+    }
     
     /*##########################################################################
     ##########################################################################*/

@@ -39,7 +39,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $options = array('except' => array('updated_at', 'updated_on', 'first_name'));
         $serializer = new Mad_Model_Serializer_Xml($record, $options);
         
-        $expected = <<< EOT
+        $expected = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <user>
   <approved type="boolean">1</approved>
@@ -49,7 +49,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
   <name>Mike Naberezny</name>
 </user>
 
-EOT;
+XML;
         $this->assertEquals($expected, $serializer->serialize());
     }
 
@@ -59,7 +59,7 @@ EOT;
         $options = array('include' => 'User');
         $serializer = new Mad_Model_Serializer_Xml($record, $options);
 
-        $expected = <<< EOT
+        $expected = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <article>
   <id type="integer">1</id>
@@ -77,7 +77,7 @@ EOT;
   </user>
 </article>
 
-EOT;
+XML;
         $this->assertEquals($expected, $serializer->serialize());
     }
 
@@ -87,7 +87,7 @@ EOT;
         $options = array('include' => 'Comments');
         $serializer = new Mad_Model_Serializer_Xml($record, $options);
 
-        $expected = <<< EOT
+        $expected = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <article>
   <id type="integer">1</id>
@@ -109,7 +109,7 @@ EOT;
   </comments>
 </article>
 
-EOT;
+XML;
 
         $this->assertEquals($expected, $serializer->serialize());
     }
@@ -120,7 +120,7 @@ EOT;
         $options = array('include' => array('User', 'Comments'));
         $serializer = new Mad_Model_Serializer_Xml($record, $options);
 
-        $expected = <<< EOT
+        $expected = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <article>
   <id type="integer">1</id>
@@ -152,7 +152,7 @@ EOT;
   </comments>
 </article>
 
-EOT;
+XML;
         $this->assertEquals($expected, $serializer->serialize());
     }
 
@@ -163,7 +163,7 @@ EOT;
                                             'Comments' => array('except' => 'article_id')));
         $serializer = new Mad_Model_Serializer_Xml($record, $options);
 
-        $expected = <<< EOT
+        $expected = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <article>
   <id type="integer">1</id>
@@ -186,7 +186,7 @@ EOT;
   </comments>
 </article>
 
-EOT;
+XML;
         $this->assertEquals($expected, $serializer->serialize());
     }
 
@@ -197,7 +197,7 @@ EOT;
 
         $serializer = new Mad_Model_Serializer_Xml($record, $options);
 
-        $expected = <<< EOT
+        $expected = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <article>
   <id type="integer">1</id>
@@ -208,7 +208,7 @@ EOT;
   <bool-method type="boolean">1</bool-method>
 </article>
 
-EOT;
+XML;
         $this->assertEquals($expected, $serializer->serialize());
     }
 
@@ -221,7 +221,7 @@ EOT;
         $options = array('include' => array('Comments' => array('only' => 'body')), 
                          'only'    => 'name');
                      
-        $expected = <<< EOT
+        $expected = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
 <user>
   <name>Mike Naberezny</name>
@@ -235,11 +235,20 @@ EOT;
   </comments>
 </user>
 
-EOT;
+XML;
         $this->assertEquals($expected, $record->toXml($options));
     }
 
     public function testFromXml()
     {
+        $record = new Article;
+        
+        $xml = '<?xml version="1.0" encoding="UTF-8"?><article><id type="integer">1</id><title>Easier XML-RPC for PHP5</title><user-id type="integer">1</user-id></article>';
+        $article = $record->fromXml($xml);
+
+        $this->assertType('Article', $article);
+        
+        $this->assertEquals(1, $article->id);
+        $this->assertEquals("Easier XML-RPC for PHP5", $article->title);
     }
 }

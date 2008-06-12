@@ -14,28 +14,28 @@
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Model_Errors implements Iterator, Countable
+class Mad_Model_Errors extends Mad_Support_ArrayObject implements Iterator, Countable
 {
     public static $defaultErrorMessages = array(
-        'inclusion'                => "is not included in the list",
-        'exclusion'                => "is reserved",
-        'invalid'                  => "is invalid",
-        'confirmation'             => "doesn't match confirmation",
-        'accepted'                 => "must be accepted",
-        'empty'                    => "can't be empty",
-        'blank'                    => "can't be blank",
-        'tooLong'                  => "is too long (maximum is %d characters)",
-        'tooShort'                 => "is too short (minimum is %d characters)",
-        'wrongLength'              => "is the wrong length (should be %d characters)",
-        'taken'                    => "has already been taken",
-        'notNumber'                => "is not a number",
-        'greaterThan'              => "must be greater than %d",
-        'greaterThanOrEqualTo'     => "must be greater than or equal to %d",
-        'equalTo'                  => "must be equal to %d",
-        'lessThan'                 => "must be less than %d",
-        'lessThanOrEqualTo'        => "must be less than or equal to %d",
-        'odd'                      => "must be odd",
-        'even'                     => "must be even"
+        'inclusion'            => "is not included in the list",
+        'exclusion'            => "is reserved",
+        'invalid'              => "is invalid",
+        'confirmation'         => "doesn't match confirmation",
+        'accepted'             => "must be accepted",
+        'empty'                => "can't be empty",
+        'blank'                => "can't be blank",
+        'tooLong'              => "is too long (maximum is %d characters)",
+        'tooShort'             => "is too short (minimum is %d characters)",
+        'wrongLength'          => "is the wrong length (should be %d characters)",
+        'taken'                => "has already been taken",
+        'notNumber'            => "is not a number",
+        'greaterThan'          => "must be greater than %d",
+        'greaterThanOrEqualTo' => "must be greater than or equal to %d",
+        'equalTo'              => "must be equal to %d",
+        'lessThan'             => "must be less than %d",
+        'lessThanOrEqualTo'    => "must be less than or equal to %d",
+        'odd'                  => "must be odd",
+        'even'                 => "must be even"
     );
 
     /**
@@ -168,6 +168,32 @@ class Mad_Model_Errors implements Iterator, Countable
     public function isEmpty()
     {
         return empty($this->_errors);
+    }
+
+    /**
+     * Convert errors to xml
+     * 
+     * @return  string
+     */
+    public function toXml($options = array())
+    {
+        if (!isset($options['root']))   { $options['root']   = 'errors'; }
+        if (!isset($options['indent'])) { $options['indent'] = 2; }
+
+        if (!empty($options['builder'])) {
+            $builder = $options['builder'];
+        } else {
+            $builder = new Mad_Model_Serializer_Builder(array('indent' => $options['indent']));
+        }
+        if (empty($options['skipInstruct'])) { $builder->instruct(); }
+
+        $tag = $builder->startTag($options['root']);
+            foreach ($this->fullMessages() as $msg) {
+                $tag->tag('error', $msg);
+            }
+        $tag->end();
+
+        return (string)$builder;
     }
 
 

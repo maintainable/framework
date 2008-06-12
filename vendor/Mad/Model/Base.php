@@ -2221,13 +2221,21 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         $serializer = new Mad_Model_Serializer_Xml($this, $options);
         return $serializer->serialize();
     }
-    
-    // TODO - finish
+
+    /** 
+     * Convert XML to an Mad_Model record
+     * 
+     * @see     Mad_Model_Base::toXml()
+     * @param   string  $xml
+     * @return  Mad_Model_Base
+     */    
     public function fromXml($xml)
     {
-        // self.attributes = Hash.from_xml(xml).values.first
+        $conversion = new Mad_Model_Serializer_Conversion;
+        $values     = array_values($conversion->fromXml($xml));
+        $attributes = $values[0];
 
-        $this->setAttributes(); 
+        $this->setAttributes($attributes); 
         return $this;
     }
 
