@@ -385,6 +385,49 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
         $this->assertEquals('6 - 10', $this->_models->range);
     }
 
+
+    /*##########################################################################
+    # XML
+    ##########################################################################*/
+    
+    public function testToXml()
+    {
+        $this->fixtures('articles');
+
+        $testCount = Article::count();
+        $tests     = Article::find('all', array('offset' => '2', 'limit' => '2'));
+        $models    = new Mad_Model_PaginatedCollection($tests, 2, 2, $testCount);
+
+        $expected = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<articles type="array">
+  <article>
+    <id type="integer">3</id>
+    <title>Testing Javascript in Rails</title>
+    <user-id type="integer">2</user-id>
+  </article>
+  <article>
+    <id type="integer">4</id>
+    <title>Creating Classes with Prototype</title>
+    <user-id type="integer">2</user-id>
+  </article>
+</articles>
+
+XML;
+        $this->assertEquals($expected, $models->toXml());
+    }
+
+    public function testToXmlProxiesOptionsToCollection()
+    {
+        $this->fixtures('articles');
+
+        $testCount = Article::count();
+        $tests     = Article::find('all', array('offset' => '2', 'limit' => '2'));
+        $models    = new Mad_Model_PaginatedCollection($tests, 2, 2, $testCount);
+
+        $this->assertContains('<articles>', $models->toXml(array('skipTypes' => true)));
+    }
+
     /*##########################################################################
     ##########################################################################*/
 }

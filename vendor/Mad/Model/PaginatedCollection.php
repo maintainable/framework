@@ -12,7 +12,7 @@
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Model_PaginatedCollection implements ArrayAccess, Iterator, Countable
+class Mad_Model_PaginatedCollection extends Mad_Support_ArrayObject implements Iterator
 {
     /**
      * The collection of objects
@@ -64,6 +64,20 @@ class Mad_Model_PaginatedCollection implements ArrayAccess, Iterator, Countable
             $items[] = get_class($item). ': '.$item->id;
         }
         return $str . (isset($items) ? "\n  ".implode("\n  ", $items) : '');
+    }
+
+
+    /*##########################################################################
+    # XML
+    ##########################################################################*/
+
+    /** 
+     * Proxy to parent Mad_Support_ArrayObject#toXml, except that 
+     * we know the explicit model type. 
+     */
+    public function toXml($options = array()) 
+    {
+        return $this->_collection->toXml($options);
     }
 
 

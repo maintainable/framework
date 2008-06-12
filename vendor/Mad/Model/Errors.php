@@ -14,7 +14,7 @@
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Model_Errors extends Mad_Support_ArrayObject implements Iterator, Countable
+class Mad_Model_Errors extends Mad_Support_ArrayObject implements Iterator
 {
     public static $defaultErrorMessages = array(
         'inclusion'            => "is not included in the list",

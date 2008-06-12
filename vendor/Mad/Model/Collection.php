@@ -19,7 +19,7 @@
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Model_Collection extends Mad_Support_ArrayObject implements ArrayAccess, Iterator, Countable
+class Mad_Model_Collection extends Mad_Support_ArrayObject implements Iterator
 {
     /**
      * The {@link Mad_Model_Base} class used to instantiate new objects

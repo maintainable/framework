@@ -361,9 +361,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
             new User(array('id' => 2, 'name' => 'Mike Naberezny'))
         ); 
         $collection = new Mad_Model_Collection(new User, $array);
-
-        $options = array();
-        $xml     = $collection->toXml($options);
+        $xml = $collection->toXml();
 
         $expected = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -391,7 +389,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
 </users>
 
 XML;
-        
+
         $this->assertEquals($expected, $xml);
     }
 
