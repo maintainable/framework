@@ -434,6 +434,18 @@ class Mad_Controller_BaseTest extends Mad_Test_Functional
         $this->assertEquals('some sample text', $this->response->getBody());
     }
 
+    // test rendering with status and location
+    public function testRenderTextWithStatusAndLocation()
+    {
+        $this->get('/unit_test/test_render_text_with_status_and_location/');
+
+        $headers = $this->response->getHeaders();
+        $this->assertTrue(isset($headers["HTTP/1.1 201 Created"]));
+        $this->assertTrue(isset($headers['Location: /unit_test/testAction']));
+
+        $this->assertEquals('some sample text', $this->response->getBody());
+    }
+
     public function testRenderXmlString()
     {
         $this->get('/unit_test/test_render_xml_string');

@@ -375,13 +375,19 @@ abstract class Mad_Controller_Base
         }
         
         // validate options
-        $valid = array('text', 'nothing', 'action', 'status', 'xml');
+        $valid = array('text', 'nothing', 'action', 'status', 'location', 'xml');
         $options = Mad_Support_Base::assertValidKeys($options, $valid);
 
         // set response status
         if ($status = $options['status']) {
             $header = $this->interpretStatus($status);
             $this->_response->setStatus($header);
+        }
+
+        // set response location
+        if ($location = $options['location']) {
+            $url = $this->urlFor($location);
+            $this->_response->setHeader("Location: $url", $replace=true);
         }
 
         // render text

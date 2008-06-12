@@ -296,6 +296,15 @@ class UnitTestController extends ApplicationController
     {
         $this->render(array('text' => 'some sample text'));
     }
+    
+    // test rendering with status and location
+    public function testRenderTextWithStatusAndLocation()
+    {
+        $this->render(array('text'     => 'some sample text',
+                            'status'   => 'created',
+                            'location' => array('action' => 'testAction')
+                            ));
+    }
 
     // test rendering nothing
     public function testRenderXmlString()
