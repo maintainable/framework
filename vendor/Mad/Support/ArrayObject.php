@@ -151,7 +151,6 @@ class Mad_Support_ArrayObject extends ArrayObject
     
     /**
      * Convert the array to XML
-     * @todo
      */
     public function toXml($options = array())
     {
