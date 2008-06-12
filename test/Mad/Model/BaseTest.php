@@ -316,6 +316,23 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals('123', $model->id);
     }
 
+    public function testGetAttributeNames()
+    {
+        $user = new User;
+        $expected = array('approved', 'created_at', 'created_on', 'first_name', 
+                          'id', 'name', 'type', 'updated_at', 'updated_on');
+        $this->assertEquals($expected, $user->attributeNames());
+    }
+
+    public function testGetColumnForAttribute()
+    {
+        $user = new User;
+        $col = $user->columnForAttribute('name');
+        $this->assertType('Mad_Model_ConnectionAdapter_Mysql_Column', $col);
+        
+        $this->assertEquals('string', $col->getType());
+    }
+
     public function testSetValuesByRowColumn()
     {
         $test = new UnitTest();

@@ -137,7 +137,7 @@ class Mad_Model_Association_HasManyTest extends Mad_Test_Unit
     public function testGetModelAssociation()
     {
         $user = new User();
-        $assoc = $user->getAssociation('Articles');
+        $assoc = $user->reflectOnAssociation('Articles');
         $this->assertTrue($assoc instanceof Mad_Model_Association_HasMany);
     }
 
@@ -188,9 +188,9 @@ class Mad_Model_Association_HasManyTest extends Mad_Test_Unit
         $this->fixtures('users', 'articles');
         $user = User::find($this->users('derek')->id);
 
-        $this->assertFalse($user->getAssociation('Articles')->isLoaded());
+        $this->assertFalse($user->reflectOnAssociation('Articles')->isLoaded());
         $user->articles;
-        $this->assertTrue($user->getAssociation('Articles')->isLoaded());
+        $this->assertTrue($user->reflectOnAssociation('Articles')->isLoaded());
     }
 
 

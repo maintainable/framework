@@ -13,4 +13,14 @@ class Article extends Mad_Model_Base
         $this->hasMany('Fax_Attachments');
         $this->hasMany('Fax_Jobs', array('through' => 'Fax_Attachments'));
     }
+    
+    public function foo()
+    {
+        return 'test serializer foo';
+    }
+    
+    public function bar()
+    {
+        return 'test serializer bar';
+    }
 }

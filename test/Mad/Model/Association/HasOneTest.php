@@ -137,7 +137,7 @@ class Mad_Model_Association_HasOneTest extends Mad_Test_Unit
     public function testGetModelAssociation()
     {
         $user = new User();
-        $assoc = $user->getAssociation('Avatar');
+        $assoc = $user->reflectOnAssociation('Avatar');
         $this->assertTrue($assoc instanceof Mad_Model_Association_HasOne);
     }
 
@@ -227,9 +227,9 @@ class Mad_Model_Association_HasOneTest extends Mad_Test_Unit
 
         $user = User::find($this->users('derek')->id);
 
-        $this->assertFalse($user->getAssociation('Avatar')->isLoaded());
+        $this->assertFalse($user->reflectOnAssociation('Avatar')->isLoaded());
         $user->avatar;
-        $this->assertTrue($user->getAssociation('Avatar')->isLoaded());
+        $this->assertTrue($user->reflectOnAssociation('Avatar')->isLoaded());
     }
 
 

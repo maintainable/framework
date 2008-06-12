@@ -42,6 +42,12 @@ abstract class Mad_Model_Base extends Mad_Support_Object
     public static $cacheTables = true;
 
 
+    /**
+     * Include the root level in json serialization
+     */
+    public static $includeRootInJson = false;
+
+
     /*##########################################################################
     # Connection
     ##########################################################################*/
@@ -235,15 +241,7 @@ abstract class Mad_Model_Base extends Mad_Support_Object
 
         // set values by attribute list
         if (isset($attributes)) {
-            // Set attributes by array
-            if (is_array($attributes)) {
-                foreach ($attributes as $attribute => $value) {
-                    $this->$attribute = $value;
-                }
-            // Set primary key (Beware this does not instantiate other properties)
-            } elseif (is_numeric($attributes)) {
-                $this->{$this->primaryKey()} = $attributes;
-            }
+            $this->setAttributes($attributes);
         }
     }
 
@@ -821,6 +819,23 @@ abstract class Mad_Model_Base extends Mad_Support_Object
     {
         return $this->_attributes;
     }
+    
+    /** 
+     * Mass assign attributes for this model
+     * @param   array   $attributes
+     */
+    public function setAttributes($attributes = array())
+    {
+        // Set attributes by array
+        if (is_array($attributes)) {
+            foreach ($attributes as $attribute => $value) {
+                $this->$attribute = $value;
+            }
+        // Set primary key (Beware this does not instantiate other properties)
+        } elseif (is_numeric($attributes)) {
+            $this->{$this->primaryKey()} = $attributes;
+        }
+    }
 
     /**
      * Finder methods must instantiate through this method to work with the
@@ -894,7 +909,9 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */
     public function attributeNames()
     {
-        return array_keys(sort($this->_attributes));
+        $attrs = array_keys($this->_attributes);
+        sort($attrs);
+        return $attrs;
     }
 
     /**
@@ -974,14 +991,19 @@ abstract class Mad_Model_Base extends Mad_Support_Object
     ##########################################################################*/
 
     /**
-     * Get the associations with this model
+     * Returns the Association object for the named association
+     * 
      * @param   string  $name
      * @return  Mad_Model_Association_Base
-     */
-    public function getAssociation($name)
+     */ 
+    public function reflectOnAssociation($name)
     {
         $this->_initAssociations();
-        return isset($this->_associations[$name]) ? $this->_associations[$name] : null;
+        if (! isset($this->_associations[$name])) {
+            throw new Mad_Model_Exception("Association $name does not exist for ".get_class($this));
+        }
+
+        return $this->_associations[$name];
     }
 
     /**
@@ -2063,6 +2085,52 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         $msg  = "must be a valid address";
         $options = array_merge(array('with' => $with, 'message' => $msg), $options);
         $this->_addValidation('format', $attributes, $options);
+    }
+
+
+    /*##########################################################################
+    # Serialization
+    ##########################################################################*/
+    
+    public function toXml($options = array())
+    {
+        $serializer = new Mad_Model_Serializer_Xml($this, $options);
+        return $serializer->serialize();
+    }
+    
+    // TODO - finish
+    public function fromXml($xml)
+    {
+        // self.attributes = Hash.from_xml(xml).values.first
+
+        $this->setAttributes(); 
+        return $this;
+    }
+    
+    public function toJson($options = array())
+    {
+        $serializer = new Mad_Model_Serializer_Json($this, $options);
+        $serialized = $serializer->serialize();
+        
+        if (self::$includeRootInJson) {
+            $jsonName = $this->getJsonClassName(); 
+            return "{ $jsonName: $serialized }";
+        } else {
+            return $serialized;
+        }
+    }
+
+    public function fromJson($json)
+    {
+        $solarJson = new Solar_Json(array());
+        $attributes = (array)$solarJson->decode($json);
+        $this->setAttributes($attributes);
+        return $this;
+    }
+
+    public function getJsonClassName()
+    {
+        return '"'.Mad_Support_Inflector::underscore($this->_className).'"';
     }
 
 

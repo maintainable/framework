@@ -171,7 +171,7 @@ class Mad_Model_Association_HasAndBelongsToManyTest extends Mad_Test_Unit
     public function testGetModelAssociation()
     {
         $article = new Article();
-        $assoc = $article->getAssociation('Categories');
+        $assoc = $article->reflectOnAssociation('Categories');
         $this->assertTrue($assoc instanceof Mad_Model_Association_HasAndBelongsToMany);
     }
 
@@ -219,9 +219,9 @@ class Mad_Model_Association_HasAndBelongsToManyTest extends Mad_Test_Unit
         $this->fixtures('categories', 'articles', 'articles_categories');
         $article = Article::find($this->articles('prototype')->id);
 
-        $this->assertFalse($article->getAssociation('Categories')->isLoaded());
+        $this->assertFalse($article->reflectOnAssociation('Categories')->isLoaded());
         $article->categories;
-        $this->assertTrue($article->getAssociation('Categories')->isLoaded());
+        $this->assertTrue($article->reflectOnAssociation('Categories')->isLoaded());
     }
 
 

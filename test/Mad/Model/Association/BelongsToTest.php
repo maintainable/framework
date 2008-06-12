@@ -137,7 +137,7 @@ class Mad_Model_Association_BelongsToTest extends Mad_Test_Unit
     public function testGetModelAssociation()
     {
         $article = new Article();
-        $assoc = $article->getAssociation('User');
+        $assoc = $article->reflectOnAssociation('User');
         $this->assertTrue($assoc instanceof Mad_Model_Association_BelongsTo);
     }
 
@@ -172,7 +172,7 @@ class Mad_Model_Association_BelongsToTest extends Mad_Test_Unit
         $article = Article::find($this->articles('xml_rpc')->id);
 
         $this->assertTrue($article->user instanceof User);
-        $this->assertEquals('Mike', $article->user->name);
+        $this->assertEquals('Mike', $article->user->first_name);
     }
 
     // test belongsTo: make sure associated object gets cached
@@ -214,9 +214,9 @@ class Mad_Model_Association_BelongsToTest extends Mad_Test_Unit
         $this->fixtures('articles', 'users');
         $article = Article::find($this->articles('xml_rpc')->id);
 
-        $this->assertFalse($article->getAssociation('User')->isLoaded());
+        $this->assertFalse($article->reflectOnAssociation('User')->isLoaded());
         $article->user;
-        $this->assertTrue($article->getAssociation('User')->isLoaded());
+        $this->assertTrue($article->reflectOnAssociation('User')->isLoaded());
     }
 
 

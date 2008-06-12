@@ -451,7 +451,7 @@ class Mad_Model_Association_BaseTest extends Mad_Test_Unit
         $this->fixtures('users', 'articles', 'comments', 
                         'categories', 'articles_categories');
 
-        $users = Article::find('all', array('conditions' => 'users.name = :name', 
+        $users = Article::find('all', array('conditions' => 'users.first_name = :name', 
                                             'include' => array('User', 'Categories'), 
                                             'limit'   => 2), 
                                       array(':name' => 'Derek'));

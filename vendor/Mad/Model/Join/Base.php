@@ -83,7 +83,7 @@ class Mad_Model_Join_Base
      */
     public function reflections($name=null)
     {
-        return $this->_model->getAssociation($name);
+        return $this->_model->reflectOnAssociation($name);
     }
 
     /**

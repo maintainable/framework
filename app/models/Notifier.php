@@ -9,7 +9,7 @@ class Notifier extends Mad_Mailer_Base
      */
     public function confirm($user)
     {
-        $this->subject      = "Confirmation for $user->name";
+        $this->subject      = "Confirmation for $user->first_name";
         $this->body['user'] = $user;
         $this->body['url']  = 'http://maintainable.com';
 
@@ -26,7 +26,7 @@ class Notifier extends Mad_Mailer_Base
      */
     public function send($user)
     {
-        $this->subject      = "Confirmation for $user->name";
+        $this->subject      = "Confirmation for $user->first_name";
         $this->body['user'] = $user;
         $this->body['url']  = 'http://maintainable.com';
 

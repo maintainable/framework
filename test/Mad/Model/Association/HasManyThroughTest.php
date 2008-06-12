@@ -144,7 +144,7 @@ class Mad_Model_Association_HasManyThroughTest extends Mad_Test_Unit
     public function testGetModelAssociation()
     {
         $article = new Article();
-        $assoc = $article->getAssociation('Tags');
+        $assoc = $article->reflectOnAssociation('Tags');
         $this->assertTrue($assoc instanceof Mad_Model_Association_HasManyThrough);
     }
 
@@ -190,9 +190,9 @@ class Mad_Model_Association_HasManyThroughTest extends Mad_Test_Unit
         $this->fixtures('articles', 'taggings', 'tags');
         $article = Article::find($this->articles('testing_js')->id);
 
-        $this->assertFalse($article->getAssociation('Tags')->isLoaded());
+        $this->assertFalse($article->reflectOnAssociation('Tags')->isLoaded());
         $article->tags;
-        $this->assertTrue($article->getAssociation('Tags')->isLoaded());
+        $this->assertTrue($article->reflectOnAssociation('Tags')->isLoaded());
     }
 
 
