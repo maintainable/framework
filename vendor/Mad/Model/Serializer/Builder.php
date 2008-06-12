@@ -14,7 +14,7 @@
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Model_Serializer_Builder extends Mad_Model_Serializer_Base
+class Mad_Model_Serializer_Builder
 {
     protected $_xml = null;
 
@@ -23,12 +23,16 @@ class Mad_Model_Serializer_Builder extends Mad_Model_Serializer_Base
      */
     public function __construct($options = array())
     {
+        $options['indent'] = isset($options['indent']) ? $options['indent'] : 0;
         $this->_options = $options;
 
         $this->_xml = new XmlWriter();
         $this->_xml->openMemory();
-        $this->_xml->setIndent(true);
-        $this->_xml->setIndentString(str_repeat(' ', $options['indent']));
+
+        if (!empty($options['indent'])) {
+            $this->_xml->setIndent(true);
+            $this->_xml->setIndentString(str_repeat(' ', $options['indent']));
+        }
     }
 
     /**
@@ -39,8 +43,10 @@ class Mad_Model_Serializer_Builder extends Mad_Model_Serializer_Base
         $output = $this->_xml->flush(false);
 
         // fix root indentation
-        $indent = str_repeat(' ', $this->_options['indent']);
-        $output = preg_replace("/>($indent+)</", ">\n$1<", $output);
+        if (!empty($this->_options['indent'])) {
+            $indent = str_repeat(' ', $this->_options['indent']);
+            $output = preg_replace("/>($indent+)</", ">\n$1<", $output);
+        }
 
         return $output;
     }
