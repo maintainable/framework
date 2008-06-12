@@ -297,6 +297,14 @@ class Mad_Controller_Response_Http
     }
 
     /**
+     * @todo charset
+     */
+    public function setContentType($mimeType)
+    {
+        $this->setHeader("Content-Type: $mimeType", $replace=true);
+    }
+
+    /**
      * Get if the response is a 200 OK
      * 
      * @return  boolean

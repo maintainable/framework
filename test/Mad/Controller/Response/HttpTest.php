@@ -62,6 +62,14 @@ class Mad_Controller_Response_HttpTest extends Mad_Test_Unit
         $this->assertEquals('303 See Other', $this->_response->getStatus());
     }
 
+    public function testSetContentType()
+    {
+        $this->_response->setContentType($mimeType = 'application/xml');
+        $headers = $this->_response->getHeaders();
+
+        $this->assertTrue(isset($headers["Content-Type: $mimeType"]));        
+    }
+
     // test getting headers for a 200 status
     public function testGetHeaders200()
     {

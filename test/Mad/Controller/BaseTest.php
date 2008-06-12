@@ -33,6 +33,8 @@ class Mad_Controller_BaseTest extends Mad_Test_Functional
         // set up request/routes
         $this->request  = new Mad_Controller_Request_Mock();
         $this->response = new Mad_Controller_Response_Mock();
+        
+        $this->fixtures('articles');
     }
 
     /*##########################################################################
@@ -419,6 +421,26 @@ class Mad_Controller_BaseTest extends Mad_Test_Functional
     {
         $this->get('/unit_test/test_render_text/');
         $this->assertEquals('some sample text', $this->response->getBody());
+    }
+
+    public function testRenderXmlString()
+    {
+        $this->get('/unit_test/test_render_xml_string');
+        
+        $headers = $this->response->getHeaders();
+        $this->assertTrue(isset($headers['Content-Type: application/xml']));
+        $this->assertEquals('<foo></foo>', $this->response->getBody());
+    }
+
+    public function testRenderXmlModel()
+    {
+        $this->get('/unit_test/test_render_xml_model');
+        
+        $headers = $this->response->getHeaders();
+        $this->assertTrue(isset($headers['Content-Type: application/xml']));
+
+        $model = Article::find(1);
+        $this->assertEquals($model->toXml(), $this->response->getBody());
     }
 
     // test rendering the default template file

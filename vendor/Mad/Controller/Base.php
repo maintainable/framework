@@ -246,7 +246,7 @@ abstract class Mad_Controller_Base
         } catch (Exception $e) {
             $this->_rescueAction($e);
         }
-        
+
         return $this->_response;
     }
 
@@ -375,7 +375,7 @@ abstract class Mad_Controller_Base
         }
         
         // validate options
-        $valid = array('text', 'nothing', 'action', 'status');
+        $valid = array('text', 'nothing', 'action', 'status', 'xml');
         $options = Mad_Support_Base::assertValidKeys($options, $valid);
 
         // stat response status
@@ -387,15 +387,25 @@ abstract class Mad_Controller_Base
         if ($text = $options['text']) {
             $this->renderText($text);
 
+        // render xml
+        } else if ($xml = $options['xml']) {
+            $this->_response->setContentType('application/xml');
+
+            if (is_object($xml) && method_exists($xml, 'toXml')) {
+                $xml = $xml->toXml();
+            }
+
+            $this->renderText($xml);
+
         // render template file
-        } elseif ($action = $options['action']) {
+        } else if ($action = $options['action']) {
             $this->renderAction($action);
 
         // render empty body
-        } elseif ($options['nothing']) {
+        } else if ($options['nothing']) {
             $this->renderText('');
 
-        // render defualt template
+        // render default template
         } else {
             $this->renderAction($this->_action);
         }
