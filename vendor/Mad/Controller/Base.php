@@ -378,9 +378,10 @@ abstract class Mad_Controller_Base
         $valid = array('text', 'nothing', 'action', 'status', 'xml');
         $options = Mad_Support_Base::assertValidKeys($options, $valid);
 
-        // stat response status
+        // set response status
         if ($status = $options['status']) {
-            $this->_response->setStatus($status);
+            $header = $this->interpretStatus($status);
+            $this->_response->setStatus($header);
         }
 
         // render text
@@ -508,6 +509,56 @@ abstract class Mad_Controller_Base
     protected function renderNothing()
     {
         $this->renderText('');
+    }
+
+    /**
+     * Render a response that has no content (merely headers). The options
+     * argument is interpreted to be a hash of header names and values.
+     * This allows you to easily return a response that consists only of
+     * significant headers:
+     *
+     *   head('created', array('location' => 'http://foo'))
+     *   head(array('status' => 'created', 'location' => 'http://foo'))
+     *
+     * @param  integer|string|array  $first   Status code or options array
+     * @param  array                 $second  Options array
+     * @return void
+     */
+    protected function head($first, $second=array())
+    {
+        if (is_array($first)) {
+            $options = $first;
+            if (isset($options['status'])) {
+                $status = $options['status'];
+                unset($options['status']);
+            } else {
+                $status = 'ok';
+            }
+        } else {
+            $status  = $first;
+            $options = $second;
+        }
+
+        $status = $this->interpretStatus($status);
+        
+        foreach ($options as $key => $value) {
+            $dashed = Mad_Support_Inflector::dasherize($key);
+            $spaced = str_replace('-', ' ', $dashed);
+            $spaced = ucwords($spaced);
+            $dashed = str_replace(' ', '-', $spaced);
+
+            $this->_response->setHeader("$dashed: $value", $replace=true);
+        }
+
+        $this->_response->setStatus($status);
+        $this->render(array('nothing' => true));
+    }
+
+    /**
+     */
+    protected function interpretStatus($status) 
+    {
+        return Mad_Controller_StatusCodes::interpret($status);
     }
 
     /**

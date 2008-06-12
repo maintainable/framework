@@ -283,7 +283,12 @@ class UnitTestController extends ApplicationController
 
     public function testRenderStatus()
     {
-        $this->render(array('text' => '403 Forbidden', 'status' => 403));
+        $this->render(array('text' => 'go away', 'status' => 403));
+    }
+
+    public function testRenderStatusFromString()
+    {
+        $this->render(array('text' => 'errors', 'status' => 'unprocessableEntity'));
     }
 
     // test rendering some text
@@ -292,6 +297,19 @@ class UnitTestController extends ApplicationController
         $this->render(array('text' => 'some sample text'));
     }
 
+    // test rendering nothing
+    public function testRenderXmlString()
+    {
+        $this->render(array('xml' => '<foo></foo>'));
+    }
+
+    // test rendering nothing
+    public function testRenderXmlModel()
+    {
+        $article = Article::find(1);
+        $this->render(array('xml' => $article));
+    }
+    
     // test rendering a template that is not the default for this action
     public function testRenderAction()
     {
@@ -312,6 +330,29 @@ class UnitTestController extends ApplicationController
         $this->render(array('action' => 'error'));
     }
 
+    /*##########################################################################
+    # Test Head 
+    ##########################################################################*/
+
+    public function testHeadWithInteger()
+    {
+        $this->head(201);
+    }
+
+    public function testHeadWithString()
+    {
+        $this->head('created');
+    }
+
+    public function testHeadWithOptionsOnly()
+    {
+        $this->head(array('status' => 'created', 'location' => 'http://foo'));
+    }
+
+    public function testHeadWithStringAndOptions()
+    {
+        $this->head('created', array('location' => 'http://foo'));
+    }
 
     /*##########################################################################
     # Method missing test

@@ -413,7 +413,18 @@ class Mad_Controller_BaseTest extends Mad_Test_Functional
 
         // verify headers
         $headers = $this->response->getHeaders();
-        $this->assertTrue(isset($headers["HTTP/1.1 403"]));
+        $this->assertTrue(isset($headers["HTTP/1.1 403 Forbidden"]));
+        $this->assertEquals('go away', $this->response->getBody());
+    }
+    
+    public function testRenderStatusFromString()
+    {
+        $this->get('/unit_test/test_render_status_from_string');
+
+        // verify headers
+        $headers = $this->response->getHeaders();
+        $this->assertTrue(isset($headers["HTTP/1.1 422 Unprocessable Entity"]));
+        $this->assertEquals('errors', $this->response->getBody());
     }
 
     // test render text using renderText
@@ -554,7 +565,44 @@ class Mad_Controller_BaseTest extends Mad_Test_Functional
         $this->assertTrue(isset($headers["Content-Disposition: inline; filename=myImg.jpg"]));
         $this->assertTrue(isset($headers["Content-Transfer-Encoding: binary"]));
     }
+    
+    /*##########################################################################
+    # Test Head Method
+    ##########################################################################*/
 
+    public function testHeadWithInteger()
+    {
+        $this->get('/unit_test/test_head_with_integer');
+
+        $headers = $this->response->getHeaders();
+        $this->assertTrue(isset($headers["HTTP/1.1 201 Created"]));
+    }
+
+    public function testHeadWithString()
+    {
+        $this->get('/unit_test/test_head_with_string');
+
+        $headers = $this->response->getHeaders();
+        $this->assertTrue(isset($headers["HTTP/1.1 201 Created"]));
+    }
+
+    public function testHeadWithOptionsOnly()
+    {
+        $this->get('/unit_test/test_head_with_options_only');
+
+        $headers = $this->response->getHeaders();
+        $this->assertTrue(isset($headers["HTTP/1.1 201 Created"]));
+        $this->assertTrue(isset($headers["Location: http://foo"]));
+    }
+    
+    public function testHeadWithStringAndOptions()
+    {
+        $this->get('/unit_test/test_head_with_string_and_options');
+
+        $headers = $this->response->getHeaders();
+        $this->assertTrue(isset($headers["HTTP/1.1 201 Created"]));
+        $this->assertTrue(isset($headers["Location: http://foo"]));
+    }
 
     /*##########################################################################
     # Test Filter Methods
