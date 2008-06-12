@@ -3,7 +3,7 @@
  * Horde Routes package
  *
  * This package is heavily inspired by the Python "Routes" library
- * by Ben Bangert (http://routes.groovie.org).  Routes is based 
+ * by Ben Bangert (http://routes.groovie.org).  Routes is based
  * largely on ideas from Ruby on Rails (http://www.rubyonrails.org).
  *
  * @author  Maintainable Software, LLC. (http://www.maintainable.com)
@@ -28,7 +28,7 @@ class Horde_Routes_Mapper
      * @var array
      */
     public $environ = array();
-        
+
     /**
      * Callback function used to get array of controller names
      * @var callback
@@ -52,13 +52,13 @@ class Horde_Routes_Mapper
      * @var boolean
      */
     public $explicit;
-    
+
     /**
      * Collect debug information during route match?
      * @var boolean
      */
     public $debug = false;
-    
+
     /**
      * Use sub-domain support?
      * @var boolean
@@ -69,7 +69,7 @@ class Horde_Routes_Mapper
      * Array of sub-domains to ignore if using sub-domain support
      * @var array
      */
-    public $subDomainsIgnore = array();    
+    public $subDomainsIgnore = array();
 
     /**
      * Append trailing slash ('/') to generated routes?
@@ -118,7 +118,7 @@ class Horde_Routes_Mapper
      * @var string
      */
     public $domainMatch = '[^\.\/]+?\.[^\.\/]+';
-    
+
     /**
      * Array of all connected routes, indexed by the serialized array of all
      * keys that each route could utilize.
@@ -138,7 +138,7 @@ class Horde_Routes_Mapper
      * @var Horde_Routes_Utils
      */
     public $utils;
-    
+
     /**
      * Have regular expressions been created for all connected routes?
      * @var boolean
@@ -213,7 +213,7 @@ class Horde_Routes_Mapper
     }
 
     /**
-     * Create and connect a new Route to the Mapper.  
+     * Create and connect a new Route to the Mapper.
      *
      * Usage:
      *   $m = new Horde_Routes_Mapper();
@@ -240,7 +240,7 @@ class Horde_Routes_Mapper
             // connect('route_name', ':/controller/:action/:id', array('kargs'=>'here'))
             $routeName = $first;
             $routePath = $second;
-            $kargs     = $third;            
+            $kargs     = $third;
         } else if ($second !== null) {
             // 2 args given
             if (is_array($second)) {
@@ -253,7 +253,7 @@ class Horde_Routes_Mapper
                 $routeName = $first;
                 $routePath = $second;
                 $kargs     = array();
-            }            
+            }
         } else {
             // 1 arg given
             // connect('/:controller/:action/:id')
@@ -630,128 +630,128 @@ class Horde_Routes_Mapper
 
     /**
      * Generate routes for a controller resource
-     * 
+     *
      * The $memberName name should be the appropriate singular version of the
      * resource given your locale and used with members of the collection.
      *
-     * The $collectionName name will be used to refer to the resource 
+     * The $collectionName name will be used to refer to the resource
      * collection methods and should be a plural version of the $memberName
      * argument. By default, the $memberName name will also be assumed to map
      * to a controller you create.
-     * 
-     * The concept of a web resource maps somewhat directly to 'CRUD' 
+     *
+     * The concept of a web resource maps somewhat directly to 'CRUD'
      * operations. The overlying things to keep in mind is that mapping a
      * resource is about handling creating, viewing, and editing that
      * resource.
-     * 
+     *
      * All keyword arguments ($kargs) are optional.
-     * 
+     *
      * ``controller``
      *     If specified in the keyword args, the controller will be the actual
      *     controller used, but the rest of the naming conventions used for
      *     the route names and URL paths are unchanged.
-     * 
+     *
      * ``collection``
      *     Additional action mappings used to manipulate/view the entire set of
      *     resources provided by the controller.
-     *     
+     *
      *     Example::
      *
-     *         $map->resource('message', 'messages', 
+     *         $map->resource('message', 'messages',
      *                        array('collection' => array('rss' => 'GET)));
      *         # GET /message;rss (maps to the rss action)
      *         # also adds named route "rss_message"
-     * 
+     *
      * ``member``
      *      Additional action mappings used to access an individual 'member'
      *      of this controllers resources.
-     *      
+     *
      *      Example::
-     *          
-     *          $map->resource('message', 'messages', 
+     *
+     *          $map->resource('message', 'messages',
      *                         array('member' => array('mark' => 'POST')));
      *          # POST /message/1;mark (maps to the mark action)
      *          # also adds named route "mark_message"
-     *  
+     *
      *  ``new``
      *      Action mappings that involve dealing with a new member in the
      *      controller resources.
-     *      
+     *
      *      Example::
-     *          
-     *          $map->resource('message', 'messages', 
+     *
+     *          $map->resource('message', 'messages',
      *                         array('new' => array('preview' => 'POST')));
      *          # POST /message/new;preview (maps to the preview action)
      *          # also adds a url named "preview_new_message"
-     *  
+     *
      *  ``pathPrefix``
      *      Prepends the URL path for the Route with the pathPrefix given.
      *      This is most useful for cases where you want to mix resources
      *      or relations between resources.
-     *  
+     *
      *  ``namePrefix``
      *      Perpends the route names that are generated with the namePrefix
      *      given. Combined with the pathPrefix option, it's easy to
      *      generate route names and paths that represent resources that are
      *      in relations.
-     *      
+     *
      *      Example::
-     *          
-     *          map.resource('message', 'messages', 
-     *                       array('controller' => 'categories', 
-     *                             'pathPrefix' => '/category/:category_id', 
+     *
+     *          map.resource('message', 'messages',
+     *                       array('controller' => 'categories',
+     *                             'pathPrefix' => '/category/:category_id',
      *                             'namePrefix' => 'category_')));
      *              # GET /category/7/message/1
      *              # has named route "category_message"
-     *           
-     *  ``parentResource`` 
-     *      An assoc. array containing information about the parent resource,
-     *      for creating a nested resource. It should contain the ``$memberName`` 
-     *      and ``collectionName`` of the parent resource. This assoc. array will 
-     *      be available via the associated ``Route`` object which can be 
-     *      accessed during a request via ``request.environ['routes.route']`` 
-     * 
-     *      If ``parentResource`` is supplied and ``pathPrefix`` isn't, 
-     *      ``pathPrefix`` will be generated from ``parentResource`` as  
-     *      "<parent collection name>/:<parent member name>_id". 
-     * 
-     *      If ``parentResource`` is supplied and ``namePrefix`` isn't, 
-     *      ``namePrefix`` will be generated from ``parentResource`` as  
-     *      "<parent member name>_". 
-     * 
-     *      Example:: 
-     * 
-     *          $m = new Horde_Routes_Mapper();
-     *          $utils = $m->utils;  
      *
-     *          $m->resource('location', 'locations', 
-     *                       array('parentResource' => 
-     *                              array('memberName' => 'region', 
-     *                                    'collectionName' => 'regions')))); 
-     *          # pathPrefix is "regions/:region_id" 
+     *  ``parentResource``
+     *      An assoc. array containing information about the parent resource,
+     *      for creating a nested resource. It should contain the ``$memberName``
+     *      and ``collectionName`` of the parent resource. This assoc. array will
+     *      be available via the associated ``Route`` object which can be
+     *      accessed during a request via ``request.environ['routes.route']``
+     *
+     *      If ``parentResource`` is supplied and ``pathPrefix`` isn't,
+     *      ``pathPrefix`` will be generated from ``parentResource`` as
+     *      "<parent collection name>/:<parent member name>_id".
+     *
+     *      If ``parentResource`` is supplied and ``namePrefix`` isn't,
+     *      ``namePrefix`` will be generated from ``parentResource`` as
+     *      "<parent member name>_".
+     *
+     *      Example::
+     *
+     *          $m = new Horde_Routes_Mapper();
+     *          $utils = $m->utils;
+     *
+     *          $m->resource('location', 'locations',
+     *                       array('parentResource' =>
+     *                              array('memberName' => 'region',
+     *                                    'collectionName' => 'regions'))));
+     *          # pathPrefix is "regions/:region_id"
      *          # namePrefix is "region_"
      *
-     *          $utils->urlFor('region_locations', array('region_id'=>13)); 
+     *          $utils->urlFor('region_locations', array('region_id'=>13));
      *          # '/regions/13/locations'
      *
      *          $utils->urlFor('region_new_location', array('region_id'=>13));
      *          # '/regions/13/locations/new'
      *
-     *          $utils->urlFor('region_location', 
-     *                        array('region_id'=>13, 'id'=>60)); 
+     *          $utils->urlFor('region_location',
+     *                        array('region_id'=>13, 'id'=>60));
      *          # '/regions/13/locations/60'
      *
-     *          $utils->urlFor('region_edit_location', 
+     *          $utils->urlFor('region_edit_location',
      *                        array('region_id'=>13, 'id'=>60));
-     *          # '/regions/13/locations/60;edit'
+     *          # '/regions/13/locations/60/edit'
      *
      *   Overriding generated ``pathPrefix``::
      *
      *      $m = new Horde_Routes_Mapper();
-     *      $utils = new Horde_Routes_Utils(); 
+     *      $utils = new Horde_Routes_Utils();
      *
      *      $m->resource('location', 'locations',
-     *                   array('parentResource' => 
+     *                   array('parentResource' =>
      *                         array('memberName' => 'region',
      *                               'collectionName' => 'regions'),
      *                         'pathPrefix' => 'areas/:area_id')));
@@ -764,14 +764,19 @@ class Horde_Routes_Mapper
      *
      *       $m = new Horde_Routes_Mapper
      *      $m->resource('location', 'locations',
-     *                   array('parentResource' => 
+     *                   array('parentResource' =>
      *                         array('memberName' => 'region',
      *                               'collectionName' => 'regions'),
      *                         'namePrefix' => '')));
-     *       # pathPrefix is "regions/:region_id" 
+     *       # pathPrefix is "regions/:region_id"
      *
      *       $utils->urlFor('locations', array('region_id'=>51));
      *       # '/regions/51/locations'
+     *
+     * Note: this method is not compatible with Python Routes inasmuch as 
+     * it does not use the semicolon to delimit custom actions.  This was
+     * a change in Rails (http://dev.rubyonrails.org/changeset/6485) and
+     * adopting it here allows us to keep parity with ActiveResource.
      *
      * @param  string  $memberName      Singular version of the resource name
      * @param  string  $collectionName  Collection name (plural of $memberName)
@@ -867,10 +872,10 @@ class Horde_Routes_Mapper
                 $routeName = sprintf('%s%s_%s', $kargs['namePrefix'], $action, $collectionName);
 
                 $this->connect($routeName,
-                               sprintf("%s;%s", $collectionPath, $action),
+                               sprintf("%s/%s", $collectionPath, $action),
                                $routeOptions);
                 $this->connect('formatted_' . $routeName,
-                               sprintf("%s.:(format);%s", $collectionPath, $action),
+                               sprintf("%s/%s.:(format)", $collectionPath, $action),
                                $routeOptions);
             }
             if ($primary) {
@@ -901,7 +906,7 @@ class Horde_Routes_Mapper
                 if ($action == 'new' && $newPath) {
                     $path = $newPath;
                 } else {
-                    $path = sprintf('%s;%s', $newPath, $action);
+                    $path = sprintf('%s/%s', $newPath, $action);
                 }
 
                 $name = 'new_' . $memberName;
@@ -914,7 +919,7 @@ class Horde_Routes_Mapper
                 if ($action == 'new' && $newPath) {
                     $path = $newPath . '.:(format)';
                 } else {
-                    $path = sprintf('%s.:(format);%s', $newPath, $action);
+                    $path = sprintf('%s/%s.:(format)', $newPath, $action);
                 }
 
                 $this->connect('formatted_' . $kargs['namePrefix'] . $name,
@@ -938,10 +943,10 @@ class Horde_Routes_Mapper
             foreach ($lst as $action) {
                 $routeOptions['action'] = $action;
                 $this->connect(sprintf('%s%s_%s', $kargs['namePrefix'], $action, $memberName),
-                               sprintf('%s;%s', $memberPath, $action),
+                               sprintf('%s/%s', $memberPath, $action),
                                $routeOptions);
                 $this->connect(sprintf('formatted_%s%s_%s', $kargs['namePrefix'], $action, $memberName),
-                               sprintf('%s.:(format);%s', $memberPath, $action),
+                               sprintf('%s/%s.:(format)', $memberPath, $action),
                                $routeOptions);
             }
 
@@ -1000,23 +1005,24 @@ class Horde_Routes_Mapper
 
     /**
      * Sort an array of Horde_Routes_Routes to using _keycmp() for the comparision
-     * to order them ideally for matching.  
+     * to order them ideally for matching.
      *
-     * An unfortunate property of PHP's usort() is that if two members compare 
+     * An unfortunate property of PHP's usort() is that if two members compare
      * equal, their order in the sorted array is undefined (see PHP manual).
      * This is unsuitable for us because the order that the routes were
      * connected to the mapper is significant.
      *
-     * Uses this method uses merge sort algorithm based on the 
+     * Uses this method uses merge sort algorithm based on the
      * comments in http://www.php.net/usort
      *
      * @param  array  $array  Array Horde_Routes_Route objects to sort (by reference)
      * @return void
      */
-    protected function _keysort(&$array) {
+    protected function _keysort(&$array)
+    {
         // arrays of size < 2 require no action.
         if (count($array) < 2) { return; }
-        
+
         // split the array in half
         $halfway = count($array) / 2;
         $array1 = array_slice($array, 0, $halfway);
@@ -1078,7 +1084,7 @@ class Horde_Routes_Mapper
         if ($lendiffa == 0) {
             return -1;
         }
-   
+
         // Or $b matches exactly, use it
         if ($lendiffb == 0) {
             return 1;
@@ -1116,7 +1122,7 @@ class Horde_Routes_Mapper
      *
      * @param  integer|float  $a  First item to compare
      * @param  integer|flot   $b  Second item to compare
-     * @param  integer            Result of comparison            
+     * @param  integer            Result of comparison
      */
     protected function _cmp($a, $b)
     {
@@ -1135,7 +1141,8 @@ class Horde_Routes_Mapper
      * @param  string  $name  Part or URL with slash at begin/end
      * @return string         Part or URL with begin/end slashes removed
      */
-    protected function _stripSlashes($name) {
+    protected function _stripSlashes($name)
+    {
         if (substr($name, 0, 1) == '/') {
             $name = substr($name, 1);
         }
