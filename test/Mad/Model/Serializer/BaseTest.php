@@ -253,17 +253,18 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
     public function testGetSerializableRecordWithMethods()
     {
         $record  = $this->articles('xml_rpc');
-        $options = array('methods' => array('foo', 'bar'));
+        $options = array('methods' => array('foo', 'intMethod', 'boolMethod'));
 
         $serializer = new Mad_Model_Serializer_Base($record, $options);        
         $record = $serializer->getSerializableRecord();
 
         $expected = array (
-          'id'      => '1',
-          'title'   => 'Easier XML-RPC for PHP5',
-          'user_id' => '1', 
-          'foo'     => 'test serializer foo', 
-          'bar'     => 'test serializer bar'
+          'id'         => '1',
+          'title'      => 'Easier XML-RPC for PHP5',
+          'user_id'    => '1', 
+          'boolMethod' => true,
+          'foo'        => 'test serializer foo', 
+          'intMethod'  => 123
         );
 
         $this->assertEquals($expected, $record);

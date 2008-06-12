@@ -2092,6 +2092,130 @@ abstract class Mad_Model_Base extends Mad_Support_Object
     # Serialization
     ##########################################################################*/
     
+    /**
+     * Builds an XML document to represent the model. Some configuration is
+     * available through <code>options</code>. However more complicated cases should
+     * override <code>Mad_Model_Base#toXml</code>.
+     *
+     * By default the generated XML document will include the processing
+     * instruction and all the object's attributes. For example:
+     *
+     *   <?xml version="1.0" encoding="UTF-8"?>
+     *   <topic>
+     *     <title>The First Topic</title>
+     *     <author-name>David</author-name>
+     *     <id type="integer">1</id>
+     *     <approved type="boolean">false</approved>
+     *     <replies-count type="integer">0</replies-count>
+     *     <bonus-time type="datetime">2000-01-01T08:28:00+12:00</bonus-time>
+     *     <written-on type="datetime">2003-07-16T09:28:00+1200</written-on>
+     *     <content>Have a nice day</content>
+     *     <author-email-address>david@loudthinking.com</author-email-address>
+     *     <parent-id></parent-id>
+     *     <last-read type="date">2004-04-15</last-read>
+     *   </topic>
+     *
+     * This behavior can be controlled with <code>only</code>, <code>except</code>,
+     * <code>skip_instruct</code>, <code>skip_types</code> and <code>dasherize</code>.
+     * The <code>only</code> and <code>except</code> options are the same as for the
+     * <code>attributes</code> method. The default is to dasherize all column names, but you
+     * can disable this setting <code>dasherize</code> to <code>false</code>. To not have the
+     * column type included in the XML output set <code>:skip_types</code> to <code>true</code>.
+     *
+     * For instance:
+     *
+     *   $topic->toXml(array('skip_instruct' => true, 
+     *                       'except' => array('id', 'bonus_time', 'written_on', 'replies_count'));
+     *
+     *   <topic>
+     *     <title>The First Topic</title>
+     *     <author-name>David</author-name>
+     *     <approved type="boolean">false</approved>
+     *     <content>Have a nice day</content>
+     *     <author-email-address>david@loudthinking.com</author-email-address>
+     *     <parent-id></parent-id>
+     *     <last-read type="date">2004-04-15</last-read>
+     *   </topic>
+     *
+     * To include first level associations use <code>include</code>:
+     *
+     *   $firm->toXml(array('include' => array('Account', 'Clients')));
+     *
+     *   <?xml version="1.0" encoding="UTF-8"?>
+     *   <firm>
+     *     <id type="integer">1</id>
+     *     <rating type="integer">1</rating>
+     *     <name>37signals</name>
+     *     <clients type="array">
+     *       <client>
+     *         <rating type="integer">1</rating>
+     *         <name>Summit</name>
+     *       </client>
+     *       <client>
+     *         <rating type="integer">1</rating>
+     *         <name>Microsoft</name>
+     *       </client>
+     *     </clients>
+     *     <account>
+     *       <id type="integer">1</id>
+     *       <credit-limit type="integer">50</credit-limit>
+     *     </account>
+     *   </firm>
+     *
+     * To include deeper levels of associations pass a hash like this:
+     *
+     *   $firm->toXml(array('include' => array('Account' => array(), 
+     *                                         'Clients' => array('include' => 'Address'))));
+     *
+     *   <?xml version="1.0" encoding="UTF-8"?>
+     *   <firm>
+     *     <id type="integer">1</id>
+     *     <rating type="integer">1</rating>
+     *     <name>37signals</name>
+     *     <clients type="array">
+     *       <client>
+     *         <rating type="integer">1</rating>
+     *         <name>Summit</name>
+     *         <address>
+     *           ...
+     *         </address>
+     *       </client>
+     *       <client>
+     *         <rating type="integer">1</rating>
+     *         <name>Microsoft</name>
+     *         <address>
+     *           ...
+     *         </address>
+     *       </client>
+     *     </clients>
+     *     <account>
+     *       <id type="integer">1</id>
+     *       <credit-limit type="integer">50</credit-limit>
+     *     </account>
+     *   </firm>
+     *
+     * To include any methods on the model being called use <code>methods</code>:
+     *
+     *   $firm->toXml(array('methods' => array('calculated_earnings', 'real_earnings')));
+     *
+     *   <firm>
+     *     # ... normal attributes as shown above ...
+     *     <calculated-earnings>100000000000000000</calculated-earnings>
+     *     <real-earnings>5</real-earnings>
+     *   </firm>
+     *
+     * As noted above, you may override <code>toXml()</code> in your <code>Mad_Model_Base</code>
+     * subclasses to have complete control about what's generated. The general
+     * form of doing this is:
+     *
+     *   class IHaveMyOwnXML extends Mad_Model_Base
+     *   {
+     *      public function toXml($options = array)
+     *      {
+     *          // ...
+     *      }
+     *   }
+     */
     public function toXml($options = array())
     {
         $serializer = new Mad_Model_Serializer_Xml($this, $options);
@@ -2106,7 +2230,65 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         $this->setAttributes(); 
         return $this;
     }
-    
+
+    public function getXmlClassName()
+    {
+        return Mad_Support_Inflector::underscore($this->_className);
+    }
+
+    /** 
+     * Returns a JSON string representing the model. Some configuration is
+     * available through <code>$options</code>.
+     *
+     * Without any <code>$options</code>, the returned JSON string will include all
+     * the model's attributes. For example:
+     *
+     *   $konata = User::find(1);
+     *   $konata->toJson();
+     *   # => {"id": 1, "name": "Konata Izumi", "age": 16,
+     *         "created_at": "2006/08/01", "awesome": true}
+     *
+     * The <code>only</code> and <code>except</code> options can be used to limit 
+     * the attributes included, and work similar to the <code>attributes</code> 
+     * method. For example:
+     *
+     *   $konata->toJson(array('only' => array('id', 'name')));
+     *   # => {"id": 1, "name": "Konata Izumi"}
+     *
+     *   $konata->toJson(array('except' => array('id', 'created_at', 'age')));
+     *   # => {"name": "Konata Izumi", "awesome": true}
+     *
+     * To include any methods on the model, use <code>:methods</code>.
+     *
+     *   $konata->toJson(array('methods' => 'permalink'));
+     *   # => {"id": 1, "name": "Konata Izumi", "age": 16,
+     *         "created_at": "2006/08/01", "awesome": true,
+     *         "permalink": "1-konata-izumi"}
+     *
+     * To include associations, use <code>:include</code>.
+     *
+     *   $konata->toJson(array('include' => 'Posts'));
+     *   # => {"id": 1, "name": "Konata Izumi", "age": 16,
+     *         "created_at": "2006/08/01", "awesome": true,
+     *         "posts": [{"id": 1, "author_id": 1, "title": "Welcome to the weblog"},
+     *                   {"id": 2, author_id: 1, "title": "So I was thinking"}]}
+     *
+     * 2nd level and higher order associations work as well:
+     *
+     *   $konata->toJson(array('include' => array('Posts' => array(
+     *                                              'include' => array('Comments' => array(
+    *                                                                    'only' => 'body')),
+     *                                              'only'    => 'title'))));
+     *   # => {"id": 1, "name": "Konata Izumi", "age": 16,
+     *         "created_at": "2006/08/01", "awesome": true,
+     *         "posts": [{"comments": [{"body": "1st post!"}, {"body": "Second!"}],
+     *                    "title": "Welcome to the weblog"},
+     *                   {"comments": [{"body": "Don't think too hard"}],
+     *                    "title": "So I was thinking"}]}
+     * 
+     * @param   array   $options
+     * @return  string
+     */
     public function toJson($options = array())
     {
         $serializer = new Mad_Model_Serializer_Json($this, $options);
@@ -2119,7 +2301,14 @@ abstract class Mad_Model_Base extends Mad_Support_Object
             return $serialized;
         }
     }
-
+    
+    /** 
+     * Convert Json notation to an Mad_Model record
+     * 
+     * @see     Mad_Model_Base::toJson()
+     * @param   string  $json
+     * @return  Mad_Model_Base
+     */
     public function fromJson($json)
     {
         $solarJson = new Solar_Json(array());

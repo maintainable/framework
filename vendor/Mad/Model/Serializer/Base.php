@@ -16,8 +16,11 @@
  */
 class Mad_Model_Serializer_Base
 {
-    protected $_record  = null;
+    protected $_record = null;
+
     protected $_options = array();
+
+    protected $_serializableRecord = array();
 
     public function __construct($record, $options = array()) 
     {
@@ -28,7 +31,7 @@ class Mad_Model_Serializer_Base
 
     public function __toString()
     {
-        $this->serialize();
+        return $this->serialize();
     }
     
     /**
@@ -88,13 +91,13 @@ class Mad_Model_Serializer_Base
      *   +records+     - the association record(s) to be serialized
      *   +opts+        - options for the association records
      */
-    public function addIncludes($serializableRecord = array())
+    public function addIncludes()
     {
         if (isset($this->_options['include'])) {
             $includeAssociations = (array)$this->_options['include'];
             unset($this->_options['include']);
         }
-        if (empty($includeAssociations)) { return $serializableRecord; }
+        if (empty($includeAssociations)) { return; }
 
         $baseOnlyOrExcept = array('except' => $this->_options['except'], 
                                   'only'   => $this->_options['only']);
@@ -128,45 +131,52 @@ class Mad_Model_Serializer_Base
 
             // sub-records
             $opts = array_merge($this->_options, $associationOptions);
-            
-            // multiple record association
-            if (is_array($records)) {
-                $serialized = array();
-                foreach ($records as $record) {
-                    $serializer = new self($record, $opts);
-                    $serialized[] = $serializer->getSerializableRecord();
-                }
-                $serializableRecord[$association] = $serialized;
-                    
-            // single record association
-            } else {
-                $serializer = new self($records, $opts);
-                $serializableRecord[$association] = $serializer->getSerializableRecord();
-            }
+
+            $this->yieldRecords($association, $records, $opts);
         }
 
         $this->_options['include'] = $includeAssociations;
-
-        return $serializableRecord;
     }
     
-    public function getSerializableRecord()
+    /** 
+     * Use the record to build associations
+     */
+    public function yieldRecords($association, $records, $opts)
     {
-        $serializableRecord = array();
-        
-        foreach ($this->getSerializableAttributeNames() as $name) {
-            $serializableRecord[$name] = $this->_record->$name;
+        // multiple record association
+        if (is_array($records)) {
+            $serialized = array();
+            foreach ($records as $record) {
+                $serializer = new self($record, $opts);
+                $serialized[] = $serializer->getSerializableRecord();
+            }
+            $this->_serializableRecord[$association] = $serialized;
+                
+        // single record association
+        } else {
+            $serializer = new self($records, $opts);
+            $this->_serializableRecord[$association] = $serializer->getSerializableRecord();
         }
-        foreach ($this->getSerializableMethodNames() as $name) {
-            $serializableRecord[$name] = $this->_record->{$name}();
-        }
-        $serializableRecord = $this->addIncludes($serializableRecord);
-
-        return $serializableRecord;
     }
 
+    public function getSerializableRecord()
+    {
+        $this->_serializableRecord = array();
+        
+        foreach ($this->getSerializableAttributeNames() as $name) {
+            $this->_serializableRecord[$name] = $this->_record->$name;
+        }
+        foreach ($this->getSerializableMethodNames() as $name) {
+            $this->_serializableRecord[$name] = $this->_record->{$name}();
+        }
+        $this->addIncludes();
+
+        return $this->_serializableRecord;
+    }
+
+    // overwrite to implement
     public function serialize()
     {
-        // overwrite to implement
+        return '';
     }
 }

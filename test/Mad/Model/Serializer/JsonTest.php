@@ -59,6 +59,18 @@ class Mad_Model_Serializer_JsonTest extends Mad_Test_Unit
         $this->assertEquals($expected, $record->toJson($options));
     }
 
+    public function testToJsonIncludeRoot()
+    {
+        Mad_Model_Base::$includeRootInJson = true;
+
+        $record  = $this->users('mike');
+        $options = array('only' => 'name');
+
+        $expected = '{ "user": {"name":"Mike Naberezny"} }';
+
+        $this->assertEquals($expected, $record->toJson($options));
+    }
+
     public function testFromJson()
     {
         $record = new Article;

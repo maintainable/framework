@@ -23,4 +23,19 @@ class Article extends Mad_Model_Base
     {
         return 'test serializer bar';
     }
+    
+    public function intMethod()
+    {
+        return 123;
+    }
+
+    public function floatMethod()
+    {
+        return 1.23;
+    }
+
+    public function boolMethod()
+    {
+        return true;
+    }
 }
