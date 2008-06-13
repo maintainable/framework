@@ -315,9 +315,9 @@ XML;
     
 
     /*##########################################################################
-    # To XML
+    # Hash To XML
     ##########################################################################*/
-    
+
     public function testOneLevel() 
     {
         $hash = array('name' => 'David', 'street' => 'Paulina');
@@ -432,6 +432,104 @@ XML;
         $this->assertContains('<addresses type="array"><address><streets type="array"><street><name>', $xml);
     }
 
+
+
+    /*##########################################################################
+    # Array To XML
+    ##########################################################################*/
+ 
+    public function testToXml()
+    {
+        $array = array(
+            array('name' => "David", 'age' => 26, 'age_in_millis' => 820497600000), 
+            array('name' => "Jason", 'age' => 31, 'age_in_millis' => 1.1)
+        );
+        $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => true, 'indent' => 0));
+        
+        $this->assertEquals('<records type="array"><record>', substr($xml, 0, 30));
+        $this->assertContains('<age type="integer">26</age>', $xml);
+        $this->assertContains('<name>David</name>',           $xml);
+        $this->assertContains('<age type="integer">31</age>', $xml);
+        $this->assertContains('<name>Jason</name>',           $xml);
+        $this->assertContains('<age-in-millis type="integer">820497600000</age-in-millis>', $xml);
+        $this->assertContains('<age-in-millis type="float">1.1</age-in-millis>', $xml);
+    }
+
+    public function testToXmlWithDedicatedName()
+    {
+        $array = array(
+            array('name' => "David", 'age' => 26, 'age_in_millis' => 820497600000)
+        );
+        $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => true, 'indent' => 0, 
+                                                           'root'         => 'people'));
+
+        $this->assertEquals('<people type="array"><person>', substr($xml, 0, 29));
+    }
+
+    public function testToXmlWithOptions()
+    {
+        $array = array(
+            array('name' => "David", 'street_address' => 'Paulina'), 
+            array('name' => "Jason", 'street_address' => 'Evergreen')
+        );
+        $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => true, 'indent' => 0, 
+                                                           'skipTypes'    => true));
+
+        $this->assertEquals('<records><record>', substr($xml, 0, 17));
+        $this->assertContains('<street-address>Paulina</street-address>',   $xml);
+        $this->assertContains('<name>David</name>',                         $xml);
+        $this->assertContains('<street-address>Evergreen</street-address>', $xml);
+        $this->assertContains('<name>Jason</name>',                         $xml);
+    }
+
+    public function testToXmlWithDasherizeFalse()
+    {
+        $array = array(
+            array('name' => "David", 'street_address' => 'Paulina'),
+            array('name' => "Jason", 'street_address' => 'Evergreen')
+        );
+        $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => true, 'indent'    => 0, 
+                                                           'skipTypes'    => true, 'dasherize' => false));
+
+        $this->assertEquals('<records><record>', substr($xml, 0, 17));
+        $this->assertContains('<street_address>Paulina</street_address>',   $xml);
+        $this->assertContains('<street_address>Evergreen</street_address>', $xml);
+    }
+
+    public function testToXmlWithDasherizeTrue()
+    {
+        $array = array(
+            array('name' => "David", 'street_address' => 'Paulina'),
+            array('name' => "Jason", 'street_address' => 'Evergreen')
+        );
+        $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => true, 'indent'    => 0, 
+                                                           'skipTypes'    => true, 'dasherize' => true));
+
+        $this->assertEquals('<records><record>', substr($xml, 0, 17));
+        $this->assertContains('<street-address>Paulina</street-address>',   $xml);
+        $this->assertContains('<street-address>Evergreen</street-address>', $xml);
+    }
+
+    public function testToWithInstruct()
+    {
+        $array = array(
+            array('name' => "David", 'age' => 26, 'age_in_millis' => 820497600000), 
+            array('name' => "Jason", 'age' => 31, 'age_in_millis' => 1.0)
+        );
+        $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => false, 'indent' => 0));
+
+        $this->assertEquals('<?xml', substr($xml, 0, 5));
+    }
+
+    public function testToXmlWithEmpty()
+    {
+        $array = array();
+        $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => true, 'indent' => 0));
+
+        $this->assertEquals('<records type="array"></records>', $xml);
+    }
+
+
     /*##########################################################################
     ##########################################################################*/   
     
@@ -447,6 +545,9 @@ XML;
 }
 
 
+/**
+ * Test class for custom toXml method on objects
+ */
 class IWriteMyOwnXML
 {
     public function toXml($options = array()) 

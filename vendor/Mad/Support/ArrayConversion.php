@@ -54,7 +54,7 @@ class Mad_Support_ArrayConversion
     public function toXml($array, $options = array()) 
     {
         // associative
-        if (!is_object($array) && !is_int(key($array))) {
+        if (!empty($array) && !is_object($array) && !is_int(key($array))) {
             return $this->hashToXml($array, $options);
 
         // numeric
