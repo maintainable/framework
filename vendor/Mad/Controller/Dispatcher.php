@@ -157,6 +157,10 @@ class Mad_Controller_Dispatcher
                 $ret['controller'] = $val;
                 $ret[':controller'] = Mad_Support_Inflector::camelize($val).'Controller';
             } elseif ($key == 'action') {
+                // Horde_Routes_Mapper->resource() and Python Routes are inconsistent
+                // with Rails by using "delete" instead of "destroy".
+                if ($val == 'delete') { $val = 'destroy'; }
+
                 $ret['action']  = $val;
                 $ret[':action'] = Mad_Support_Inflector::camelize($val, 'lower');
             } else {
