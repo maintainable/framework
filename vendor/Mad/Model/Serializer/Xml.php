@@ -20,7 +20,7 @@ class Mad_Model_Serializer_Xml extends Mad_Model_Serializer_Base
 
     /**
      * To keep the code as similar to Rails as possible, we use 
-     * Mad_Model_Serializer_Builder as a proxy to XMLWriter 
+     * Mad_Support_Builder as a proxy to XMLWriter 
      */
     public function getBuilder()
     {
@@ -33,7 +33,7 @@ class Mad_Model_Serializer_Xml extends Mad_Model_Serializer_Base
             if (!empty($this->_options['builder'])) {
                 $this->_builder = $this->_options['builder'];
             } else {
-                $this->_builder = new Mad_Model_Serializer_Builder($options);
+                $this->_builder = new Mad_Support_Builder($options);
                 $this->_options['builder'] = $this->_builder;
             }
 

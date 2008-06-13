@@ -154,18 +154,21 @@ class Mad_Support_ArrayObject extends ArrayObject
      */
     public function toXml($options = array())
     {
-        $firstClass  = get_class($this->get(0));
-        $sameClasses = true;
+        $firstElt  = $this->get(0);
+        $firstType = is_object($firstElt) ? get_class($firstElt) : gettype($firstElt);
+        $sameTypes = true;
+
         foreach ($this as $element) {
-            if (!is_callable(array($element, 'toXml'))) {
+            // either an array or object with toXml method
+            if (!is_array($element) && !is_callable(array($element, 'toXml'))) {
                 throw new Mad_Support_Exception("Not all elements respond to toXml");
             }
-            if (get_class($element) != $firstClass) { $sameClasses = false; }
+            if (get_class($element) != $firstType) { $sameTypes = false; }
         }
 
         if (!isset($options['root'])) {
-            if ($sameClasses && $this->count() > 0) {
-                $options['root'] = Mad_Support_Inflector::pluralize($firstClass);
+            if ($sameTypes && $this->count() > 0) {
+                $options['root'] = Mad_Support_Inflector::pluralize($firstType);
             } else {
                 $options['root'] = 'records';
             }
@@ -178,7 +181,7 @@ class Mad_Support_ArrayObject extends ArrayObject
         if (!isset($options['skipTypes'])) { $options['skipTypes'] = false; }
 
         if (empty($options['builder'])) {
-            $options['builder'] = new Mad_Model_Serializer_Builder(
+            $options['builder'] = new Mad_Support_Builder(
                 array('indent' => $options['indent']));
         }
 
@@ -195,7 +198,7 @@ class Mad_Support_ArrayObject extends ArrayObject
             $options['builder']->instruct(); 
         }
 
-        $opts = array_merge($options, array('root' => 'children'));
+        $opts = array_merge($options, array('root' => $children));
 
         $builder = $options['builder'];
         $attrs   = $options['skipTypes'] ? array() : array('type' => 'array');
@@ -208,8 +211,19 @@ class Mad_Support_ArrayObject extends ArrayObject
         } else {
             $tag = $builder->startTag($root, '', $attrs);
                 $opts['skipInstruct'] = true;
-                foreach ($this as $object) {
-                    $object->toXml($opts);
+                foreach ($this as $element) {
+                    // associative array
+                    if (is_array($element) && !is_int(key($element))) {
+                        $conversion = new Mad_Support_Conversion;
+                        $conversion->hashToXml($element, $opts);
+                    // array
+                    } elseif (is_array($element)) {
+                        $ao = new Mad_Support_ArrayObject($element);
+                        $ao->toXml($opts);
+                    // object
+                    } else {
+                        $element->toXml($opts);
+                    }
                 }
             $tag->end();
         }

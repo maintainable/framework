@@ -183,7 +183,7 @@ class Mad_Model_Errors extends Mad_Support_ArrayObject implements Iterator
         if (!empty($options['builder'])) {
             $builder = $options['builder'];
         } else {
-            $builder = new Mad_Model_Serializer_Builder(array('indent' => $options['indent']));
+            $builder = new Mad_Support_Builder(array('indent' => $options['indent']));
         }
         if (empty($options['skipInstruct'])) { $builder->instruct(); }
 

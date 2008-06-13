@@ -2231,8 +2231,8 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */    
     public function fromXml($xml)
     {
-        $conversion = new Mad_Model_Serializer_Conversion;
-        $values     = array_values($conversion->fromXml($xml));
+        $conversion = new Mad_Support_Conversion;
+        $values     = array_values($conversion->hashFromXml($xml));
         $attributes = $values[0];
 
         $this->setAttributes($attributes); 

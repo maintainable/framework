@@ -1,7 +1,7 @@
 <?php
 /**
  * @category   Mad
- * @package    Mad_Model
+ * @package    Mad_Support
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt 
@@ -12,20 +12,18 @@
  */
 if (!defined('MAD_ENV')) define('MAD_ENV', 'test');
 if (!defined('MAD_ROOT')) {
-    require_once dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/config/environment.php';
+    require_once dirname(dirname(dirname(dirname(__FILE__)))).'/config/environment.php';
 }
 
 /**
- * @todo Tests for sanitizeSql()
- * 
- * @group      model
+ * @group      support
  * @category   Mad
- * @package    Mad_Model
+ * @package    Mad_Support
  * @subpackage UnitTests
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Model_Serializer_BuilderTest extends Mad_Test_Unit
+class Mad_Support_BuilderTest extends Mad_Test_Unit
 {
     // set up new db by inserting dummy data into the db
     public function setUp()
@@ -35,7 +33,7 @@ class Mad_Model_Serializer_BuilderTest extends Mad_Test_Unit
 
     public function testInstruct()
     {
-        $builder = new Mad_Model_Serializer_Builder;
+        $builder = new Mad_Support_Builder;
         $builder->instruct();
         
         $expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -44,7 +42,7 @@ class Mad_Model_Serializer_BuilderTest extends Mad_Test_Unit
 
     public function testTag()
     {
-        $builder = new Mad_Model_Serializer_Builder;
+        $builder = new Mad_Support_Builder;
         $builder->tag('div', 'my div & "escaped" <tag> value', array('id' => 'my_id'));
 
         $expected = '<div id="my_id">my div &amp; &quot;escaped&quot; &lt;tag&gt; value</div>';
@@ -53,7 +51,7 @@ class Mad_Model_Serializer_BuilderTest extends Mad_Test_Unit
     
     public function testTagBlock()
     {
-        $builder = new Mad_Model_Serializer_Builder;
+        $builder = new Mad_Support_Builder;
         $tag = $builder->startTag('user', '');
             $tag->tag('age', 28, array('type' => 'integer'));
         $tag->end();
@@ -64,7 +62,7 @@ class Mad_Model_Serializer_BuilderTest extends Mad_Test_Unit
 
     public function testIndentation()
     {
-        $builder = new Mad_Model_Serializer_Builder(array('indent' => 2));
+        $builder = new Mad_Support_Builder(array('indent' => 2));
         $builder->instruct();
 
         $tag = $builder->startTag('user', '');
