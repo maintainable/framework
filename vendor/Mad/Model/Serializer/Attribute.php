@@ -101,7 +101,7 @@ class Mad_Model_Serializer_Attribute
     
     protected function _convert($value)
     {
-        $conversion = new Mad_Support_Conversion;
+        $conversion = new Mad_Support_ArrayConversion;
 
         if (isset($conversion->xmlFormatting[$this->_type])) {
             $formatter = $conversion->xmlFormatting[$this->_type];

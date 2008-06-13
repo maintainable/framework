@@ -154,79 +154,16 @@ class Mad_Support_ArrayObject extends ArrayObject
      */
     public function toXml($options = array())
     {
-        $firstElt  = $this->get(0);
-        $firstType = is_object($firstElt) ? get_class($firstElt) : gettype($firstElt);
-        $sameTypes = true;
-
-        foreach ($this as $element) {
-            // either an array or object with toXml method
-            if (!is_array($element) && !is_callable(array($element, 'toXml'))) {
-                throw new Mad_Support_Exception("Not all elements respond to toXml");
-            }
-            if (get_class($element) != $firstType) { $sameTypes = false; }
-        }
-
-        if (!isset($options['root'])) {
-            if ($sameTypes && $this->count() > 0) {
-                $options['root'] = Mad_Support_Inflector::pluralize($firstType);
-            } else {
-                $options['root'] = 'records';
-            }
-        }
-        if (!isset($options['children'])) {
-            $options['children'] = Mad_Support_Inflector::singularize($options['root']);
-        }
-
-        if (!isset($options['indent']))    { $options['indent']    = 2; }
-        if (!isset($options['skipTypes'])) { $options['skipTypes'] = false; }
-
-        if (empty($options['builder'])) {
-            $options['builder'] = new Mad_Support_Builder(
-                array('indent' => $options['indent']));
-        }
-
-        $root = $options['root'];
-        unset($options['root']);
-        
-        $children = $options['children'];
-        unset($options['children']);
-
-        if (!array_key_exists('dasherize', $options) || !empty($options['dasherize'])) {
-            $root = Mad_Support_Inflector::dasherize($root);
-        }
-        if (empty($options['skipInstruct'])) {
-            $options['builder']->instruct(); 
-        }
-
-        $opts = array_merge($options, array('root' => $children));
-
-        $builder = $options['builder'];
-        $attrs   = $options['skipTypes'] ? array() : array('type' => 'array');
-        
-        // no elements in array
-        if ($this->count() == 0) {
-            $builder->tag($root, '', $attrs);
-            
-        // build xml from elements
-        } else {
-            $tag = $builder->startTag($root, '', $attrs);
-                $opts['skipInstruct'] = true;
-                foreach ($this as $element) {
-                    // associative array
-                    if (is_array($element) && !is_int(key($element))) {
-                        $conversion = new Mad_Support_Conversion;
-                        $conversion->hashToXml($element, $opts);
-                    // array
-                    } elseif (is_array($element)) {
-                        $ao = new Mad_Support_ArrayObject($element);
-                        $ao->toXml($opts);
-                    // object
-                    } else {
-                        $element->toXml($opts);
-                    }
-                }
-            $tag->end();
-        }
-        return (string)$builder;
+        $conversion = new Mad_Support_ArrayConversion;
+        return $conversion->toXml($this, $options);
+    }
+    
+    /**
+     *
+     */
+    public static function fromXml($xml)
+    {
+        $conversion = new Mad_Support_ArrayConversion;
+        return $conversion->fromXml($xml);
     }
 }

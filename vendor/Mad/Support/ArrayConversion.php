@@ -14,7 +14,7 @@
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Support_Conversion
+class Mad_Support_ArrayConversion
 {
     public $xmlTypeNames = array(
       "integer" => "integer", 
@@ -42,6 +42,44 @@ class Mad_Support_Conversion
       "base64Binary" => 'parseBase64Binary',
       "file"         => 'parseFile',
     );
+    
+    /**
+     * Convert an array to XML. While PHP has a single array() to do 
+     * ordered and associative collections, we've split toXml into two
+     * separate methods to resemble the Rails code more closely
+     * 
+     * @param   array   $array
+     * @param   array   $options
+     */
+    public function toXml($array, $options = array()) 
+    {
+        // associative
+        if (!is_object($array) && !is_int(key($array))) {
+            return $this->hashToXml($array, $options);
+
+        // numeric
+        } else {
+            return $this->arrayToXml($array, $options);
+        }
+    }
+
+
+    /**
+     * Convert an XML string to an associative array
+     * 
+     * @param   string  $xmlStr
+     * @return  array
+     */
+    public function fromXml($xmlStr)
+    {
+        // build array data struct from the xml
+        $xml = new SimpleXMLElement($xmlStr);
+        $params = $this->_parseElement($xml);
+        
+        // remove dasherized keys and typecast values
+        $params = $this->_undasherizeKeys($params);
+        return $this->_typecastXmlValue($params);
+    }
 
     /**
      * Convert an associative array to XML
@@ -77,8 +115,7 @@ class Mad_Support_Conversion
                 $opts = array_merge($options, array('children'     => Mad_Support_Inflector::singularize($key), 
                                                     'root'         => $key, 
                                                     'skipInstruct' => true));
-                $ao = new Mad_Support_ArrayObject($value);
-                $ao->toXml($opts);
+                $this->arrayToXml($value, $opts);
 
             } else {
                 // object
@@ -122,21 +159,86 @@ class Mad_Support_Conversion
     }
 
     /**
-     * Convert an XML string to an array
-     * 
-     * @param   string  $xmlStr
-     * @return  array
+     * Convert array collection to XML
+     * @param   array   $array
+     * @param   array   $options
      */
-    public function hashFromXml($xmlStr)
+    public function arrayToXml($array, $options = array())
     {
-        // build array data struct from the xml
-        $xml = new SimpleXMLElement($xmlStr);
-        $params = $this->_parseElement($xml);
+        $firstElt  = current($array);
+        $firstType = is_object($firstElt) ? get_class($firstElt) : gettype($firstElt);
+        $sameTypes = true;
+
+        foreach ($array as $element) {
+            // either an array or object with toXml method
+            if (!is_array($element) && !is_callable(array($element, 'toXml'))) {
+                throw new Mad_Support_Exception("Not all elements respond to toXml");
+            }
+            if (get_class($element) != $firstType) { $sameTypes = false; }
+        }
+
+        if (!isset($options['root'])) {
+            if ($sameTypes && count($array) > 0) {
+                $options['root'] = Mad_Support_Inflector::pluralize($firstType);
+            } else {
+                $options['root'] = 'records';
+            }
+        }
+        if (!isset($options['children'])) {
+            $options['children'] = Mad_Support_Inflector::singularize($options['root']);
+        }
+
+        if (!isset($options['indent']))    { $options['indent']    = 2; }
+        if (!isset($options['skipTypes'])) { $options['skipTypes'] = false; }
+
+        if (empty($options['builder'])) {
+            $options['builder'] = new Mad_Support_Builder(
+                array('indent' => $options['indent']));
+        }
+
+        $root = $options['root'];
+        unset($options['root']);
         
-        // remove dasherized keys and typecast values
-        $params = $this->_undasherizeKeys($params);
-        return $this->_typecastXmlValue($params);
+        $children = $options['children'];
+        unset($options['children']);
+
+        if (!array_key_exists('dasherize', $options) || !empty($options['dasherize'])) {
+            $root = Mad_Support_Inflector::dasherize($root);
+        }
+        if (empty($options['skipInstruct'])) {
+            $options['builder']->instruct(); 
+        }
+
+        $opts = array_merge($options, array('root' => $children));
+
+        $builder = $options['builder'];
+        $attrs   = $options['skipTypes'] ? array() : array('type' => 'array');
+        
+        // no elements in array
+        if (count($array) == 0) {
+            $builder->tag($root, '', $attrs);
+            
+        // build xml from elements
+        } else {
+            $tag = $builder->startTag($root, '', $attrs);
+                $opts['skipInstruct'] = true;
+                foreach ($array as $element) {
+                    // associative array
+                    if (is_array($element) && !is_int(key($element))) {
+                        $this->hashToXml($element, $opts);
+                    // array
+                    } elseif (is_array($element)) {
+                        $this->arrayToXml($element, $opts);
+                    // object
+                    } else {
+                        $element->toXml($opts);
+                    }
+                }
+            $tag->end();
+        }
+        return (string)$builder;        
     }
+
 
 
     // formatting

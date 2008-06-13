@@ -25,12 +25,12 @@ if (!defined('MAD_ROOT')) {
  * @copyright  (c) 2007 Maintainable Software, LLC
  * @license    http://maintainable.com/framework-license.txt
  */
-class Mad_Support_ConversionTest extends Mad_Test_Unit
+class Mad_Support_ArrayConversionTest extends Mad_Test_Unit
 {
     // set up new db by inserting dummy data into the db
     public function setUp()
     {        
-        $this->conversion = new Mad_Support_Conversion;
+        $this->conversion = new Mad_Support_ArrayConversion;
     }
 
 
@@ -58,7 +58,7 @@ class Mad_Support_ConversionTest extends Mad_Test_Unit
   <resident type="symbol">yes</resident>
 </topic>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
 
         $expected = array(
             'title'                 => "The First Topic",
@@ -96,7 +96,7 @@ XML;
   <parent-id></parent-id>
 </topic>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $expected = array(
             'title'      => null, 
             'id'         => null,
@@ -141,7 +141,7 @@ XML;
   </topic>
 </topics>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $expected = array(
            'title'                => "The First Topic",
            'author_name'          => "David",
@@ -167,7 +167,7 @@ XML;
   </photos>
 </rsp>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $expected = array(
             'id'       => "175756086",
             'owner'    => "55569174@N00",
@@ -188,7 +188,7 @@ XML;
   <posts type="array"></posts>
 </blog>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $expected = array('blog' => array('posts' => array()));
         $this->assertEquals($expected, $parsed);
     }
@@ -201,7 +201,7 @@ XML;
   </posts>
 </blog>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $expected = array('blog' => array('posts' => array()));
 
         $this->assertEquals($expected, $parsed);
@@ -216,7 +216,7 @@ XML;
   </posts>
 </blog>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $expected = array('blog' => array('posts' => array('a post')));
 
         $this->assertEquals($expected, $parsed);
@@ -232,7 +232,7 @@ XML;
   </posts>
 </blog>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $expected = array('blog' => array('posts' => array('a post', 'another post')));
 
         $this->assertEquals($expected, $parsed);
@@ -247,7 +247,7 @@ XML;
   </logo>
 </blog>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
 
         $this->assertNotNull($parsed['blog']);
         $this->assertNotNull($parsed['blog']['logo']);
@@ -266,7 +266,7 @@ XML;
   </logo>
 </blog>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $file = $parsed['blog']['logo'];
 
         $this->assertEquals('untitled',                 $file->originalFilename);
@@ -285,7 +285,7 @@ XML;
   <illustration type="base64Binary">YmFiZS5wbmc=</illustration>
 </bacon>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $expected = array(
           'weight'       => 0.5,
           'chunky'       => true,
@@ -305,7 +305,7 @@ XML;
   <image type="ProductImage"><filename>image.gif</filename></image>
 </product>
 XML;
-        $parsed = $this->conversion->hashFromXml($xml);
+        $parsed = $this->conversion->fromXml($xml);
         $expected = array(
             'weight' => 0.5, 
             'image'  => array('type' => 'ProductImage', 'filename' => 'image.gif')

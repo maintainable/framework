@@ -392,7 +392,7 @@ XML;
 
         $this->assertEquals($expected, $xml);
     }
-
+/*
     public function testToXmlAssigningRoot()
     {
         $array = array(
