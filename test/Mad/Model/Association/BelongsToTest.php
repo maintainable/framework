@@ -230,7 +230,7 @@ class Mad_Model_Association_BelongsToTest extends Mad_Test_Unit
         $this->fixtures('articles', 'users');
 
         $article = new Article(array('title' => 'Test Foo'));
-        $user    = new User(array('name' => 'Test Bar'));
+        $user    = new User(array('name' => 'Test Bar', 'company_id' => 1));
         $article->user = $user;
 
         $this->assertEquals($user, $article->user);
@@ -253,7 +253,7 @@ class Mad_Model_Association_BelongsToTest extends Mad_Test_Unit
         $this->fixtures('articles', 'users');
 
         $article = Article::find($this->articles('xml_rpc')->id);
-        $user    = new User(array('name' => 'Test Bar'));
+        $user    = new User(array('name' => 'Test Bar', 'company_id' => 1));
         $article->user = $user;
 
         $this->assertEquals($user, $article->user);
@@ -310,7 +310,7 @@ class Mad_Model_Association_BelongsToTest extends Mad_Test_Unit
         $this->fixtures('articles', 'users');
 
         $article = new Article(array('title' => 'Test Foo'));
-        $user    = $article->buildUser(array('name' => 'Test Bar'));
+        $user    = $article->buildUser(array('name' => 'Test Bar', 'company_id' => 1));
 
         $this->assertEquals($user, $article->user);
 
@@ -353,7 +353,7 @@ class Mad_Model_Association_BelongsToTest extends Mad_Test_Unit
         $this->fixtures('articles', 'users');
 
         $article = new Article(array('title' => 'Test Foo'));
-        $newUser = $article->createUser(array('name' => 'Test Bar'));
+        $newUser = $article->createUser(array('name' => 'Test Bar', 'company_id' => 1));
         $this->assertEquals($newUser->id, $article->user->id);
 
         // this HAS saved the associated object

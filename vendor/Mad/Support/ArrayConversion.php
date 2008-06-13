@@ -23,8 +23,11 @@ class Mad_Support_ArrayConversion
     );
 
     public $xmlFormatting = array(
-      "binary" => 'formatBinary',
-      "yaml"   => 'formatYaml'
+      "boolean"  => 'formatBoolean',
+      "binary"   => 'formatBinary',
+      "date"     => 'formatDate',
+      "datetime" => 'formatDatetime',
+      "yaml"     => 'formatYaml'
     );
     
     public $xmlParsing = array(
@@ -240,9 +243,13 @@ class Mad_Support_ArrayConversion
     }
 
 
-
     // formatting
 
+    public function formatBoolean($boolean)
+    {
+        return $boolean ? 'true' : 'false';
+    }
+    
     public function formatBinary($binary)
     {
         return base64_encode($binary);
@@ -251,6 +258,18 @@ class Mad_Support_ArrayConversion
     public function formatYaml($yaml)
     {
         return Horde_Yaml::dump($yaml);
+    }
+    
+    public function formatDate($date)
+    {
+        $formatted = gmdate('Y-m-d', strtotime($date));
+        return $formatted == '1970-01-01' ? null : $formatted;
+    }
+    
+    public function formatDatetime($date)
+    {
+        $formatted = gmdate('c', strtotime($date));
+        return substr($formatted, 0, 10) == '1970-01-01' ? null : $formatted;
     }
 
 
@@ -263,14 +282,28 @@ class Mad_Support_ArrayConversion
 
     public function parseDate($date, $entity = null)
     {
-        $parsed = date("Y-m-d", strtotime($date));
-        return $parsed == '1969-12-31' ? null : $parsed;
+        // check if the date is valid
+        $parsed = gmdate("Y-m-d", strtotime($date));
+        if ($parsed == '1970-01-01') {
+            return null;
+
+        // of it's valid - return local time
+        } else {
+            return date("Y-m-d", strtotime($parsed));
+        }
     }
     
     public function parseDatetime($datetime, $entity = null)
     {
-        $parsed = date("Y-m-d H:i:s", strtotime($datetime));
-        return substr($parsed, 0, 10) == '1969-12-31' ? null : $parsed;
+        // check if the date is valid
+        $parsed = gmdate("Y-m-d H:i:s", strtotime($datetime));
+        if (substr($parsed, 0, 10) == '1970-01-01') {
+            return null;
+
+        // of it's valid - return local time
+        } else {
+            return date("Y-m-d H:i:s", strtotime($datetime));
+        }
     }
     
     public function parseInteger($integer, $entity = null)

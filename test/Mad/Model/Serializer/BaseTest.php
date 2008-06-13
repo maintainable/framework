@@ -41,8 +41,8 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
         $serializer = new Mad_Model_Serializer_Base($record, $options);      
         $attrNames = $serializer->getSerializableAttributeNames();
 
-        $expected = array('approved', 'created_at', 'created_on', 'first_name', 
-                          'id', 'name', 'updated_at', 'updated_on');
+        $expected = array('approved', 'company_id', 'created_at', 'created_on', 
+                         'first_name', 'id', 'name', 'updated_at', 'updated_on');
         $this->assertEquals($expected, $attrNames);
     }
 
@@ -54,7 +54,7 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
         $serializer = new Mad_Model_Serializer_Base($record, $options);      
         $attrNames = $serializer->getSerializableAttributeNames();
 
-        $expected = array('approved', 'created_at', 'created_on', 
+        $expected = array('approved', 'company_id', 'created_at', 'created_on', 
                           'id', 'name', 'updated_at', 'updated_on');
         $this->assertEquals($expected, $attrNames);
     }
@@ -67,7 +67,7 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
         $serializer = new Mad_Model_Serializer_Base($record, $options);      
         $attrNames = $serializer->getSerializableAttributeNames();
 
-        $expected = array('approved', 'created_at', 'created_on', 
+        $expected = array('approved', 'company_id', 'created_at', 'created_on', 
                           'id', 'updated_at', 'updated_on');
         $this->assertEquals($expected, $attrNames);
     }
@@ -160,7 +160,8 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
           'title'   => 'Easier XML-RPC for PHP5',
           'user_id' => '1', 
           'User'    => array(
-                'approved' => 1, 
+                'approved'   => 1, 
+                'company_id' => 1,
                 'created_at' => '2008-01-01 12:20:00', 
                 'created_on' => '2008-01-01', 
                 'first_name' => 'Mike', 
@@ -208,7 +209,8 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
           'title'   => 'Easier XML-RPC for PHP5',
           'user_id' => '1', 
           'User'    => array(
-                'approved' => 1, 
+                'approved'   => 1, 
+                'company_id' => 1,
                 'created_at' => '2008-01-01 12:20:00', 
                 'created_on' => '2008-01-01', 
                 'first_name' => 'Mike', 

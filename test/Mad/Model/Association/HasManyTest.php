@@ -300,7 +300,7 @@ class Mad_Model_Association_HasManyTest extends Mad_Test_Unit
     {
         $this->fixtures('users', 'articles');
 
-        $user = new User(array('name' => 'Name Foo'));
+        $user = new User(array('name' => 'Name Foo', 'company_id' => 1));
 
         $article1 = new Article(array('title' => 'Article 1'));
         $article2 = new Article(array('title' => 'Article 2'));
@@ -416,7 +416,7 @@ class Mad_Model_Association_HasManyTest extends Mad_Test_Unit
     {
         $this->fixtures('users', 'articles');
 
-        $user = new User(array('name' => 'User Foo 1'));
+        $user = new User(array('name' => 'User Foo 1', 'company_id' => 1));
         $user->articleIds = array($this->articles('xml_rpc')->id, $this->articles('best_practices')->id);
 
         $this->assertEquals($this->articles('xml_rpc')->id,        $user->articleIds[0]);
@@ -479,7 +479,7 @@ class Mad_Model_Association_HasManyTest extends Mad_Test_Unit
     {
         $this->fixtures('users', 'articles');
 
-        $user = new User(array('name' => 'User Foo 1'));
+        $user = new User(array('name' => 'User Foo 1', 'company_id' => 1));
         $article1 = new Article(array('title' => 'Article 1'));
         $article2 = new Article(array('title' => 'Article 2'));
 

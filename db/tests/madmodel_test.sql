@@ -104,9 +104,17 @@ CREATE TABLE comments (
   KEY article_id (article_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS companies;
+CREATE TABLE companies (
+  id         int(11) auto_increment, 
+  name       varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id         int(11) auto_increment, 
+  company_id int(11) NOT NULL,
   name       varchar(255) NOT NULL,
   first_name varchar(40) NOT NULL,
   approved   tinyint(1) NOT NULL default '1',

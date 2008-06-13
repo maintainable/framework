@@ -69,7 +69,7 @@ class Mad_Model_Serializer_Base
 
         $methods = isset($this->_options['methods']) ? (array)$this->_options['methods'] : array();
         foreach ($methods as $method) {
-            if (is_callable(array($this->_record, $method))) {
+            if (method_exists($this->_record, $method)) {
                 $methodAttributes[] = $method; 
             }
         }
@@ -120,7 +120,7 @@ class Mad_Model_Serializer_Base
                 $records = $this->_record->{$method}();
             }            
 
-            if (empty($records)) { continue; }
+            if ($records === null) { continue; }
 
             // options
             if ($includeHasOptions) {

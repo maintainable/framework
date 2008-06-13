@@ -271,7 +271,7 @@ class Mad_Model_Association_HasOneTest extends Mad_Test_Unit
     {
         $this->fixtures('users', 'avatars');
 
-        $user   = new User(array('name' => 'Foo Name'));
+        $user   = new User(array('name' => 'Foo Name', 'company_id' => 1));
         $avatar = new Avatar(array('filepath' => 'test.gif'));
         $user->avatar = $avatar;
 
@@ -347,7 +347,7 @@ class Mad_Model_Association_HasOneTest extends Mad_Test_Unit
     {
         $this->fixtures('users', 'avatars');
 
-        $user   = new User(array('name' => 'Foo Name'));
+        $user   = new User(array('name' => 'Foo Name', 'company_id' => 1));
         $avatar = $user->buildAvatar(array('filepath' => 'test.gif'));
         $this->assertEquals($avatar, $user->avatar);
 

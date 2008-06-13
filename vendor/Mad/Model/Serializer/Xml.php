@@ -50,7 +50,11 @@ class Mad_Model_Serializer_Xml extends Mad_Model_Serializer_Base
      */
     public function root()
     {
-        $root = !empty($options['root']) ? $options['root'] : $this->_record->getXmlClassName();
+        if (!empty($this->_options['root'])) {
+            $root = $this->_options['root'];
+        } else {
+            $root = $this->_record->getXmlClassName();
+        }
         return $this->dasherize($root);
     }
 
@@ -94,8 +98,8 @@ class Mad_Model_Serializer_Xml extends Mad_Model_Serializer_Base
 
         $methodAttributes = array();
 
-        foreach ($methods as $name) {
-            if (is_callable(array($this->_record, $name))) {
+        foreach ((array)$methods as $name) {
+            if (method_exists($this->_record, $name)) {
                 $methodAttributes[] = new Mad_Model_Serializer_MethodAttribute($name, $this->_record); 
             }
         }

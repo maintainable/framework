@@ -70,7 +70,7 @@ class Mad_Model_Serializer_Attribute
         }
 
         if ($this->_value === null) {
-            $decorations['null'] = $this->_type;
+            $decorations['nil'] = 'true';
         }
 
         return $decorations;

@@ -319,8 +319,8 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     public function testGetAttributeNames()
     {
         $user = new User;
-        $expected = array('approved', 'created_at', 'created_on', 'first_name', 
-                          'id', 'name', 'type', 'updated_at', 'updated_on');
+        $expected = array('approved', 'company_id', 'created_at', 'created_on', 
+                          'first_name', 'id', 'name', 'type', 'updated_at', 'updated_on');
         $this->assertEquals($expected, $user->attributeNames());
     }
 

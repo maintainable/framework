@@ -359,11 +359,11 @@ XML;
         $xml = $this->conversion->hashToXml($hash, $this->xmlOptions());
 
         $this->assertEquals("<person>", substr($xml, 0, 8));
-        $this->assertContains('<street-name>Paulina</street-name>',    $xml);
-        $this->assertContains('<name>David</name>',                    $xml);
-        $this->assertContains('<age type="integer">26</age>',          $xml);
-        $this->assertContains('<moved-on>2005-11-15</moved-on>',       $xml);
-        $this->assertContains('<resident type="boolean">1</resident>', $xml);
+        $this->assertContains('<street-name>Paulina</street-name>',       $xml);
+        $this->assertContains('<name>David</name>',                       $xml);
+        $this->assertContains('<age type="integer">26</age>',             $xml);
+        $this->assertContains('<moved-on>2005-11-15</moved-on>',          $xml);
+        $this->assertContains('<resident type="boolean">true</resident>', $xml);
     }
 
     public function testOneLevelWithNils()
@@ -383,10 +383,10 @@ XML;
         $xml = $this->conversion->hashToXml($hash, $this->xmlOptions(array('skipTypes' => true)));
 
         $this->assertEquals("<person>", substr($xml, 0, 8));
-        $this->assertContains('<street>Paulina</street>', $xml);
-        $this->assertContains('<name>David</name>',       $xml);
-        $this->assertContains('<age nil="true"></age>',   $xml);
-        $this->assertContains('<resident>1</resident>',   $xml);
+        $this->assertContains('<street>Paulina</street>',  $xml);
+        $this->assertContains('<name>David</name>',        $xml);
+        $this->assertContains('<age nil="true"></age>',    $xml);
+        $this->assertContains('<resident>true</resident>', $xml);
     }
 
     public function testTwoLevels()

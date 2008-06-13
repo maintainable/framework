@@ -215,7 +215,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         User::deleteAll();
 
         // Now use the Rails insertion
-        User::create(array('wealth' => '12345678901234567890.0123456789'));
+        User::create(array('wealth' => '12345678901234567890.0123456789', 'company_id' => 1));
 
         // SELECT @todo - type cast attribute values
         $user = User::find('first');
@@ -245,7 +245,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
           'birthday' => '2005-01-01 12:23:40', 
           'favorite_day' => '1980-03-05',
           'moment_of_truth' => "1582-10-10 21:40:18", 
-          'male' => true));
+          'male' => true, 'company_id' => 1));
 
         $bob = User::find('first');
         $this->assertEquals('bob',             $bob->first_name);
@@ -266,7 +266,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         User::deleteAll();
 
         $this->_conn->addColumn('users', 'intelligence_quotient', 'tinyint');
-        User::create(array('intelligence_quotient' => 300));
+        User::create(array('intelligence_quotient' => 300, 'company_id' => 1));
 
         $jonnyg = User::find('first');
         $this->assertEquals('127', $jonnyg->intelligence_quotient);
@@ -293,7 +293,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         User::deleteAll();
 
         $this->_conn->addColumn('users', 'girlfriend', 'string');
-        User::create(array('girlfriend' => 'bobette'));
+        User::create(array('girlfriend' => 'bobette', 'company_id' => 1));
 
         $this->_conn->renameColumn('users', 'girlfriend', 'exgirlfriend');
 

@@ -96,16 +96,14 @@ class Mad_Model_Serializer_AttributeTest extends Mad_Test_Unit
         $record->string_value = null;
 
         $attribute = new Mad_Model_Serializer_Attribute('string_value', $record);
-        $this->assertEquals(array('null' => 'string'), $attribute->getDecorations());
+        $this->assertEquals(array('nil' => 'true'), $attribute->getDecorations());
     }
 
-    // @todo - we have no fixtures with binary data
     public function testGetDecorationsAddsBinaryEncoding()
     {
-        // $record = $this->unit_tests('unit_test_1');
-        // $record->binary_value = null;
+        $record = $this->unit_tests('unit_test_1');
 
-        // $attribute = new Mad_Model_Serializer_Attribute('string_value', $record);
-        // $this->assertEquals(array('null' => 'string'), $attribute->getDecorations());
+        $attribute = new Mad_Model_Serializer_Attribute('blob_value', $record);
+        $this->assertEquals(array('type' => 'binary', 'encoding' => 'base64'), $attribute->getDecorations());
     }
 }
