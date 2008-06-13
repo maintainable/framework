@@ -874,6 +874,7 @@ class Horde_Routes_Mapper
                 $this->connect($routeName,
                                sprintf("%s/%s", $collectionPath, $action),
                                $routeOptions);
+
                 $this->connect('formatted_' . $routeName,
                                sprintf("%s/%s.:(format)", $collectionPath, $action),
                                $routeOptions);
@@ -893,8 +894,6 @@ class Horde_Routes_Mapper
                        $collectionPath,
                        array_merge($connectkargs, $options));
 
-        $connectkargs = array('action' => 'index',
-                              'conditions' => array('method' => array('GET')));
         $this->connect('formatted_' . $kargs['namePrefix'] . $collectionName,
                        $collectionPath . '.:(format)',
                        array_merge($connectkargs, $options));
@@ -953,6 +952,7 @@ class Horde_Routes_Mapper
             if ($primary) {
                 $routeOptions['action'] = $primary;
                 $this->connect($memberPath, $routeOptions);
+                $this->connect($memberPath . '.:(format)', $routeOptions);
             }
         }
 
