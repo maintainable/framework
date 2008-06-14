@@ -773,10 +773,11 @@ class Horde_Routes_Mapper
      *       $utils->urlFor('locations', array('region_id'=>51));
      *       # '/regions/51/locations'
      *
-     * Note: this method is not compatible with Python Routes inasmuch as 
-     * it does not use the semicolon to delimit custom actions.  This was
-     * a change in Rails (http://dev.rubyonrails.org/changeset/6485) and
-     * adopting it here allows us to keep parity with ActiveResource.
+     * Note: Since Horde Routes 0.2.0 and Python Routes 1.8, this method is
+     * not compatible with earlier versions inasmuch as the semicolon is no 
+     * longer used to delimit custom actions.  This was a change in Rails
+     * itself (http://dev.rubyonrails.org/changeset/6485) and adopting it
+     * here allows us to keep parity with Rails and ActiveResource.
      *
      * @param  string  $memberName      Singular version of the resource name
      * @param  string  $collectionName  Collection name (plural of $memberName)
@@ -874,7 +875,6 @@ class Horde_Routes_Mapper
                 $this->connect($routeName,
                                sprintf("%s/%s", $collectionPath, $action),
                                $routeOptions);
-
                 $this->connect('formatted_' . $routeName,
                                sprintf("%s/%s.:(format)", $collectionPath, $action),
                                $routeOptions);
@@ -893,7 +893,6 @@ class Horde_Routes_Mapper
         $this->connect($kargs['namePrefix'] . $collectionName,
                        $collectionPath,
                        array_merge($connectkargs, $options));
-
         $this->connect('formatted_' . $kargs['namePrefix'] . $collectionName,
                        $collectionPath . '.:(format)',
                        array_merge($connectkargs, $options));

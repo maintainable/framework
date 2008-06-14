@@ -625,10 +625,12 @@ class Horde_Routes_Route
         }
 
         if (!empty($this->conditions)) {
-            if (array_key_exists('method', $this->conditions) &&
-                (empty($kargs['environ']['REQUEST_METHOD']) ||
-                 !in_array($kargs['environ']['REQUEST_METHOD'], $this->conditions['method']))) {
-                return false;
+            if (isset($this->conditions['method'])) {
+                if (empty($kargs['environ']['REQUEST_METHOD'])) { return false; }
+
+                if (!in_array($kargs['environ']['REQUEST_METHOD'], $this->conditions['method'])) { 
+                    return false; 
+                }
             }
 
             // Check sub-domains?
@@ -816,9 +818,7 @@ class Horde_Routes_Route
                      $newExtras[$key] = $value;
                 }
             }
-
             $url .= http_build_query($newExtras);
-
         } else if ($_appendSlash && substr($url, -1) != '/') {
             $url .= '/';
         }
