@@ -83,14 +83,6 @@ class Mad_Controller_Dispatcher
         $t = new Mad_Support_Timer;
         $t->start();
 
-        // pass a subset of the request environment
-        // horde_routes_mapper for route matching
-        $environ = array('REQUEST_METHOD' => $request->getMethod());
-        foreach (array('HTTP_HOST', 'SERVER_NAME', 'HTTPS') as $k) { 
-            $environ[$k] = $request->getServer($k); 
-        }
-        $this->_mapper->environ = $environ;
-
         $response = new Mad_Controller_Response_Http;
 
         // Recognize routes & Process request
@@ -112,6 +104,14 @@ class Mad_Controller_Dispatcher
      */
     public function recognize($request)
     {
+        // pass a subset of the request environment
+        // horde_routes_mapper for route matching
+        $environ = array('REQUEST_METHOD' => $request->getMethod());
+        foreach (array('HTTP_HOST', 'SERVER_NAME', 'HTTPS') as $k) { 
+            $environ[$k] = $request->getServer($k); 
+        }
+        $this->_mapper->environ = $environ;
+
         $path = $request->getPath();
         if (substr($path, 0, 1) != '/') { $path = "/$path"; }
 
