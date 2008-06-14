@@ -26,15 +26,25 @@ class Mad_Controller_Request_Mock extends Mad_Controller_Request_Http
     /**
      * Request is populated with all the superglobals from page request.
      */
-    public function __construct()
+    public function __construct($options = array())
     {
+        // set the body for the request to test xml parsing
+        if (isset($options['body'])) {
+            $this->_body = $options['body'];
+            unset($options['body']);
+        }
+        if (isset($options['contentType'])) {
+            $this->_contentType = new Mad_Controller_Mime_Type('text/xml', 'xml');
+            unset($options['contentType']);
+        }
+
         $this->initData();
         $this->setCookie(array());
         $this->setSession(array());
         $this->setFlash(array());
         $this->setSessionId('1');
-        
-        parent::__construct();
+
+        parent::__construct($options);
     }
 
 

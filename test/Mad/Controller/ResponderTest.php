@@ -29,16 +29,19 @@ class Mad_Controller_ResponderTest extends Mad_Test_Unit
 {
     // JavaScript
     
-    public function testRespondsToJsWhenUriEndsWithDotJs()
+    public function testRespondsToJsWhenFormatIsJs()
     {
         $request = new Mad_Controller_Request_Mock();
         $request->setServer('HTTP_ACCEPT', '');
-        $request->setUri('foo.js');
-        
+        $request->setPathParams(array('format' => 'js'));
+        $request->setUri('');
+
         $responder = new Mad_Controller_Responder($request);
         $this->assertTrue($responder->js);
+        $this->assertFalse($responder->xml);
+        $this->assertFalse($responder->html);
     }
-    
+
     public function testRespondsToJsWhenAcceptHeaderIsTextJavascript()
     {
         $request = new Mad_Controller_Request_Mock();
@@ -47,18 +50,23 @@ class Mad_Controller_ResponderTest extends Mad_Test_Unit
                 
         $responder = new Mad_Controller_Responder($request);
         $this->assertTrue($responder->js);
+        $this->assertFalse($responder->xml);
+        $this->assertFalse($responder->html);
     }
     
     // XML
 
-    public function testRespondsToXmlWhenUriEndsWithDotXml()
+    public function testRespondsToXmlWhenFormatIsXml()
     {
         $request = new Mad_Controller_Request_Mock();
         $request->setServer('HTTP_ACCEPT', '');
-        $request->setUri('foo.xml');
+        $request->setPathParams(array('format' => 'xml'));
+        $request->setUri('');
         
         $responder = new Mad_Controller_Responder($request);
         $this->assertTrue($responder->xml);
+        $this->assertFalse($responder->js);
+        $this->assertFalse($responder->html);
     }
     
     public function testRespondsToXmlWhenAcceptHeaderIsTextXml()
@@ -69,18 +77,23 @@ class Mad_Controller_ResponderTest extends Mad_Test_Unit
                 
         $responder = new Mad_Controller_Responder($request);
         $this->assertTrue($responder->xml);
+        $this->assertFalse($responder->js);
+        $this->assertFalse($responder->html);
     }
 
     // HTML
     
-    public function testRespondsToHtmlWhenUriEndsWithDotHtml()
+    public function testRespondsToHtmlWhenFormatIsHtml()
     {
         $request = new Mad_Controller_Request_Mock();
         $request->setServer('HTTP_ACCEPT', '');
-        $request->setUri('foo.html');
+        $request->setPathParams(array('format' => 'html'));
+        $request->setUri('');
         
         $responder = new Mad_Controller_Responder($request);
         $this->assertTrue($responder->html);
+        $this->assertFalse($responder->js);
+        $this->assertFalse($responder->xml);
     }
     
     public function testRespondsToHtmlWhenAcceptHeaderIsTextHtml()
@@ -91,9 +104,11 @@ class Mad_Controller_ResponderTest extends Mad_Test_Unit
                 
         $responder = new Mad_Controller_Responder($request);
         $this->assertTrue($responder->html);
+        $this->assertFalse($responder->js);
+        $this->assertFalse($responder->xml);
     }
     
-    public function testRespondToDefaultsToHtml()
+    public function testRespondToDefaultsToAll()
     {
         $request = new Mad_Controller_Request_Mock();
         $request->setServer('HTTP_ACCEPT', '');
@@ -101,6 +116,8 @@ class Mad_Controller_ResponderTest extends Mad_Test_Unit
 
         $responder = new Mad_Controller_Responder($request);
         $this->assertTrue($responder->html);
+        $this->assertTrue($responder->js);
+        $this->assertTrue($responder->xml);
     }
     
     // __call()
@@ -117,6 +134,4 @@ class Mad_Controller_ResponderTest extends Mad_Test_Unit
         }
         $this->fail();
     }
-
-
 }

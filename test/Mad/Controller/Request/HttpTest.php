@@ -34,11 +34,6 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
         $this->_req = new Mad_Controller_Request_Mock();
     }
 
-    // clear out db cookies
-    public function tearDown()
-    {
-    }
-
     /*##########################################################################
     # Instantiation Tests
     ##########################################################################*/
@@ -54,6 +49,8 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
 
         $this->assertFalse($reqId1 == $reqId2);
     }
+
+
 
 
     /*##########################################################################
@@ -116,7 +113,7 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
     }
 
     // test getting combined params
-    public function testGetAllParams()
+    public function testgetParameters()
     {
         $this->_req->setPathParams(array('test3' => 'true'));
 
@@ -146,7 +143,7 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
                     'size'     => '45',
                     'tmp_name' => '/tmp/test3'))
             ));
-        $this->assertEquals($expected, $this->_req->getAllParams());
+        $this->assertEquals($expected, $this->_req->getParameters());
     }
 
     // test getting the $_GET vars
@@ -192,7 +189,7 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
     /*##########################################################################
     # Test Method/URI
     ##########################################################################*/
-
+    /*
     // test setting the request method
     public function testSetMethod()
     {
@@ -342,6 +339,69 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
         $this->assertEquals('bar', $this->_req->getCookie('foo'));
     }
 
+
+    /*##########################################################################
+    # Mime/Content type methods
+    ##########################################################################*/
+
+    public function testGetBody()
+    {
+        $xml = '<people type="array"><person><id>1</id></person></people>';
+        $req = new Mad_Controller_Request_Mock(array('body' => $xml));
+
+        $this->assertEquals($xml, $req->getBody());
+    }
+
+    public function testGetContentLength()
+    {
+        $xml = '<people type="array"><person><id>1</id></person></people>';
+        $req = new Mad_Controller_Request_Mock(array('body' => $xml));
+
+        $this->assertEquals(57, $req->getContentLength());
+    }
+
+    public function testGetContentType()
+    {
+        $this->_req->setServer('CONTENT_TYPE', 'text/javascript');
+        
+        $this->assertEquals('js', (string)$this->_req->getContentType());
+    }
+
+    public function testGetAcceptsWithJavascriptHttpAccept()
+    {
+        $name  = 'text/javascript';
+        $this->_req->setServer('HTTP_ACCEPT', 'text/javascript');
+        
+        $this->assertEquals('js', (string)current($this->_req->getAccepts()));
+    }
+
+    public function testGetAcceptsWithHtmlHttpAccept()
+    {   
+        $this->assertEquals('html', (string)current($this->_req->getAccepts()));
+    }
+
+    public function testGetFormatWithFormatParam()
+    {
+        $this->_req->setPathParams(array('format' => 'js'));
+
+        $this->assertEquals('js', (string)$this->_req->getFormat());
+    }
+
+    public function testGetFormatFromHttpAccept()
+    {
+        $this->assertEquals('html', (string)$this->_req->getFormat());
+    }
+
+    public function testFormattedRequestParams()
+    {
+        $xml = '<people type="array"><person><id>1</id></person></people>';
+
+        $req = new Mad_Controller_Request_Mock(array('body'        => $xml, 
+                                                     'contentType' => 'xml'));
+        $params = $req->getParameters();
+        $people = $params['people'];
+        $this->assertEquals(1, $people[0]['id']);
+    }
 
     /*##########################################################################
     ##########################################################################*/

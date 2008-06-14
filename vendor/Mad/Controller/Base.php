@@ -1125,7 +1125,7 @@ abstract class Mad_Controller_Base
      */
     private function _initParams()
     {
-        $hash = $this->_request->getAllParams();
+        $hash = $this->_request->getParameters();
         $this->params = new Mad_Support_ArrayObject($hash);
 
         $this->_action = $this->params->get(':action');

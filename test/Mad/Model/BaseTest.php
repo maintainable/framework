@@ -526,27 +526,9 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     {
         $test = UnitTest::find(1);
 
-        try {
-            $test->id = 12345;
-            $this->fail();
-        } catch (Mad_Model_Exception $e) {}
-
-        $expected = 'You cannot set the primary key of an object with an existing primary key';
-        $this->assertEquals($expected, $e->getMessage());
-    }
-
-    // test setting pk attribute when it already exists
-    public function testSetPkAttributeExists()
-    {
-        $test = UnitTest::find(1);
-
-        try {
-            $test->id = 12345;
-            $this->fail();
-        } catch (Mad_Model_Exception $e) {}
-
-        $expected = 'You cannot set the primary key of an object with an existing primary key';
-        $this->assertEquals($expected, $e->getMessage());
+        $test->id = 12345;
+        
+        $this->assertEquals(1, $test->id);
     }
 
 

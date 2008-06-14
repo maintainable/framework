@@ -47,7 +47,11 @@ class Mad_Controller_Request_Http
     protected $_session;
     protected $_flash;
 
+    protected $_contentType;
+    protected $_accepts;
+    protected $_format;
     protected $_method;
+    protected $_body;
     protected $_remoteIp;
     protected $_port;
     protected $_https;
@@ -72,6 +76,9 @@ class Mad_Controller_Request_Http
         $this->_initRequestId();
         $this->_initSessionData();
 
+        // register default mime types
+        Mad_Controller_Mime_Type::registerTypes();
+
         // superglobal data if not passed in thru constructor
         $this->_get     = isset($options['get'])     ? $options['get']     : $_GET;
         $this->_post    = isset($options['post'])    ? $options['post']    : $_POST;
@@ -80,6 +87,7 @@ class Mad_Controller_Request_Http
         $this->_server  = isset($options['server'])  ? $options['server']  : $_SERVER;
         $this->_env     = isset($options['env'])     ? $options['env']     : $_ENV;
         $this->_pathParams = array();
+        $this->_formattedRequestParams = $this->_parseFormattedRequestParameters();
 
         // use FileUpload object to store files
         $this->_setFilesSuperglobals();
@@ -100,6 +108,26 @@ class Mad_Controller_Request_Http
     /*##########################################################################
     # Public Methods
     ##########################################################################*/
+
+    /**
+     * Get the http request method:
+     *  eg. GET, POST, PUT, DELETE
+     *
+     * @return  string
+     */
+    public function getMethod()
+    {
+        $methods = array('GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'OPTIONS');
+        
+        if ($this->_method == 'POST') {
+            if (isset($this->_post['_method'])) {
+                $faked = strtoupper($this->_post['_method']);
+                if (in_array($faked, $methods)) { return $faked; }
+            }
+        }
+        
+        return $this->_method;
+    }
 
     /**
      * Get list of all superglobals to pass into a different request
@@ -183,23 +211,76 @@ class Mad_Controller_Request_Http
     }
 
     /**
-     * Get the http request method:
-     *  eg. GET, POST, PUT, DELETE
-     *
+     * The request body
+     * 
      * @return  string
      */
-    public function getMethod()
+    public function getBody()
     {
-        $methods = array('GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'OPTIONS');
-        
-        if ($this->_method == 'POST') {
-            if (isset($this->_post['_method'])) {
-                $faked = strtoupper($this->_post['_method']);
-                if (in_array($faked, $methods)) { return $faked; }
+        if (!isset($this->_body)) {
+            $this->_body = file_get_contents("php://input");
+        }
+        return $this->_body;
+    }
+    
+    /**
+     * Return the request content length
+     * 
+     * @return  int
+     */
+    public function getContentLength()
+    {
+        return strlen($this->getBody());
+    }
+
+    public function getContentType()
+    {
+        if (!isset($this->_contentType)) {
+            $type = $this->getServer('CONTENT_TYPE');
+            $this->_contentType = Mad_Controller_Mime_Type::lookup($type);
+        }
+        return $this->_contentType;
+    }
+
+    /**
+     * @return  array
+     */
+    public function getAccepts()
+    {
+        if (!isset($this->_accepts)) {
+            $accept = $this->getServer('HTTP_ACCEPT');
+            if (empty($accept)) {
+                $types = array();
+                $contentType = $this->getContentType();
+                if ($contentType) { $types[] = $contentType; }
+                $types[] = Mad_Controller_Mime_Type::lookupByExtension('all');
+                $accepts = $types;
+            } else {
+                $accepts = Mad_Controller_Mime_Type::parse($accept);
+            }
+            $this->_accepts = $accepts;
+        }
+        return $this->_accepts;
+    }
+    
+
+    /**
+     * Returns the Mime type for the format used in the request. If there is no 
+     * format available, the first of the 
+     * 
+     * @return  string
+     */
+    public function getFormat()
+    {
+        if (!isset($this->_format)) {
+            $params = $this->getParameters();
+            if (isset($params['format'])) {
+                $this->_format = Mad_Controller_Mime_Type::lookupByExtension($params['format']);
+            } else {
+                $this->_format = current($this->getAccepts());
             }
         }
-        
-        return $this->_method;
+        return $this->_format;
     }
 
     /**
@@ -299,10 +380,12 @@ class Mad_Controller_Request_Http
      * 
      * @return  array
      */
-    public function getAllParams()
+    public function getParameters()
     {
         $allParams = array();
-        $paramArrays = array($this->_pathParams, $this->_get, $this->_post, $this->_files);
+        $paramArrays = array($this->_pathParams, $this->_formattedRequestParams, 
+                             $this->_get, $this->_post, $this->_files);
+
         foreach ($paramArrays as $params) {
             foreach ((array)$params as $key => $value) {
                 if (!is_array($value) || !isset($allParams[$key])) {
@@ -421,6 +504,28 @@ class Mad_Controller_Request_Http
     /*##########################################################################
     # Private Methods
     ##########################################################################*/
+
+    private function _parseFormattedRequestParameters()
+    {
+        if ($this->getContentLength() == 0) { return array(); }
+
+        $contentType = (string)$this->getContentType();
+
+        // Don't parse params for unknown requests.
+        if (empty($contentType)) { return array(); }
+
+        $mimeType = Mad_Controller_Mime_Type::lookupByExtension($contentType);
+
+        // parse xml into params
+        if ($mimeType->symbol == 'xml') {
+            $body = $this->getBody();
+            return empty($body) ? array() : Mad_Support_ArrayObject::fromXml($body);
+
+        // nothing else supported now
+        } else {
+            return array();
+        }
+    }
 
     /**
      * Uniquely identify each request from others. This aids in threading

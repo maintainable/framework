@@ -1,5 +1,5 @@
 <?php
-  $cleanParams = $this->request->getAllParams();
+  $cleanParams = $this->request->getParameters();
   unset($cleanParams['controller'], $cleanParams[':controller'], 
         $cleanParams['action'],     $cleanParams[':action']);
   $requestDump = empty($cleanParams) ? 'None' : var_export($cleanParams, true);

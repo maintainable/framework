@@ -31,7 +31,7 @@ class Mad_Controller_Responder
     public function __construct($request)
     {
         $this->_request = $request;
-        $this->_analyze();
+        $this->_format  = (string)$this->_request->getFormat();
     }
 
     /**
@@ -40,8 +40,9 @@ class Mad_Controller_Responder
      * @param  string   $format  
      * @return boolean  Accepted?
      */
-    public function __get($format) {
-        return $this->_format == $format;
+    public function __get($format)
+    {
+        return $this->_format == $format || $this->_format == 'all';
     }
 
     /**
@@ -58,29 +59,4 @@ class Mad_Controller_Responder
 
         throw new BadMethodCallException($msg);
     }
-
-    /*
-     * Very hacked together analysis of HTTP_ACCEPT and URI to
-     * guess the format that the remote is expecting.
-     *
-     * @todo proper mime types implementation 
-     */
-    protected function _analyze()
-    {
-        $accept = $this->_request->getServer('HTTP_ACCEPT');
-        $uri    = $this->_request->getUri();
-        
-        if (strstr($uri, '.js')) {
-            $this->_format = 'js';
-        } else if (strstr($uri, '.xml')) {
-            $this->_format = 'xml';
-        } else if (strstr($accept, 'text/javascript')) {
-            $this->_format = 'js';
-        } else if (strstr($accept, 'text/html') || strstr($uri, '.html')) {
-            $this->_format = 'html';
-        } else if (strstr($accept, 'text/xml')) {
-            $this->_format = 'xml';
-        }
-    }
-
 }

@@ -328,9 +328,8 @@ abstract class Mad_Model_Base extends Mad_Support_Object
 
         // cannot change pk if it's already set
         if (($name == $this->primaryKey()) && !$this->isNewRecord()) {
-            $msg = 'You cannot set the primary key of an object with an '.
-                   'existing primary key';
-            throw new Mad_Model_Exception($msg);
+            // ignore assignment of pk so that this works with activeresource
+            return;
         }
 
         // active-record || attribute-reader value
