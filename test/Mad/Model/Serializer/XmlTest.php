@@ -38,7 +38,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
     # Xml Serialization Test
     ##########################################################################*/
 
-    public function test_should_serialize_default_root()
+    public function testShouldSerializeDefaultRoot()
     {
         $user = new User;
         $xml  = $user->toXml();
@@ -47,7 +47,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('</user>', $xml);
     }
 
-    public function test_should_serialize_default_root_with_namespace()
+    public function testShouldSerializeDefaultRootWithNamespace()
     {
         $user = new User;
         $xml  = $user->toXml(array('namespace' => "http://xml.rubyonrails.org/contact"));
@@ -56,7 +56,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('</user>', $xml);
     }
 
-    public function test_should_serialize_custom_root()
+    public function testShouldSerializeCustomRoot()
     {
         $user = new User;
         $xml  = $user->toXml(array('root' => "xml_contact"));
@@ -65,7 +65,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('</xml-contact>', $xml);
     }
 
-    public function test_should_allow_undasherized_tags()
+    public function testShouldAllowUndasherizedTags()
     {
         $user = new User;
         $xml  = $user->toXml(array('root' => "xml_contact", 'dasherize' => false));
@@ -80,21 +80,21 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
     # Default Xml Serialization Test
     ##########################################################################*/
 
-    public function test_should_serialize_string()
+    public function testShouldSerializeString()
     {
         $xml = User::find(1)->toXml();
         
         $this->assertContains('<name>Mike Naberezny</name>', $xml);
     }
 
-    public function test_should_serialize_integer()
+    public function testShouldSerializeInteger()
     {
         $xml = User::find(1)->toXml();
         
         $this->assertContains('<id type="integer">1</id>', $xml);
     }
 
-    public function test_should_serialize_binary()
+    public function testShouldSerializeBinary()
     {
         $xml = UnitTest::find(1)->toXml();
 
@@ -102,21 +102,21 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<blob-value encoding="base64" type="binary">', $xml);
     }
 
-    public function test_should_serialize_date()
+    public function testShouldSerializeDate()
     {
         $xml = User::find(1)->toXml();
 
         $this->assertContains('<created-on type="date">2008-01-01</created-on>', $xml);
     }
 
-    public function test_should_serialize_datetime()
+    public function testShouldSerializeDatetime()
     {
         $xml = User::find(1)->toXml();
 
         $this->assertContains('<created-at type="datetime">2008-01-01T20:20:00+00:00</created-at>', $xml);
     }
 
-    public function test_should_serialize_boolean()
+    public function testShouldSerializeBoolean()
     {
         $xml = User::find(1)->toXml();
 
@@ -128,14 +128,14 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
     # Nil Xml Serialization Test
     ##########################################################################*/
 
-    public function test_should_serialize_null_string()
+    public function testShouldSerializeNullString()
     {
         $user = new User(array('name' => null));
         $xml = $user->toXml();
         $this->assertContains('<name nil="true"></name>', $xml);
     }
 
-    public function test_should_serialize_null_integer()
+    public function testShouldSerializeNullInteger()
     {
         $user = new User(array('id' => null));
         $xml = $user->toXml();
@@ -143,7 +143,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<id type="integer" nil="true"></id>', $xml);
     }
 
-    public function test_should_serialize_null_binary()
+    public function testShouldSerializeNullBinary()
     {
         $user = new UnitTest(array('blob_value' => null));
         $xml = $user->toXml();
@@ -151,7 +151,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<blob-value encoding="base64" type="binary" nil="true"></blob-value>', $xml);
     }
 
-    public function test_should_serialize_null_date()
+    public function testShouldSerializeNullDate()
     {
         $user = new User(array('created_on' => null));
         $xml = $user->toXml();
@@ -162,7 +162,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<created-on type="date" nil="true"></created-on>', $xml);
     }
 
-    public function test_should_serialize_null_datetime()
+    public function testShouldSerializeNullDatetime()
     {
         $user = new User(array('created_at' => null));
         $xml = $user->toXml();
@@ -173,7 +173,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<created-at type="datetime" nil="true"></created-at>', $xml);
     }
 
-    public function test_should_serialize_null_boolean()
+    public function testShouldSerializeNullBoolean()
     {
         $user = new User(array('approved' => null));
         $xml = $user->toXml();
@@ -186,7 +186,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
     # Database Connection Xml Serialization Test
     ##########################################################################*/
 
-    public function test_passing_hash_shouldnt_reuse_builder()
+    public function testPassingHashShouldntReuseBuilder()
     {
         $options = array('include' => 'Comments');
         $mike = $this->users('mike');
@@ -197,7 +197,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertEquals($firstXml, $secondXml);
     }
 
-    public function test_include_uses_association_name()
+    public function testIncludeUsesAssociationName()
     {
         $xml = $this->companies('maintainable')->toXml(array('include' => 'Users', 'indent' => 0));
         
@@ -206,7 +206,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<user type="Client">', $xml);
     }
 
-    public function test_methods_are_called_on_object()
+    public function testMethodsAreCalledOnObject()
     {
         $options = array('methods' => 'foo');
         $xmlRpc = $this->articles('xml_rpc');
@@ -216,7 +216,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<foo>test serializer foo</foo>', $xml);
     }
 
-    public function test_should_not_call_methods_on_associations_that_dont_respond()
+    public function testShouldNotCallMethodsOnAssociationsThatDontRespond()
     {
         $xml = $this->companies('maintainable')->toXml(array('include' => 'Users', 
                                                              'indent'  => 2, 
@@ -227,7 +227,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertNotContains('    <foo>',                     $xml);
     }
 
-    public function test_should_include_empty_has_many_as_empty_array()
+    public function testShouldIncludeEmptyHasManyAsEmptyArray()
     {
         User::deleteAll();
         
@@ -239,7 +239,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<users type="array"></users>', $xml);
     }
 
-    public function test_should_has_many_array_elements_should_include_type_when_different_from_guessed_value()
+    public function testShouldHasManyArrayElementsShouldIncludeTypeWhenDifferentFromGuessedValue()
     {
         $xml = $this->companies('maintainable')->toXml(array('include' => 'Employees', 
                                                              'indent'  => 2));
