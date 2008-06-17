@@ -95,6 +95,30 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
         $expected = array('first_name', 'name');
         $this->assertEquals($expected, $attrNames);
     }
+    
+    public function testGetSerializablePropertyNamesSingle()
+    {
+        $record  = $this->articles('xml_rpc');
+        $options = array('properties' => 'validity');
+
+        $serializer = new Mad_Model_Serializer_Base($record, $options);        
+        $propertyNames = $serializer->getSerializablePropertyNames();
+        
+        $expected = array('validity');
+        $this->assertEquals($expected, $propertyNames);
+    }
+
+    public function testGetSerializablePropertyNamesMultiple()
+    {
+        $record  = $this->articles('xml_rpc');
+        $options = array('properties' => array('validity', 'is_good'));
+
+        $serializer = new Mad_Model_Serializer_Base($record, $options);        
+        $propertyNames = $serializer->getSerializablePropertyNames();
+        
+        $expected = array('is_good', 'validity');
+        $this->assertEquals($expected, $propertyNames);
+    }
 
     public function testGetSerializableMethodNamesSingle()
     {
@@ -105,6 +129,7 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
         $methodNames = $serializer->getSerializableMethodNames();
         
         $expected = array('foo');
+        $this->assertEquals($expected, $methodNames);
     }
 
     public function testGetSerializableMethodNamesMultiple()
@@ -115,18 +140,21 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
         $serializer = new Mad_Model_Serializer_Base($record, $options);        
         $methodNames = $serializer->getSerializableMethodNames();
         
-        $expected = array('foo', 'bar');
+        $expected = array('bar', 'foo');
+        $this->assertEquals($expected, $methodNames);
     }
 
     public function testGetSerializableNames()
     {
         $record  = $this->articles('xml_rpc');
-        $options = array('methods' => 'foo', 'except' => 'title');
+        $options = array('methods'    => 'foo', 
+                         'properties' => 'validity', 
+                         'except'     => 'title');
 
         $serializer = new Mad_Model_Serializer_Base($record, $options);        
         $attrNames = $serializer->getSerializableNames();
 
-        $expected = array('foo', 'id', 'user_id');
+        $expected = array('foo', 'id', 'user_id', 'validity');
         $this->assertEquals($expected, $attrNames);
     }
 
@@ -267,6 +295,29 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
           'boolMethod' => true,
           'foo'        => 'test serializer foo', 
           'intMethod'  => 123
+        );
+
+        $this->assertEquals($expected, $record);
+    }
+
+
+    public function testGetSerializableRecordWithProperties()
+    {
+        $record  = $this->articles('xml_rpc');
+        $record->is_good  = false;
+        $record->validity = array('Valid!');
+
+        $options = array('properties' => array('is_good', 'validity'));
+
+        $serializer = new Mad_Model_Serializer_Base($record, $options);        
+        $record = $serializer->getSerializableRecord();
+
+        $expected = array (
+          'id'         => '1',
+          'title'      => 'Easier XML-RPC for PHP5',
+          'user_id'    => '1', 
+          'is_good'    => false,
+          'validity'   => array('Valid!')
         );
 
         $this->assertEquals($expected, $record);

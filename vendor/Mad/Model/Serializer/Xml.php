@@ -106,9 +106,30 @@ class Mad_Model_Serializer_Xml extends Mad_Model_Serializer_Base
         return $methodAttributes;
     }
 
+    /**
+     * @return  array
+     */
+    public function getSerializablePropertyAttributes()
+    {
+        $properties = !empty($this->_options['properties']) ? $this->_options['properties'] : array();
+
+        $propertyAttributes = array();
+
+        foreach ((array)$properties as $name) {
+            try {
+                $propertyAttributes[] = new Mad_Model_Serializer_PropertyAttribute($name, $this->_record); 
+
+            // ignore exceptions -- just don't add as a property if it errors
+            } catch (Exception $e) {}
+        }
+        return $propertyAttributes;
+    }
+
     public function addAttributes()
     {
-        $attributes = array_merge($this->getSerializableAttributes(), $this->getSerializableMethodAttributes());
+        $attributes = array_merge($this->getSerializableAttributes(), 
+                                  $this->getSerializablePropertyAttributes(), 
+                                  $this->getSerializableMethodAttributes());
         foreach ($attributes as $attribute) {
             $this->addTag($attribute);
         }  
@@ -122,8 +143,18 @@ class Mad_Model_Serializer_Xml extends Mad_Model_Serializer_Base
         $attrName  = $this->dasherize($attribute->getName());
         $attrValue = $attribute->getValue();
         $attrDecos = $attribute->getDecorations(empty($this->_options['skipTypes']));
+        
+        $builder = $this->getBuilder();
+        
+        // check if attribute values need to be further serialized
+        if (is_array($attrValue)) {
+            $options = array_merge($this->_options, array('root' => $attrName));
+            $ao = new Mad_Support_ArrayObject($attrValue);
+            $ao->toXml($options);
 
-        $tag = $this->getBuilder()->tag($attrName, $attrValue, $attrDecos);
+        } else {
+            $builder->tag($attrName, $attrValue, $attrDecos);
+        }
     }
     
     /**

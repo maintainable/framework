@@ -2,6 +2,9 @@
 
 class Article extends Mad_Model_Base
 {
+    protected $_validity;
+    protected $_is_good;
+
     // relationships and validation
     protected function _initialize()
     {
@@ -12,8 +15,12 @@ class Article extends Mad_Model_Base
 
         $this->hasMany('Fax_Attachments');
         $this->hasMany('Fax_Jobs', array('through' => 'Fax_Attachments'));
+        
+
+        // serializable properties
+        $this->attrAccessor('validity', 'is_good');
     }
-    
+
     public function foo()
     {
         return 'test serializer foo';

@@ -1247,6 +1247,26 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     /*##########################################################################
     # Test UPDATEs
     ##########################################################################*/
+    
+    // @todo - fix saving of belongs to associated objects
+    // Saving a change to a column of an associated belongs to object doesn't 
+    // work when we include the object in the find. This has to do with saving
+    // the associated object before we save the base object
+    public function testUpdateAttributesWithAssociations()
+    {
+        $this->markTestSkipped();
+
+        $this->fixtures('users', 'articles');
+
+        $article = Article::find($this->articles('xml_rpc')->id, array('include' => 'User'));
+        $this->assertEquals($this->users('mike')->id, $article->user_id);
+
+        $article->updateAttributes(array('user_id' => $this->users('derek')->id));
+        $article->save();
+
+        $article = Article::find($this->articles('xml_rpc')->id);
+        $this->assertEquals($this->users('derek')->id, $article->user_id);
+    }
 
     // test updating one attribute
     public function testUpdateAttribute()

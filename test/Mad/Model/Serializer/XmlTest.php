@@ -216,15 +216,36 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<foo>test serializer foo</foo>', $xml);
     }
 
+    public function testPropertiesAreCalledOnObject()
+    {
+        $options = array('properties' => 'validity', 'indent' => 0);
+        $xmlRpc = $this->articles('xml_rpc');
+        $xmlRpc->validity = array('is' => 'excellent');
+
+        $xml = $xmlRpc->toXml($options);
+
+        $this->assertContains('<validity><is>excellent</is></validity>', $xml);
+    }
+
     public function testShouldNotCallMethodsOnAssociationsThatDontRespond()
     {
         $xml = $this->companies('maintainable')->toXml(array('include' => 'Users', 
-                                                             'indent'  => 2, 
+                                                             'indent'  => 2,
                                                              'methods' => 'foo'));        
 
         $this->assertTrue(!method_exists($this->companies('maintainable')->users[0], 'foo'));
         $this->assertContains('  <foo>test serializer foo</foo>', $xml);
         $this->assertNotContains('    <foo>',                     $xml);
+    }
+
+    public function testShouldNotCallPropertiesOnAssociationsThatDontRespond()
+    {
+        $xml = $this->companies('maintainable')->toXml(array('include'    => 'Users', 
+                                                             'indent'  => 2,
+                                                             'properties' => 'is_cool'));
+
+        $this->assertContains('  <is-cool type="boolean">true</is-cool>', $xml);
+        $this->assertNotContains('    <is-cool>',                         $xml);
     }
 
     public function testShouldIncludeEmptyHasManyAsEmptyArray()
@@ -347,6 +368,20 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertContains('<bool-method type="boolean">true</bool-method>', $xml);        
     }
 
+    public function testSerializeWithProperties()
+    {
+        $record  = $this->articles('xml_rpc');
+        $record->validity = array('is' => 'great');
+        $record->is_good  = true;
+
+        $options = array('properties' => array('validity', 'is_good'), 'indent' => 0);
+        $serializer = new Mad_Model_Serializer_Xml($record, $options);
+
+        $xml = $serializer->serialize($record, $options);
+
+        $this->assertContains('<is-good type="boolean">true</is-good>', $xml);
+        $this->assertContains('<validity><is>great</is></validity>',    $xml);
+    }
 
     /*##########################################################################
     # Model conversion Serialization Test

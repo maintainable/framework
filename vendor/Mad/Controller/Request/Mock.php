@@ -28,16 +28,6 @@ class Mad_Controller_Request_Mock extends Mad_Controller_Request_Http
      */
     public function __construct($options = array())
     {
-        // set the body for the request to test xml parsing
-        if (isset($options['body'])) {
-            $this->_body = $options['body'];
-            unset($options['body']);
-        }
-        if (isset($options['contentType'])) {
-            $this->_contentType = new Mad_Controller_Mime_Type('text/xml', 'xml');
-            unset($options['contentType']);
-        }
-
         $this->initData();
         $this->setCookie(array());
         $this->setSession(array());
@@ -176,6 +166,20 @@ class Mad_Controller_Request_Mock extends Mad_Controller_Request_Http
     public function setPort($port)
     {
         $this->_port = $port;
+    }
+    
+    public function setContentType($contentType)
+    {
+        $this->_contentType = $contentType;
+    }
+        
+    /**
+     * Set the body (xml) for this request
+     */
+    public function setBody($body)
+    {
+        $this->_body = $body;
+        $this->_formattedRequestParams = $this->_parseFormattedRequestParameters();
     }
 
     /**

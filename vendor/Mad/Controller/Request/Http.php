@@ -505,7 +505,21 @@ class Mad_Controller_Request_Http
     # Private Methods
     ##########################################################################*/
 
-    private function _parseFormattedRequestParameters()
+    /**
+     * Uniquely identify each request from others. This aids in threading
+     *  related log requests during troubleshooting on a busy server
+     */
+    private function _initRequestId()
+    {
+        $uuid = new OmniTI_Util_UUID();
+        $this->_requestId = $uuid->toRFC4122String();
+    }
+
+    /**
+     * Parse XML into request params for active resource style requests
+     * @return  array
+     */
+    protected function _parseFormattedRequestParameters()
     {
         if ($this->getContentLength() == 0) { return array(); }
 
@@ -525,16 +539,6 @@ class Mad_Controller_Request_Http
         } else {
             return array();
         }
-    }
-
-    /**
-     * Uniquely identify each request from others. This aids in threading
-     *  related log requests during troubleshooting on a busy server
-     */
-    private function _initRequestId()
-    {
-        $uuid = new OmniTI_Util_UUID();
-        $this->_requestId = $uuid->toRFC4122String();
     }
 
     /**

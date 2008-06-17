@@ -77,9 +77,23 @@ class Mad_Model_Serializer_Base
         return $methodAttributes;
     }
 
+    public function getSerializablePropertyNames()
+    {
+        $propertyAttributes = array();
+
+        $properties = isset($this->_options['properties']) ? (array)$this->_options['properties'] : array();
+        foreach ($properties as $property) {
+            $propertyAttributes[] = $property; 
+        }
+        sort($propertyAttributes);
+        return $propertyAttributes;
+    }
+
     public function getSerializableNames()
     {
-        $names = array_merge($this->getSerializableAttributeNames(), $this->getSerializableMethodNames());
+        $names = array_merge($this->getSerializableAttributeNames(), 
+                             $this->getSerializablePropertyNames(),
+                             $this->getSerializableMethodNames());
         sort($names);
         return $names;
     }
@@ -165,6 +179,9 @@ class Mad_Model_Serializer_Base
         
         foreach ($this->getSerializableAttributeNames() as $name) {
             $this->_serializableRecord[$name] = $this->_record->$name;
+        }
+        foreach ($this->getSerializablePropertyNames() as $name) {
+            $this->_serializableRecord[$name] = $this->_record->{$name};
         }
         foreach ($this->getSerializableMethodNames() as $name) {
             $this->_serializableRecord[$name] = $this->_record->{$name}();

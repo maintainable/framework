@@ -189,7 +189,7 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
     /*##########################################################################
     # Test Method/URI
     ##########################################################################*/
-    /*
+
     // test setting the request method
     public function testSetMethod()
     {
@@ -347,7 +347,8 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
     public function testGetBody()
     {
         $xml = '<people type="array"><person><id>1</id></person></people>';
-        $req = new Mad_Controller_Request_Mock(array('body' => $xml));
+        $req = new Mad_Controller_Request_Mock();
+        $req->setBody($xml);
 
         $this->assertEquals($xml, $req->getBody());
     }
@@ -355,7 +356,8 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
     public function testGetContentLength()
     {
         $xml = '<people type="array"><person><id>1</id></person></people>';
-        $req = new Mad_Controller_Request_Mock(array('body' => $xml));
+        $req = new Mad_Controller_Request_Mock();
+        $req->setBody($xml);
 
         $this->assertEquals(57, $req->getContentLength());
     }
@@ -396,9 +398,12 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
     {
         $xml = '<people type="array"><person><id>1</id></person></people>';
 
-        $req = new Mad_Controller_Request_Mock(array('body'        => $xml, 
-                                                     'contentType' => 'xml'));
+        $req = new Mad_Controller_Request_Mock();
+        $req->setContentType('xml');
+        $req->setBody($xml);
+
         $params = $req->getParameters();
+
         $people = $params['people'];
         $this->assertEquals(1, $people[0]['id']);
     }
