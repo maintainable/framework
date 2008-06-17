@@ -193,7 +193,7 @@ class Mad_Model_Errors extends Mad_Support_ArrayObject implements Iterator
             }
         $tag->end();
 
-        return (string)$builder;
+        return $builder->__toString();
     }
 
 
