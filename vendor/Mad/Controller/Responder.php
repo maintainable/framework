@@ -31,7 +31,12 @@ class Mad_Controller_Responder
     public function __construct($request)
     {
         $this->_request = $request;
-        $this->_format  = (string)$this->_request->getFormat();
+
+        $format = $this->_request->getFormat();
+        if (is_object($format) && $format instanceof Mad_Controller_Mime_Type) {
+            $format = $format->__toString();
+        }
+        $this->_format = $format;
     }
 
     /**
