@@ -221,6 +221,6 @@ class Mad_Model_Serializer_Xml extends Mad_Model_Serializer_Base
             $this->addIncludes();
         $tag->end();
 
-        return (string)$builder;
+        return $builder->__toString();
     }
 }
