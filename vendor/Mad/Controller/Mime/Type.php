@@ -50,8 +50,6 @@ class Mad_Controller_Mime_Type
     
     public static function lookupByExtension($ext)
     {
-        $look = var_export(self::$extensionLookup['xml'], true);
-
         if (!empty(self::$extensionLookup[$ext])) {
             return self::$extensionLookup[$ext];
         } else {
