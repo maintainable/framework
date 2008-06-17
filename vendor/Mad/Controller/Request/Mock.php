@@ -168,11 +168,38 @@ class Mad_Controller_Request_Mock extends Mad_Controller_Request_Http
         $this->_port = $port;
     }
     
+    /**
+     * Set the content type for this mock request.
+     *
+     * $contentType may be a type ("application/xml"), an
+     * extension ("xml"), a Mad_Controller_Mime_Type, or NULL.
+     *
+     *   $request->setContentType('application/xml');  // type  
+     *   $request->setContentType('xml')               // extension
+     *
+     * If you want to manipulate the content type header directly,
+     * you need to call this method with NULL after setting the header
+     * to wipe any previously cached value.  See getContentType().
+     *
+     *   $request->setServer('CONTENT_TYPE', 'raw header value');
+     *   $request->setContentType(null);
+     *
+     * @param  mixed $contentType
+     * @return void
+     */
     public function setContentType($contentType)
     {
+        if (is_string($contentType)) {
+            if (strpos($contentType, '/') !== false) {
+                $contentType = Mad_Controller_Mime_Type::lookup($contentType);
+            } else {
+                $contentType = Mad_Controller_Mime_Type::lookupByExtension($contentType);
+            }
+        }
+        
         $this->_contentType = $contentType;
     }
-        
+
     /**
      * Set the body (xml) for this request
      */
