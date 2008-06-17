@@ -16,21 +16,31 @@
  */
 class Mad_Controller_UrlWriter
 {
-    /** @var Horde_Routes_Util */
-    protected $_utils;
-    
-    /** @var array */
+    /** 
+     * Defaults to merge into route parameters when not using named routes.
+     * @var array 
+     */
     protected $_defaults;
+
+    /** 
+     * @var Horde_Routes_Util 
+     */
+    protected $_utils;
     
     /**
      * Class constructor
      *
-     * @param  array  $defaults  Defaults to merge in every call to urlFor().
+     * @param  array                   $defaults  Defaults to merge for urlFor()
+     * @param  null|Horde_Route_Utils  $utils     Route utilities
      */
-    public function __construct($defaults = array())
+    public function __construct($defaults = array(), $utils = null)
     {
         $this->_defaults = $defaults;
-        $this->_utils = Mad_Controller_Dispatcher::getInstance()->getRouteUtils();
+        
+        if ($utils === null) {
+            $utils = Mad_Controller_Dispatcher::getInstance()->getRouteUtils();
+        }
+        $this->_utils = $utils;
     }
 
     /**
@@ -40,7 +50,7 @@ class Mad_Controller_UrlWriter
      * @param  $second  mixed
      * @return string
      */
-    public function urlFor($first = array(), $second = array())
+    public function urlFor($first, $second = array())
     {
         // anonymous route: serialize to params & merge defaults
         //   urlFor(array('controller' => 'books'))
