@@ -523,13 +523,7 @@ class Mad_Controller_Request_Http
     {
         if ($this->getContentLength() == 0) { return array(); }
 
-        $contentType = $this->getContentType();
-
-        // Don't parse params for unknown requests.
-        if ($contentType === null) { return array(); }
-
-        /** @var Mad_Controller_Mime_Type */
-        $mimeType = Mad_Controller_Mime_Type::lookupByExtension($contentType);
+        $mimeType = $this->getContentType();
         if ($mimeType === null) { return array(); }
 
         // parse xml into params
