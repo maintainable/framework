@@ -50,7 +50,7 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
     ##########################################################################*/
 
     /**
-     * Simulate a get request to the controller
+     * Simulate a GET request to the controller
      *
      * {{code: php
      *  ...
@@ -70,7 +70,7 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
     }
 
     /**
-     * Simulate a post request to the controller
+     * Simulate a POST request to the controller
      *
      * {{code: php
      *  ...
@@ -87,6 +87,46 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
     {
         $this->_initParams('POST', $options, $session);
         $this->_sendRequest($url, 'POST');
+    }
+
+    /**
+     * Simulate a PUT request to the controller
+     *
+     * {{code: php
+     *  ...
+     *  $this->put('/unit_test/test_action/123', array('myGetVar' => 1));
+     *  $this->assertResponse('success');
+     *  ...
+     * }}
+     *
+     * @param   string  $url
+     * @param   array   $options
+     * @param   array   $session
+     */
+    public function put($url, $options=null, $session=null)
+    {
+        $this->_initParams('PUT', $options, $session);
+        $this->_sendRequest($url, 'PUT');
+    }
+
+    /**
+     * Simulate a DELETE request to the controller
+     *
+     * {{code: php
+     *  ...
+     *  $this->delete('/unit_test/test_action/123', array('myGetVar' => 1));
+     *  $this->assertResponse('success');
+     *  ...
+     * }}
+     *
+     * @param   string  $url
+     * @param   array   $options
+     * @param   array   $session
+     */
+    public function delete($url, $options=null, $session=null)
+    {
+        $this->_initParams('DELETE', $options, $session);
+        $this->_sendRequest($url, 'DELETE');
     }
 
     /**
