@@ -158,7 +158,7 @@ class Mad_Support_ArrayConversion
             
         }
         $tag->end();
-        return (string)$options['builder'];
+        return $options['builder']->__toString();
     }
 
     /**
@@ -239,7 +239,7 @@ class Mad_Support_ArrayConversion
                 }
             $tag->end();
         }
-        return (string)$builder;        
+        return $builder->__toString();        
     }
 
 
