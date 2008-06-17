@@ -511,8 +511,8 @@ class Mad_Controller_Request_Http
      */
     private function _initRequestId()
     {
-        $uuid = new OmniTI_Util_UUID();
-        $this->_requestId = $uuid->toRFC4122String();
+        $uuid = new Horde_Support_Uuid();
+        $this->_requestId = $uuid->__toString();
     }
 
     /**
