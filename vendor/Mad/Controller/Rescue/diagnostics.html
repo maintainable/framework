@@ -4,10 +4,10 @@
   <?php $params = $this->request->getPathParams(); ?>
 
   <?php if (! empty($params[':controller'])): ?>
-    in <?php echo htmlentities( $this->controller = $params[':controller']  ) ?><?php if ($this->action = $params[':action']): ?>-&gt;<?php echo htmlentities($params[':action']) ?><?php endif ?>
+    in <span class="location"><?php echo htmlentities( $this->controller = $params[':controller']  ) ?><?php if ($this->action = $params[':action']): ?>-&gt;<?php echo htmlentities($params[':action']) ?><?php endif ?></span>
   <?php endif ?>
-  
 </h1>
+
 <pre><?php echo htmlentities(wordwrap($this->message, 100, "\n")) ?></pre>
 
 <?php echo $this->render(['partial' => 'trace']) ?>
