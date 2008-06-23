@@ -20,9 +20,9 @@ class AllTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Mad');
 
-        $basedir = dirname(__FILE__);
-        $baseregexp = preg_quote($basedir . DIRECTORY_SEPARATOR, '/');
-
+        $basedir = dirname(__FILE__) . DIRECTORY_SEPARATOR;
+        $baseregexp = preg_quote($basedir, '/');
+            
         foreach(new RecursiveIteratorIterator(
                  new RecursiveDirectoryIterator($basedir)) as $file) {
 
