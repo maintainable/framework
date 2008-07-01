@@ -394,8 +394,12 @@ abstract class Mad_Model_Association_Collection extends Mad_Model_Association_Ba
     public function clearObjects($args=array())
     {
         $this->destroyDependent();
-        $this->_loaded['getObjects']   = array();
-        $this->_loaded['getObjectIds'] = array();
+        if (!empty($this->_loaded['getObjects'])) {
+            $this->_loaded['getObjects'] = array();
+        }
+        if (!empty($this->_loaded['getObjectIds'])) {
+            $this->_loaded['getObjectIds'] = array();
+        }
         $this->_changed = true;
     }
 
