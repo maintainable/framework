@@ -183,7 +183,7 @@ class Horde_Yaml_Dumper
         }
 
         if (strlen($value) > $this->_options['wordwrap']) {
-            $indent += $this->_indent;
+            $indent += $this->_options['indent'];
             $indent = str_repeat(' ', $indent);
             $wrapped = wordwrap($value, $this->_options['wordwrap'], "\n$indent");
             $value = ">\n" . $indent . $wrapped;
