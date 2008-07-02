@@ -8,6 +8,13 @@ task :test do
     sh "phpunit AllTests.php"
   end
 end
+
+desc "Print out all defined routes in match order, with names."
+task :routes do
+  chdir File.join(MAD_ROOT) do
+    sh "php ./script/routes"
+  end
+end
   
 namespace :test do
   desc "Run the unit tests in test/unit"
