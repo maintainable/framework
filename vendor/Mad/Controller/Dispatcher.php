@@ -64,6 +64,16 @@ class Mad_Controller_Dispatcher
     }
 
     /**
+     * Get the route mapper for this dispatcher
+     *
+     * @return  Horde_Routes_Mapper
+     */
+    public function getRouteMapper()
+    {
+        return $this->_mapper;
+    }
+
+    /**
      * Get the route utilities for this dispatcher and its mapper
      *
      * @return  Horde_Routes_Utils
