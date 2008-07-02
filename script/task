@@ -1,0 +1,71 @@
+#!/usr/bin/env php
+<?php
+
+// check for environement arg
+foreach ($argv as $key => $value) {
+    if (preg_match('/MAD_ENV=(.*)/', $value, $match)) {
+        define('MAD_ENV', strtolower($match[1]));
+        unset($argv[$key]);
+        $argv = array_values($argv);
+    }
+}
+
+/**
+ * Set environment
+ */
+if (!defined('MAD_ENV')) define('MAD_ENV', isset($_SERVER['MAD_ENV']) ? $_SERVER['MAD_ENV'] : 'development');
+require_once dirname(dirname(__FILE__)).'/config/environment.php';
+
+if (empty($argv[1])) {
+    $usage = "Usage: ./script/task <taskname>   Run task"             . PHP_EOL
+           . "       ./script/task --tasks      List available tasks" . PHP_EOL;
+    die($usage);
+}
+
+// load all framework and application tasks
+$loader = new Mad_Task_Loader();
+$loader->loadAll();
+
+// runner for all tasks
+$runner = new Mad_Task_Runner();
+$runner->addGlobalTaskSets();
+
+$cmds = array('--tasks', '-T', '--yaml');
+
+// task listings
+if (in_array($argv[1], $cmds)) {
+    $tasks = $runner->getTasks();
+
+    // colon-ize task names (foo_bar -> foo:bar)
+    $colonized = array();
+    foreach ($tasks as $name => $desc) {
+        $colonized[ str_replace('_', ':', $name) ] = $desc;
+    }
+    $tasks = $colonized;
+    
+    // yaml output
+    if ($argv[1] == '--yaml') {
+        echo Horde_Yaml::dump($tasks);
+        
+    // rake-like output
+    } else {
+        $width = 0;
+        foreach ($tasks as $name => $desc) { 
+            $l = strlen($name); 
+            if ($l > $width) { $width = $l; }
+        }
+
+        foreach ($tasks as $name => $desc) {
+            $line = str_pad($name, $width + 2, ' ', STR_PAD_RIGHT)
+                  . '# ' . $desc;
+            if (strlen($line) > 78) { $line = substr($line, 0, 75) . '...'; }
+
+            echo $line . PHP_EOL;
+        }        
+    }
+
+// run the requested task
+} else {
+    $name = str_replace(':', '_', $argv[1]);
+    $runner->run($name);
+}
