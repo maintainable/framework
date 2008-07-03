@@ -34,14 +34,12 @@ $cmds = array('--tasks', '-T', '--yaml');
 
 // task listings
 if (in_array($argv[1], $cmds)) {
-    $tasks = $runner->getTasks();
-
-    // colon-ize task names (foo_bar -> foo:bar)
-    $colonized = array();
-    foreach ($tasks as $name => $desc) {
-        $colonized[ str_replace('_', ':', $name) ] = $desc;
+    // get all tasks and colon-ize names (foo_bar -> foo:bar)
+    $tasks = array();
+    foreach ($runner->getTasks() as $name => $desc) {
+        $tasks[ str_replace('_', ':', $name) ] = $desc;
     }
-    $tasks = $colonized;
+    ksort($tasks);
     
     // yaml output
     if ($argv[1] == '--yaml') {
