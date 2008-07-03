@@ -39,13 +39,9 @@ class Mad_Task_BuiltinSet_Database extends Mad_Task_Set
      */
     public function db_reset()
     {
-        echo "Migrating down to version 0...\n";
-        $GLOBALS['argv'] = array('./script/task', 'db:migrate', 'VERSION=0');
-        $this->db_migrate();
-
-        echo "Migrating up to current version...\n";
-        $GLOBALS['argv'] = array();
-        $this->db_migrate();
+        $path = MAD_ROOT . '/db/migrate/';
+        Mad_Model_Migration_Migrator::down($path, 0);
+        Mad_Model_Migration_Migrator::up($path);
     }
 
 }
