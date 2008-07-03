@@ -19,7 +19,7 @@ class Mad_Task_BuiltinSet_Database extends Mad_Task_Set
     /**
      * Migrate the database through scripts in db/migrate.
      */
-    public function db_migrate()
+    public function db_migrate($ver = null)
     {
         try {
             $script  = array_shift($GLOBALS['argv']);
@@ -32,6 +32,20 @@ class Mad_Task_BuiltinSet_Database extends Mad_Task_Set
         } catch (Exception $e) {
             echo $e->getMessage();
         }
+    }
+
+    /**
+     * Resets your database using your migrations for the current environment
+     */
+    public function db_reset()
+    {
+        echo "Migrating down to version 0...\n";
+        $GLOBALS['argv'] = array('./script/task', 'db:migrate', 'VERSION=0');
+        $this->db_migrate();
+
+        echo "Migrating up to current version...\n";
+        $GLOBALS['argv'] = array();
+        $this->db_migrate();
     }
 
 }
