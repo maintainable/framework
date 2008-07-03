@@ -41,6 +41,8 @@ class Mad_Task_Runner
     public function addGlobalTaskSets()
     {
         foreach (get_declared_classes() as $class) {
+            if ($class == 'Mad_Task_Set') { continue; }
+
             $r = new ReflectionClass($class);
             if ($r->isSubclassOf('Mad_Task_Set')) {
                 $this->addTaskSet(new $class($this));
