@@ -60,7 +60,7 @@ class Mad_Task_BuiltinSet_Routes extends Mad_Task_Set
         }
 
         // nothing to print?
-        if (empty($routes)) { exit; }
+        if (empty($routes)) { return; }
 
         /**
          * Find the max $widths to size the output columns {'name'=>40, 'method'=>6, ...}
