@@ -9,6 +9,7 @@ args = args.join(' ')
 chdir File.dirname(__FILE__) # MAD_ROOT
 task_runner = File.join('.', 'script', 'task')
 tasks = YAML.load(`php #{task_runner} --yaml`)
+abort unless tasks.is_a?(Hash) and tasks.key?("test")
 
 # dynamically build rakefile
 code = ""
