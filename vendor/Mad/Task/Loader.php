@@ -17,6 +17,12 @@
 class Mad_Task_Loader
 {
     /**
+     * Files that have been loaded by this loader.
+     * @var array<string>
+     */
+    protected $_files = array();
+    
+    /**
      * Load all built-in tasks and application tasks.
      */
     public function loadAll()
@@ -54,9 +60,21 @@ class Mad_Task_Loader
                  new RecursiveDirectoryIterator($path)) as $file) {
 
             if ($file->isFile() && preg_match('/.php$/', $file->getFilename())) {
-                require_once $file->getPathname();
+                $pathname = $file->getPathname();
+                $this->_files[] = $pathname;
+                require_once $pathname;
             }        
         }
+    }
+
+    /**
+     * Get files that have been loaded.
+     *
+     * @return array<string>  Pathnames
+     */
+    public function getLoadedFiles()
+    {
+        return $this->_files;
     }
 
 }
