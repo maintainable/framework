@@ -42,11 +42,12 @@ class Mad_Task_BuiltinSet_Routes extends Mad_Task_Set
             $methods = $route->conditions['method'];
           }
 
-          // hardcoded defaults that can't be overriden by the request path like {:key=>"value"}
+          // hardcoded defaults that can't be overriden by the request path as {:key=>"value"}
           $hardcodes = array();
           foreach ($route->hardCoded as $key) {
             $value = isset($route->defaults[$key]) ? $route->defaults[$key] : 'NULL';
-            $hardcodes[] = ":{$key}=>\"{$value}\"";
+            $dump = ":{$key}=>\"{$value}\"";
+            ($key == 'controller') ? array_unshift($hardcodes, $dump) : $hardcodes[] = $dump;
           }
           $hardcodes = empty($hardcodes) ? '' : '{'. implode(', ', $hardcodes) .'}';  
 
