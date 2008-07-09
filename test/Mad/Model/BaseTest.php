@@ -411,7 +411,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
                                    'integer_value' => 1000,
                                    'string_value'  => 'My Name'));
         
-        $values = "'100', '1000', 'My Name', '', '0.0', '0.0', '0000-00-00 00:00:00', '0000-00-00', '00:00:00', '', '0', 'a', ''";
+        $values = "'100', '1000', 'My Name', NULL, '0.0', '0.0', '0000-00-00 00:00:00', '0000-00-00', '00:00:00', NULL, '0', 'a', ''";
         $this->assertEquals($values, $test->getInsertValuesStr());
     }
 
@@ -422,7 +422,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
                                    'integer_value' => 1000,
                                    'string_value'  => "Derek's Name"));
 
-        $values = "'100', '1000', 'Derek\'s Name', '', '0.0', '0.0', '0000-00-00 00:00:00', '0000-00-00', '00:00:00', '', '0', 'a', ''";
+        $values = "'100', '1000', 'Derek\'s Name', NULL, '0.0', '0.0', '0000-00-00 00:00:00', '0000-00-00', '00:00:00', NULL, '0', 'a', ''";
         $this->assertEquals($values, $test->getInsertValuesStr());
     }
 

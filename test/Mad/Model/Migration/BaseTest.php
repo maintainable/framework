@@ -215,7 +215,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         User::deleteAll();
 
         // Now use the Rails insertion
-        User::create(array('wealth' => '12345678901234567890.0123456789', 'company_id' => 1));
+        User::create(array('wealth' => '12345678901234567890.0123456789'));
 
         // SELECT @todo - type cast attribute values
         $user = User::find('first');
@@ -266,7 +266,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         User::deleteAll();
 
         $this->_conn->addColumn('users', 'intelligence_quotient', 'tinyint');
-        User::create(array('intelligence_quotient' => 300, 'company_id' => 1));
+        User::create(array('intelligence_quotient' => 300));
 
         $jonnyg = User::find('first');
         $this->assertEquals('127', $jonnyg->intelligence_quotient);
@@ -293,7 +293,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         User::deleteAll();
 
         $this->_conn->addColumn('users', 'girlfriend', 'string');
-        User::create(array('girlfriend' => 'bobette', 'company_id' => 1));
+        User::create(array('girlfriend' => 'bobette'));
 
         $this->_conn->renameColumn('users', 'girlfriend', 'exgirlfriend');
 

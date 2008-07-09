@@ -35,13 +35,13 @@ CREATE TABLE unit_tests (
   id             int(11) auto_increment,
   integer_value  int(11) default '0',
   string_value   varchar(255) default '',
-  text_value     text NOT NULL default '',
+  text_value     text default '',
   float_value    float(2,1) default '0.0',
   decimal_value  decimal(2,1) default '0.0',
   datetime_value datetime default '0000-00-00 00:00:00',
   date_value     date default '0000-00-00',
   time_value     time default '00:00:00',
-  blob_value     blob NOT NULL default '',
+  blob_value     blob default '',
   boolean_value  tinyint(1) default '0',
   enum_value     enum('a', 'b') default 'a',
   email_value    varchar(255) default '',
@@ -55,8 +55,8 @@ CREATE TABLE unit_tests (
 DROP TABLE IF EXISTS articles; 
 CREATE TABLE articles (
   id      int(11) auto_increment, 
-  title   varchar(255) NOT NULL,
-  user_id int(11)      NOT NULL,
+  title   varchar(255) default '',
+  user_id int(11)      default 0,
   PRIMARY KEY (id), 
   KEY user_id (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -114,15 +114,15 @@ CREATE TABLE companies (
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id         int(11) auto_increment, 
-  company_id int(11) NOT NULL,
-  name       varchar(255) NOT NULL,
-  first_name varchar(40) NOT NULL,
-  approved   tinyint(1) NOT NULL default '1',
-  type       varchar(255) NOT NULL,
-  created_at datetime NOT NULL default '0000-00-00 00:00:00',
-  created_on date NOT NULL default '0000-00-00',
-  updated_at datetime NOT NULL default '0000-00-00 00:00:00',
-  updated_on date NOT NULL default '0000-00-00',
+  company_id int(11),
+  name       varchar(255) default '',
+  first_name varchar(40) default '',
+  approved   tinyint(1) default '1',
+  type       varchar(255) default '',
+  created_at datetime default '0000-00-00 00:00:00',
+  created_on date default '0000-00-00',
+  updated_at datetime default '0000-00-00 00:00:00',
+  updated_on date default '0000-00-00',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
