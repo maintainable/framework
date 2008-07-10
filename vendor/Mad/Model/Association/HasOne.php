@@ -32,7 +32,7 @@ class Mad_Model_Association_HasOne extends Mad_Model_Association_Proxy
     public function __construct($assocName, $options, Mad_Model_Base $model)
     {
         $valid = array('className', 'foreignKey', 'primaryKey', 'include',  
-                       'dependent' => 'nullify');
+                       'order', 'dependent' => 'nullify');
         $this->_options = Mad_Support_Base::assertValidKeys($options, $valid);
         $this->_assocName = $assocName;
         $this->_model     = $model;
@@ -123,9 +123,12 @@ class Mad_Model_Association_HasOne extends Mad_Model_Association_Proxy
             $table   = $this->getAssocTable();
             $pkValue = $this->getPkValue();
             $fkName  = $this->getFkName();
+            
+            $order = $this->_constructOrder();
 
             // query for associated object
-            $options = array('conditions' => "$table.$fkName = :value");
+            $options = array('conditions' => "$table.$fkName = :value", 
+                             'order'      => $order);
             if (!empty($this->_options['include'])) {
               $options['include'] = $this->_options['include'];
             }
@@ -140,5 +143,20 @@ class Mad_Model_Association_HasOne extends Mad_Model_Association_Proxy
             }
         }
         return $this->_loaded['getObject'];
+    }
+
+    /**
+     * @param   string  $order
+     */
+    protected function _constructOrder($order=null)
+    {
+        $orderStr =  null;
+        if (isset($this->_options['order']) && empty($order)) {
+            $orderStr = $this->_options['order'];
+
+        } elseif ($order) {
+            $orderStr = $order;
+        }
+        return $orderStr;
     }
 }

@@ -173,6 +173,15 @@ class Mad_Model_Association_HasOneTest extends Mad_Test_Unit
         $this->assertTrue($user->avatar instanceof Avatar);
         $this->assertEquals('derek.jpg', $user->avatar->filepath);
     }
+    
+    public function testGetAssociationOrdered()
+    {
+        $this->fixtures('users', 'comments');
+
+        $user = $this->users('mike');
+        $this->assertType('Comment', $user->latestComment);
+        $this->assertEquals('Comment B', $user->latestComment->body);
+    }
 
     // make sure associated object gets cached
     public function testGetAssociationCached()

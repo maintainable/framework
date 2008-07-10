@@ -12,7 +12,9 @@ class User extends Mad_Model_Base
         $this->hasMany('Comments');
         $this->hasOne('Avatar', array('include'   => 'User', 
                                       'dependent' => 'destroy'));
-                                      
+        $this->hasOne('LatestComment', array('className' => 'Comment', 
+                                             'order'     => 'created_at DESC'));
+
         $this->attrAccessor('is_cool');
     }
     

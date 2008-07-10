@@ -100,6 +100,7 @@ CREATE TABLE comments (
   body       text    NOT NULL,
   article_id int(11) NOT NULL,
   user_id    int(11) NOT NULL,
+  created_at datetime,
   PRIMARY KEY (id), 
   KEY article_id (article_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -216,8 +216,8 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
           'title'   => 'Easier XML-RPC for PHP5',
           'user_id' => '1', 
           'Comments' => array(
-              array('article_id' => 1, 'body' => 'Comment A', 'id' => 1, 'user_id' => 1), 
-              array('article_id' => 1, 'body' => 'Comment B', 'id' => 2, 'user_id' => 1)
+              array('article_id' => 1, 'body' => 'Comment A', 'created_at' => '2008-05-01 12:00:00', 'id' => 1, 'user_id' => 1), 
+              array('article_id' => 1, 'body' => 'Comment B', 'created_at' => '2008-08-01 12:00:00', 'id' => 2, 'user_id' => 1)
            )
         );
 
@@ -248,8 +248,8 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
                 'updated_on' => '2008-01-01'
               ), 
           'Comments' => array(
-              array('article_id' => 1, 'body' => 'Comment A', 'id' => 1, 'user_id' => 1), 
-              array('article_id' => 1, 'body' => 'Comment B', 'id' => 2, 'user_id' => 1)
+              array('article_id' => 1, 'body' => 'Comment A', 'created_at' => '2008-05-01 12:00:00', 'id' => 1, 'user_id' => 1), 
+              array('article_id' => 1, 'body' => 'Comment B', 'created_at' => '2008-08-01 12:00:00', 'id' => 2, 'user_id' => 1)
            )
         );
         
@@ -271,8 +271,8 @@ class Mad_Model_Serializer_BaseTest extends Mad_Test_Unit
           'user_id' => '1', 
           'User'    => array('name' => 'Mike Naberezny'), 
           'Comments' => array(
-              array('body' => 'Comment A', 'id' => 1, 'user_id' => 1), 
-              array('body' => 'Comment B', 'id' => 2, 'user_id' => 1)
+              array('body' => 'Comment A', 'created_at' => '2008-05-01 12:00:00', 'id' => 1, 'user_id' => 1), 
+              array('body' => 'Comment B', 'created_at' => '2008-08-01 12:00:00', 'id' => 2, 'user_id' => 1)
            )
         );
 
