@@ -63,6 +63,8 @@ class Mad_Model_Association_HasOne extends Mad_Model_Association_Proxy
     public function save()
     {
         if ($this->isLoaded()) {
+            $this->destroyDependent();
+
             $baseModel  = $this->getModel();
             $assocModel = $this->getObject();
             $fkName     = $this->getFkName();
@@ -85,7 +87,12 @@ class Mad_Model_Association_HasOne extends Mad_Model_Association_Proxy
 
         $fkName = $this->getFkName();
         $value  = $this->getPkValue();
-        $assocModel = $this->getObject();
+        // we assign a model for deletion when assigning a new object
+        if (!empty($this->_deleteModel)) {
+            $assocModel = $this->_deleteModel;
+        } else {
+            $assocModel = $this->getObject();
+        }
         if (!$assocModel) return;
 
         // delete associated records
@@ -125,8 +132,12 @@ class Mad_Model_Association_HasOne extends Mad_Model_Association_Proxy
             $bind = array(':value' => $pkValue);
 
             // load associated object
-            $object = $this->getAssocModel()->find('first', $options, $bind);
-            $this->_loaded['getObject'] = $object;
+            if (!empty($pkValue)) {
+                $object = $this->getAssocModel()->find('first', $options, $bind);
+                $this->_loaded['getObject'] = $object;
+            } else {
+                $this->_loaded['getObject'] = null;
+            }
         }
         return $this->_loaded['getObject'];
     }

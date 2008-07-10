@@ -18,6 +18,11 @@
  */
 abstract class Mad_Model_Association_Proxy extends Mad_Model_Association_Base
 {
+    /**
+     * Ids to be deleted when a save is performed
+     * @var array
+     */
+    protected $_deleteModel = null;
 
     /*##########################################################################
     # Implementation of abstract methods
@@ -86,8 +91,8 @@ abstract class Mad_Model_Association_Proxy extends Mad_Model_Association_Base
         if (!$associationModel instanceof Mad_Model_Base) {
             throw new Mad_Model_Association_Exception('added objects must be a subclass of Mad_Model_Base');
         }
-
-        $this->destroyDependent();
+        
+        $this->_deleteModel = $this->getObject();
         $this->_loaded['getObject'] = $associationModel;
         $this->_changed = true;
     }
@@ -103,7 +108,7 @@ abstract class Mad_Model_Association_Proxy extends Mad_Model_Association_Base
     {
         $attributes = isset($args[0]) ? $args[0] : null;
 
-        $this->destroyDependent();
+        $this->_deleteModel = $this->getObject();
         $class = $this->getAssocClass();
         $this->_loaded['getObject'] = new $class($attributes);
         $this->_changed = true;
@@ -132,7 +137,7 @@ abstract class Mad_Model_Association_Proxy extends Mad_Model_Association_Base
             throw new Mad_Model_Association_Exception($msg);
         }
 
-        $this->destroyDependent();
+        $this->_deleteModel = $this->getObject();
         $class = $this->getAssocClass();
         $this->_loaded['getObject'] = new $class($attributes);
         $this->_changed = true;
