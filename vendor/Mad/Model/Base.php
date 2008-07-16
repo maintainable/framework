@@ -1362,6 +1362,7 @@ abstract class Mad_Model_Base extends Mad_Support_Object
             $this->_newRecord = false;
 
             if (!$started) { $this->connection->commitDbTransaction(); }
+
             $this->_throw = false;
             return $this;
 
@@ -3084,7 +3085,8 @@ abstract class Mad_Model_Base extends Mad_Support_Object
             $column = strtolower($name);
 
             if ($column != $this->primaryKey()) {
-                $sets[] = $column." = ".$this->_quoteValue($value);
+                $sets[] = $this->connection->quoteColumnName($column)." = ".
+                          $this->_quoteValue($value);
 
             } elseif ($column == $this->primaryKey()) {
                 $pkVal = $this->_quoteValue($value);
@@ -3168,7 +3170,7 @@ abstract class Mad_Model_Base extends Mad_Support_Object
             foreach ($ids as $id) {
                 $model = $this->find($id);
                 $model->updateAttributes($attributes);
-                    $objs[] = $model;
+                $objs[] = $model;
             }
             return new Mad_Model_Collection($model, $objs);
 
