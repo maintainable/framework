@@ -108,6 +108,7 @@ class Mad_Controller_Mime_Type
             Mad_Controller_Mime_Type::register("text/plain",      'text', array(), array('txt'));
             Mad_Controller_Mime_Type::register("text/html",       'html', array('application/xhtml+xml'), array('xhtml'));
             Mad_Controller_Mime_Type::register("text/javascript", 'js',   array('application/javascript', 'application/x-javascript'), array('xhtml'));
+            Mad_Controller_Mime_Type::register("text/csv",        'csv');
             Mad_Controller_Mime_Type::register("application/xml", 'xml',  array('text/xml', 'application/x-xml'));        
             self::$registered = true;
         }
