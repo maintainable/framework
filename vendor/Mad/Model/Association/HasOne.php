@@ -63,7 +63,7 @@ class Mad_Model_Association_HasOne extends Mad_Model_Association_Proxy
     public function save()
     {
         if ($this->isLoaded()) {
-            $this->destroyDependent();
+            if ($this->_deleteModel) { $this->destroyDependent(); }
 
             $baseModel  = $this->getModel();
             $assocModel = $this->getObject();
