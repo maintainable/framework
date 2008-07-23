@@ -95,6 +95,12 @@ class Mad_Controller_Mime_Type
             if (isset(self::$extensionLookup['xml'])) {
                 $types[] = self::$extensionLookup['xml'];
             }
+
+        // default to html
+        } else {
+            if (isset(self::$extensionLookup['html'])) {
+                $types[] = self::$extensionLookup['html'];
+            }
         }
         return $types;
     }
