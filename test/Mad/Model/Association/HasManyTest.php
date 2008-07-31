@@ -777,6 +777,15 @@ class Mad_Model_Association_HasManyTest extends Mad_Test_Unit
         } catch (Exception $e) { $this->fail('Unexepected exception raised'); }
     }
 
+    public function testBuildObjectAssignsForeignKey()
+    {
+        $this->fixtures('articles', 'users');
+
+        $user = User::find($this->users('derek')->id);
+        $article = $user->buildArticle();
+        
+        $this->assertEquals($user->id, $article->user_id);
+    }
 
     /*##########################################################################
     # createObject associations

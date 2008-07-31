@@ -278,6 +278,11 @@ class Mad_Model_Association_HasMany extends Mad_Model_Association_Collection
 
         $class = $this->getAssocClass();
         $assocObject = new $class($attributes);
+
+        // assign pk value of base object to the fk of the associated
+        $fk = $this->getFkName();
+        $assocObject->$fk = $this->getPkValue();
+
         $this->_loaded['getObjects'][] = $assocObject;
 
         $this->_changed = true;
