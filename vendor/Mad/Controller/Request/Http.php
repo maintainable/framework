@@ -120,8 +120,10 @@ class Mad_Controller_Request_Http
         $methods = array('GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'OPTIONS');
         
         if ($this->_method == 'POST') {
-            if (isset($this->_post['_method'])) {
-                $faked = strtoupper($this->_post['_method']);
+            $params = $this->getParameters();
+
+            if (isset($params['_method'])) {
+                $faked = strtoupper($params['_method']);
                 if (in_array($faked, $methods)) { return $faked; }
             }
         }
