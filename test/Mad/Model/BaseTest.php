@@ -1278,12 +1278,24 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals('1000', $test2->integer_value);
     }
 
-    // test updating multiple attribute
-    public function testUpdateAttributes()
+    // test updating multiple attribute with array
+    public function testUpdateAttributesWithArray()
     {
         $test = UnitTest::find('first', array('conditions' => "string_value = 'name a'"));
         $test->updateAttributes(array('integer_value'   => 1000,
                                       'string_value' => 'name zzzz'));
+
+        $test2 = UnitTest::find($test->id);
+        $this->assertEquals('1000',      $test2->integer_value);
+        $this->assertEquals('name zzzz', $test2->string_value);
+    }
+
+    // test updating multiple attribute with traversable object
+    public function testUpdateAttributesWithTraversable()
+    {
+        $test = UnitTest::find('first', array('conditions' => "string_value = 'name a'"));
+        $test->updateAttributes(new ArrayObject(array('integer_value'   => 1000,
+                                                      'string_value' => 'name zzzz')));
 
         $test2 = UnitTest::find($test->id);
         $this->assertEquals('1000',      $test2->integer_value);

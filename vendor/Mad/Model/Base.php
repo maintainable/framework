@@ -1420,12 +1420,16 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      *                                  'description' => 'The new description'));
      * </code>
      *
-     * @param   array   $attributes
+     * @param  array|Traversable   $attributes
      * @return void
      */
     public function updateAttributes($attributes)
     {
-        if (! is_array($attributes)) { return false; }
+        if (! is_array($attributes)) {
+            if (! $attributes instanceof Traversable) {
+                return false;
+            }
+        }
 
         foreach ($attributes as $attribute => $value) {
             $this->$attribute = $value;
