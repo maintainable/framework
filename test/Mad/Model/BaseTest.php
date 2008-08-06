@@ -1278,7 +1278,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals('1000', $test2->integer_value);
     }
 
-    // test updating one attribute
+    // test updating multiple attribute
     public function testUpdateAttributes()
     {
         $test = UnitTest::find('first', array('conditions' => "string_value = 'name a'"));
@@ -1288,6 +1288,12 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $test2 = UnitTest::find($test->id);
         $this->assertEquals('1000',      $test2->integer_value);
         $this->assertEquals('name zzzz', $test2->string_value);
+    }
+
+    public function testUpdateAttributesWithoutArrayReturnsFalse()
+    {
+        $test = new UnitTest();
+        $this->assertFalse($test->updateAttributes('should-be-array'));
     }
 
     // test updating record using update statically

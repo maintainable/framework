@@ -1425,6 +1425,8 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */
     public function updateAttributes($attributes)
     {
+        if (! is_array($attributes)) { return false; }
+
         foreach ($attributes as $attribute => $value) {
             $this->$attribute = $value;
         }
