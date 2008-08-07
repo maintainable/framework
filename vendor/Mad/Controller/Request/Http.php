@@ -235,10 +235,21 @@ class Mad_Controller_Request_Http
         return strlen($this->getBody());
     }
 
+    /**
+     * @todo implement getContentTypeWithParameters() et al.
+     */
     public function getContentType()
     {
         if (!isset($this->_contentType)) {
             $type = $this->getServer('CONTENT_TYPE');
+            
+            // strip parameters from content-type like "; charset=UTF-8"
+            if (is_string($type)) {
+                if (preg_match('/^([^,\;]*)/', $type, $matches)) {
+                    $type = $matches[1];
+                }
+            }
+            
             $this->_contentType = Mad_Controller_Mime_Type::lookup($type);
         }
         return $this->_contentType;
