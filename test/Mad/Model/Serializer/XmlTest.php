@@ -415,6 +415,15 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
         $this->assertEquals("Easier XML-RPC for PHP5", $article->title);
     }
 
+    public function testToXmlBooleanCast()
+    {
+        $record  = $this->users('mike');
+        $record->approved = 0;
+
+        $xml = $record->toXml();
+
+        $this->assertContains('<approved type="boolean">false</approved>', $xml);
+    }
     /*##########################################################################
     ##########################################################################*/
 

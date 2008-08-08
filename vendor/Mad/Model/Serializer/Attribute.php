@@ -105,7 +105,7 @@ class Mad_Model_Serializer_Attribute
 
         if (isset($conversion->xmlFormatting[$this->_type])) {
             $formatter = $conversion->xmlFormatting[$this->_type];
-            return $value ? $conversion->{$formatter}($value) : null;
+            return $value !== null ? $conversion->{$formatter}($value) : null;
         }
         return $value;
     }
