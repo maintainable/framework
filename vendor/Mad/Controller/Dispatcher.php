@@ -51,14 +51,15 @@ class Mad_Controller_Dispatcher
      */
     public function reload()
     {
-        $options = array('directory'      => MAD_ROOT . '/app/controllers',
-                         'controllerScan' => array($this, 'controllerScan'),
-                         'explicit'       => false
+        $options = array('directory' => MAD_ROOT . '/app/controllers',
+                         'explicit'  => false
                         );
 
         $map = new Horde_Routes_Mapper($options);
-        
         include MAD_ROOT . '/config/routes.php';
+
+        $scanner = new Mad_Controller_Scanner($map);
+        $map->controllerScan = $scanner->getCallback();
 
         $this->_mapper = $map;
     }
@@ -178,35 +179,6 @@ class Mad_Controller_Dispatcher
             }
         }
         return !empty($ret) && isset($ret['controller']) ? $ret : false;
-    }
-
-    /**
-     * Scan a directory and return an array of the controllers it contains.
-     * The array is used by Horde_Routes to build its matching regexps.
-     *
-     * @param  string  $dirname  Controller directory
-     * @param  string  $prefix   Prefix controllers found with string
-     */ 
-    public function controllerScan($dirname = null, $prefix = '')
-    {
-        if ($dirname === null) { 
-            return array(); 
-        }
-
-        $controllers = array();
-        foreach (new DirectoryIterator($dirname) as $entry) {
-            if ($entry->isFile()) {
-                if (preg_match('/^[^_]{1,1}.*\.php$/', $entry) !== false) {
-                    $c = $prefix . substr($entry->getFilename(), 0, -4);
-                    $c = strtolower(preg_replace('/([a-z])([A-Z])/', "\${1}_\${2}", $c));
-                    $c = substr($c, 0, -(strlen('_controller')));
-                    $controllers[] = $c;
-                }
-            }
-        }
-
-        usort($controllers, 'Horde_Routes_Utils::longestFirst');
-        return $controllers;
     }
 
     /*##########################################################################
