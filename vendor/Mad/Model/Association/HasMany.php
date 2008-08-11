@@ -243,11 +243,12 @@ class Mad_Model_Association_HasMany extends Mad_Model_Association_Collection
         $options = Mad_Support_Base::assertValidKeys($options, $valid);
 
         // keys/values
-        $fkName  = $this->getFkName();
+        $assoc   = $this->_conn->quoteColumnName($this->getAssocTable());
+        $fkName  = $this->_conn->quoteColumnName($this->getFkName());
         $pkValue = $this->getPkValue();
 
         // build find options
-        $conditions = "$fkName = :pkValue ".$this->_constructConditions($options['conditions']);
+        $conditions = "$assoc.$fkName = :pkValue ".$this->_constructConditions($options['conditions']);
         $order      = $this->_constructOrder($options['order']);
         $select     = $this->_constructSelect($options['select']);
         $include    = $this->_constructInclude($options['include']);
