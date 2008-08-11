@@ -2753,7 +2753,9 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         unset($options['perPage']);
 
         // count records
-        $total = $this->_count($options, $bindVars);
+        $countOptions = $options;
+        unset($countOptions['select']);
+        $total = $this->_count($countOptions, $bindVars);
         if ($total == 0) { $page = 0; }
 
         // find records

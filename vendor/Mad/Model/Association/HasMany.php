@@ -239,7 +239,8 @@ class Mad_Model_Association_HasMany extends Mad_Model_Association_Collection
         $options = isset($args[1]) ? $args[1] : array();
         $binds   = isset($args[2]) ? $args[2] : array();
 
-        $valid = array('select', 'conditions', 'include', 'order', 'limit', 'offset');
+        $valid = array('select', 'conditions', 'include', 'order', 'limit', 
+                       'offset', 'page', 'perPage');
         $options = Mad_Support_Base::assertValidKeys($options, $valid);
 
         // keys/values
@@ -255,12 +256,21 @@ class Mad_Model_Association_HasMany extends Mad_Model_Association_Collection
 
         $options = array('conditions' => $conditions, 'order'   => $order,
                          'select'     => $select,     'include' => $include,
+                         'order'      => $options['order'],
                          'limit'      => $options['limit'], 
-                         'offset'     => $options['offset']);
+                         'offset'     => $options['offset'], 
+                         'page'       => $options['page'], 
+                         'perPage'    => $options['perPage']);
         $binds[':pkValue'] = $pkValue;
 
         // Query for the associated objects
-        return $this->getAssocModel()->find($type, $options, $binds);
+        if (!empty($options['page'])) {
+            return $this->getAssocModel()->paginate($options, $binds);
+        } else {
+            unset($options['page']);
+            unset($options['perPage']);
+            return $this->getAssocModel()->find($type, $options, $binds);
+        }
     }
 
     /**

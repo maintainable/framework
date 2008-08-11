@@ -224,7 +224,8 @@ abstract class Mad_Model_Association_Collection extends Mad_Model_Association_Ba
      */
     public function findObjectsUsingJoin($type, $options, $binds) 
     {
-        $valid = array('conditions', 'include', 'order', 'limit', 'offset');
+        $valid = array('conditions', 'include', 'order', 'limit', 'offset', 
+                       'page', 'perPage');
         $options = Mad_Support_Base::assertValidKeys($options, $valid);
 
         // tables/keys/values
@@ -246,10 +247,20 @@ abstract class Mad_Model_Association_Collection extends Mad_Model_Association_Ba
                          'from'       => "$assocTable, $joinTable",
                          'conditions' => "$assocTable.$assocPkName = $joinTable.$assocFkName ".
                                          "AND $joinTable.$fkName = :pkValue $conditions",
+                         'order'      => $options['order'],
                          'limit'      => $options['limit'],
-                         'offset'     => $options['offset']);
+                         'offset'     => $options['offset'], 
+                         'page'       => $options['page'], 
+                         'perPage'    => $options['perPage']);
         $binds[':pkValue'] = $pkValue;
-        return $this->getAssocModel()->find($type, $options, $binds);
+
+        if (!empty($options['page'])) {
+            return $this->getAssocModel()->paginate($options, $binds);
+        } else {
+            unset($options['page']);
+            unset($options['perPage']);
+            return $this->getAssocModel()->find($type, $options, $binds);
+        }
     }
 
     /**
