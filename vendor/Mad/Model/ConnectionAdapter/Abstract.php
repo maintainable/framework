@@ -132,7 +132,14 @@ abstract class Mad_Model_ConnectionAdapter_Abstract
     {
         list($dsn, $user, $pass) = $this->_parseConfig();
 
-        $pdo = new PDO($dsn, $user, $pass);
+        try {
+            $pdo = new PDO($dsn, $user, $pass);
+        } catch (PDOException $e) {
+            $msg = "Error instantiating PDO with DSN \"$dsn\".  PDOException: "
+                 . $e->getMessage(); 
+            throw new Mad_Model_Exception($msg);
+        }
+
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true); 
 
