@@ -284,10 +284,6 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */
     public function _get($name)
     {
-        if ($this->_frozen) {
-            $msg = "You cannot get attributes of a destroyed object";
-            throw new Mad_Model_Exception($msg);
-        }
         // active-record primary key value
         if ($name == 'id') { $name = $this->primaryKey(); }
 

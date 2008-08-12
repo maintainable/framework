@@ -1420,13 +1420,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $test->destroy();
 
         // try to get a attribute
-        try {
-            $str = $test->text_value;
-            $this->fail();
-        } catch (Mad_Model_Exception $e) {
-            $msg = "You cannot get attributes of a destroyed object";
-            $this->assertEquals($msg, $e->getMessage());
-        }
+        $this->assertEquals('2', $test->id);
     }
 
     // test setting a attribute for a destroyed object
