@@ -1367,7 +1367,7 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
      */
     protected function _initParams($method, $options, $session)
     {
-        if ($method == 'POST' || $method == 'PUT') {
+        if ($method == 'POST' || $method == 'PUT' || $method == 'DELETE') {
             $this->post = isset($options) ? $options : array();
         } elseif ($method == 'GET') {
             $this->get  = isset($options) ? $options : array();
