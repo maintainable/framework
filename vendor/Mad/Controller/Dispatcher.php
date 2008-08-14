@@ -87,23 +87,45 @@ class Mad_Controller_Dispatcher
     /**
      * Dispatch the request to the correct controller
      *
-     * @param   Mad_Controller_Request_Http $request
+     * @param  null|Mad_Controller_Request_Http  $request
+     * @param  null|Mad_Controller_Response_Http $response
+     * @return void
      */
-    public function dispatch(Mad_Controller_Request_Http $request)
+    public function dispatch($request=null, $response=null)
     {
         $t = new Mad_Support_Timer;
         $t->start();
 
-        $response = new Mad_Controller_Response_Http;
+        if ($response === null) {
+            $response = new Mad_Controller_Response_Http();
+        }
 
-        // Recognize routes & Process request
-        $controller = $this->recognize($request);
-        $response   = $controller->process($request, $response);
+        if ($request === null) {
+            $request = new Mad_Controller_Request_Http();
+        }
+
+        // request could not be parsed
+        if ($request->isMalformed()) {
+            $body = "Your request could not be understood by the server, "
+                  . "probably due to malformed syntax.\n\n";
+
+            $exc = $request->getException();
+            if ($exc && MAD_ENV != 'production') {
+                $body .= $exc->getMessage();
+            }
+
+            $response->setStatus(400);
+            $response->setBody($body);
+
+        // dispatch request to controller
+        } else {
+            $controller = $this->recognize($request);
+            $response   = $controller->process($request, $response);
+        }
 
         $time = $t->finish();
         $this->_logRequest($request, $time);
 
-        // Send response and log request
         $response->send();
     }
 

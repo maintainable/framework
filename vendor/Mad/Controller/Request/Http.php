@@ -61,6 +61,10 @@ class Mad_Controller_Request_Http
     protected $_uri;
     protected $_pathParams;
 
+    protected $_formattedRequestParams;
+    protected $_malformed;
+    protected $_exception;
+
     /*##########################################################################
     # Construct/Destruct
     ##########################################################################*/
@@ -73,41 +77,68 @@ class Mad_Controller_Request_Http
      */
     public function __construct($options=array())
     {
-        $this->_initRequestId();
-        $this->_initSessionData();
+        try {
+            $this->_initRequestId();
+            $this->_initSessionData();
 
-        // register default mime types
-        Mad_Controller_Mime_Type::registerTypes();
+            // register default mime types
+            Mad_Controller_Mime_Type::registerTypes();
 
-        // superglobal data if not passed in thru constructor
-        $this->_get     = isset($options['get'])     ? $options['get']     : $_GET;
-        $this->_post    = isset($options['post'])    ? $options['post']    : $_POST;
-        $this->_cookie  = isset($options['cookie'])  ? $options['cookie']  : $_COOKIE;
-        $this->_request = isset($options['request']) ? $options['request'] : $_REQUEST;
-        $this->_server  = isset($options['server'])  ? $options['server']  : $_SERVER;
-        $this->_env     = isset($options['env'])     ? $options['env']     : $_ENV;
-        $this->_pathParams = array();
-        $this->_formattedRequestParams = $this->_parseFormattedRequestParameters();
+            // superglobal data if not passed in thru constructor
+            $this->_get     = isset($options['get'])     ? $options['get']     : $_GET;
+            $this->_post    = isset($options['post'])    ? $options['post']    : $_POST;
+            $this->_cookie  = isset($options['cookie'])  ? $options['cookie']  : $_COOKIE;
+            $this->_request = isset($options['request']) ? $options['request'] : $_REQUEST;
+            $this->_server  = isset($options['server'])  ? $options['server']  : $_SERVER;
+            $this->_env     = isset($options['env'])     ? $options['env']     : $_ENV;
+            $this->_pathParams = array();
+            $this->_formattedRequestParams = $this->_parseFormattedRequestParameters();
 
-        // use FileUpload object to store files
-        $this->_setFilesSuperglobals();
+            // use FileUpload object to store files
+            $this->_setFilesSuperglobals();
 
-        // disable all superglobal data to force us to use correct way
-        $_GET = $_POST = $_FILES = $_COOKIE = $_REQUEST = $_SERVER = array();
+            // disable all superglobal data to force us to use correct way
+            $_GET = $_POST = $_FILES = $_COOKIE = $_REQUEST = $_SERVER = array();
 
-        $this->_domain   = $this->getServer('SERVER_NAME');
-        $this->_uri      = trim($this->getServer('REQUEST_URI'), '/');
-        $this->_method   = $this->getServer('REQUEST_METHOD');
-        $this->_remoteIp = $this->getServer('REMOTE_ADDR');
-        $this->_port     = $this->getServer('SERVER_PORT');
-        $this->_https    = $this->getServer('HTTPS');
-        $this->_isAjax   = $this->getServer('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest';
+            $this->_domain   = $this->getServer('SERVER_NAME');
+            $this->_uri      = trim($this->getServer('REQUEST_URI'), '/');
+            $this->_method   = $this->getServer('REQUEST_METHOD');
+            $this->_remoteIp = $this->getServer('REMOTE_ADDR');
+            $this->_port     = $this->getServer('SERVER_PORT');
+            $this->_https    = $this->getServer('HTTPS');
+            $this->_isAjax   = $this->getServer('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest';
+
+        } catch (Exception $e) {
+            $this->_malformed = true;
+            $this->_exception = $e;
+        }
+
     }
 
 
     /*##########################################################################
     # Public Methods
     ##########################################################################*/
+
+    /**
+     * Is this request believed to be malformed?
+     *
+     * @return boolean
+     */
+    public function isMalformed()
+    {
+        return $this->_malformed;
+    } 
+
+    /**
+     * Returns any exception that occurred parsing the request, or NULL.
+     *
+     * @return null|Exception
+     */
+    public function getException()
+    {
+        return $this->_exception;
+    }
 
     /**
      * Get the http request method:
