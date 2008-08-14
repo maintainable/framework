@@ -262,12 +262,18 @@ class Mad_Support_ArrayConversion
     
     public function formatDate($date)
     {
+        // 0000-00-00 becomes NULL (http://bugs.php.net/bug.php?id=45647)
+        if (preg_replace('/[^\d]/', '', $date) == 0) { return null; }
+
         $formatted = gmdate('Y-m-d', strtotime($date));
         return $formatted == '1970-01-01' ? null : $formatted;
     }
     
     public function formatDatetime($date)
     {
+        // 0000-00-00 00:00:00 becomes NULL (http://bugs.php.net/bug.php?id=45647)
+        if (preg_replace('/[^\d]/', '', $date) == 0) { return null; }
+
         $formatted = gmdate('c', strtotime($date));
         return substr($formatted, 0, 10) == '1970-01-01' ? null : $formatted;
     }
@@ -282,6 +288,9 @@ class Mad_Support_ArrayConversion
 
     public function parseDate($date, $entity = null)
     {
+        // 0000-00-00 becomes NULL (http://bugs.php.net/bug.php?id=45647)
+        if (preg_replace('/[^\d]/', '', $date) == 0) { return null; }
+
         // check if the date is valid
         $parsed = gmdate("Y-m-d", strtotime($date));
         if ($parsed == '1970-01-01') {
@@ -295,6 +304,9 @@ class Mad_Support_ArrayConversion
     
     public function parseDatetime($datetime, $entity = null)
     {
+        // 0000-00-00 00:00:00 becomes NULL (http://bugs.php.net/bug.php?id=45647)
+        if (preg_replace('/[^\d]/', '', $datetime) == 0) { return null; }
+
         // check if the date is valid
         $parsed = gmdate("Y-m-d H:i:s", strtotime($datetime));
         if (substr($parsed, 0, 10) == '1970-01-01') {
