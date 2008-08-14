@@ -1108,7 +1108,7 @@ abstract class Mad_Controller_Base
         $renderer = new Mad_Controller_Rescue_Renderer();
         $html = $renderer->render($exception, $this->_request, $this->_response);
 
-        $this->renderText($html);
+        $this->render(array('text' => $html, 'status' => 500));
     }
 
     /*##########################################################################
