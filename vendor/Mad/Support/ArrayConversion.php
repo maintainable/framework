@@ -78,7 +78,7 @@ class Mad_Support_ArrayConversion
         // build array data struct from the xml
         $xml = new SimpleXMLElement($xmlStr);
         $params = $this->_parseElement($xml);
-        
+
         // remove dasherized keys and typecast values
         $params = $this->_undasherizeKeys($params);
         return $this->_typecastXmlValue($params);
@@ -306,11 +306,31 @@ class Mad_Support_ArrayConversion
         }
     }
     
+    /**
+     * Ruby has Fixnum and Bignum, and automatically converts between them.
+     * PHP only has one Integer type and its maximum is determined by the
+     * platform PHP is compiled for.  This causes a behavioral difference 
+     * between this PHP version and its Rails counterpart.
+     * 
+     * On 32-bit PHP, the maximum Integer is 2147483647.  We throw an
+     * Overflow exception if the XML to deserialize specifies an Integer
+     * larger than this maximum.  On 64-bit PHP, we do not have this limit
+     * and parsing an Integer works the same as the Rails version.
+     */
     public function parseInteger($integer, $entity = null)
     {
         if ($integer == '') { return null; }
 
-        return (int)$integer;
+        $typecast  = (int)$integer;
+
+        // check overflow
+        $recast = (string)$typecast;
+        if ($recast != $integer) {
+            $msg = "String \"$integer\" was cast to Integer $typecast"; 
+            throw new OverflowException($msg);
+        }
+
+        return $typecast;
     }
     
     public function parseFloat($float, $entity = null)

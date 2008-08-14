@@ -38,6 +38,10 @@ class Mad_Support_ArrayConversionTest extends Mad_Test_Unit
     # From XML
     ##########################################################################*/
 
+    /**
+     * Note: This test have been changed from the Rails versions.  The number
+     * 2592000000 was changed to 2147483647.  @see ArrayConversion->parseInt()
+     */
     public function testSingleRecordFromXml()
     {
         $xml = <<< XML
@@ -47,7 +51,7 @@ class Mad_Support_ArrayConversionTest extends Mad_Test_Unit
   <id type="integer">1</id>
   <approved type="boolean"> true </approved>
   <replies-count type="integer">0</replies-count>
-  <replies-close-in type="integer">2592000000</replies-close-in>
+  <replies-close-in type="integer">2147483647</replies-close-in>
   <written-on type="date">2003-07-16</written-on>
   <viewed-at type="datetime">2003-07-16T09:28:00+0000</viewed-at>
   <content type="yaml">---\nmessage: Have a nice day\n1: should be an integer\narray: \n  - \n    should-have-dashes: true\n    should_have_underscores: true\n</content>
@@ -66,7 +70,7 @@ XML;
             'id'                    => 1,
             'approved'              => true,
             'replies_count'         => 0,
-            'replies_close_in'      => 2592000000,
+            'replies_close_in'      => 2147483647,
             'written_on'            => '2003-07-16',
             'viewed_at'             => '2003-07-16 02:28:00',
             'content'               => array('message' => "Have a nice day",    
@@ -82,6 +86,7 @@ XML;
         );
         $this->assertEquals($expected, $parsed['topic']);
     }
+
     
     public function testSingleRecordFromXmlWithNilValues()
     {
@@ -119,7 +124,7 @@ XML;
     <id type="integer">1</id>
     <approved type="boolean">false</approved>
     <replies-count type="integer">0</replies-count>
-    <replies-close-in type="integer">2592000000</replies-close-in>
+    <replies-close-in type="integer">2147483647</replies-close-in>
     <written-on type="date">2003-07-16</written-on>
     <viewed-at type="datetime">2003-07-16T09:28:00+0000</viewed-at>
     <content>Have a nice day</content>
@@ -132,7 +137,7 @@ XML;
     <id type="integer">1</id>
     <approved type="boolean">false</approved>
     <replies-count type="integer">0</replies-count>
-    <replies-close-in type="integer">2592000000</replies-close-in>
+    <replies-close-in type="integer">2147483647</replies-close-in>
     <written-on type="date">2003-07-16</written-on>
     <viewed-at type="datetime">2003-07-16T09:28:00+0000</viewed-at>
     <content>Have a nice day</content>
@@ -148,7 +153,7 @@ XML;
            'id'                   => 1,
            'approved'             => false,
            'replies_count'        => 0,
-           'replies_close_in'     => 2592000000,
+           'replies_close_in'     => 2147483647,
            'written_on'            => '2003-07-16',
            'viewed_at'             => '2003-07-16 02:28:00',
            'content'              => "Have a nice day",
@@ -348,12 +353,17 @@ XML;
         $this->assertContains('<name>David</name>', $xml);
     }
 
+    /**
+     * Note: This test have been changed from the Rails version.  The number
+     * 820497600000 was changed to 2147483647 to run on 32-bit PHP.  
+     * @see ArrayConversion->parseInt() for an explanation of the overflow issue.
+     */
     public function testOneLevelWithTypes()
     {
         $hash = array('name'          => 'David', 
                       'street_name'   => 'Paulina', 
                       'age'           => 26, 
-                      'age_in_millis' => 820497600000, 
+                      'age_in_millis' => 2147483647, 
                       'moved_on'      => '2005-11-15', 
                       'resident'      => true);
         $xml = $this->conversion->hashToXml($hash, $this->xmlOptions());
@@ -438,27 +448,37 @@ XML;
     # Array To XML
     ##########################################################################*/
  
+    /**
+     * Note: This test have been changed from the Rails version.  The number
+     * 820497600000 was changed to 2147483647 to run on 32-bit PHP.  
+     * @see ArrayConversion->parseInt() for an explanation of the overflow issue.
+     */
     public function testToXml()
     {
         $array = array(
-            array('name' => "David", 'age' => 26, 'age_in_millis' => 820497600000), 
+            array('name' => "David", 'age' => 26, 'age_in_millis' => 2147483647), 
             array('name' => "Jason", 'age' => 31, 'age_in_millis' => 1.1)
         );
         $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => true, 'indent' => 0));
-        
+
         $this->assertEquals('<records type="array"><record>', substr($xml, 0, 30));
         $this->assertContains('<age type="integer">26</age>', $xml);
         $this->assertContains('<name>David</name>',           $xml);
         $this->assertContains('<age type="integer">31</age>', $xml);
         $this->assertContains('<name>Jason</name>',           $xml);
-        $this->assertContains('<age-in-millis type="integer">820497600000</age-in-millis>', $xml);
+        $this->assertContains('<age-in-millis type="integer">2147483647</age-in-millis>', $xml);
         $this->assertContains('<age-in-millis type="float">1.1</age-in-millis>', $xml);
     }
 
+    /**
+     * Note: This test have been changed from the Rails version.  The number
+     * 820497600000 was changed to 2147483647 to run on 32-bit PHP.  
+     * @see ArrayConversion->parseInt() for an explanation of the overflow issue.
+     */
     public function testToXmlWithDedicatedName()
     {
         $array = array(
-            array('name' => "David", 'age' => 26, 'age_in_millis' => 820497600000)
+            array('name' => "David", 'age' => 26, 'age_in_millis' => 2147483647)
         );
         $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => true, 'indent' => 0, 
                                                            'root'         => 'people'));
@@ -510,10 +530,15 @@ XML;
         $this->assertContains('<street-address>Evergreen</street-address>', $xml);
     }
 
+    /**
+     * Note: This test have been changed from the Rails version.  The number
+     * 820497600000 was changed to 2147483647 to run on 32-bit PHP.  
+     * @see ArrayConversion->parseInt() for an explanation of the overflow issue.
+     */
     public function testToWithInstruct()
     {
         $array = array(
-            array('name' => "David", 'age' => 26, 'age_in_millis' => 820497600000), 
+            array('name' => "David", 'age' => 26, 'age_in_millis' => 2147483647), 
             array('name' => "Jason", 'age' => 31, 'age_in_millis' => 1.0)
         );
         $xml = $this->conversion->arrayToXml($array, array('skipInstruct' => false, 'indent' => 0));
