@@ -710,10 +710,10 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
      * @param   mixed   $content
      * @param   boolean $exists
      * @param   string  $msg
-     * @param   boolean $html
+     * @param   boolean $isHtml
      * @throws  Mad_Test_Exception
      */
-    public function assertSelect($selector, $content=true, $exists=true, $msg=null, $html=true)
+    public function assertSelect($selector, $content=true, $exists=true, $msg=null, $isHtml=true)
     {
         if (! method_exists($this, 'assertSelectEquals')) {
             throw new Mad_Test_Exception('PHPUnit selector assertion support required');
@@ -722,20 +722,20 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
         // only parse response into dom once for better performance
         if ($this->_responseDom === null) {
             $body = $this->response->getBody();
-            $this->_responseDom = PHPUnit_Util_XML::domLoad($body, $html);
+            $this->_responseDom = PHPUnit_Util_XML::load($body, $isHtml);
         }
 
         if (is_string($content)) {
             if (preg_match('!^/.*/.?$!', $content)) {            
                 $this->assertSelectRegexp($selector, $content, $exists, 
-                                          $this->_responseDom, $msg, $html);
+                                          $this->_responseDom, $msg, $isHtml);
             } else {
                 $this->assertSelectEquals($selector, $content, $exists, 
-                                          $this->_responseDom, $msg, $html);
+                                          $this->_responseDom, $msg, $isHtml);
             }
         } else {
             $this->assertSelectCount($selector, $content, 
-                                     $this->_responseDom, $msg, $html);
+                                     $this->_responseDom, $msg, $isHtml);
         }
     }
 
