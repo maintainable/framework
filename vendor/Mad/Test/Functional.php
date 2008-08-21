@@ -693,7 +693,7 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
      *     // There are more than 2, less than 10 li elements
      *     $this->assertSelect("ul > li", array('>' => 2, '<' => 10));
      *     
-     *     // @todo - add support for this
+     *     // There are more than or exactly 2, less than or exactly 10 li elements
      *     $this->assertSelect("ul > li", array('>=' => 2, '<=' => 10));
      *     
      *     // The "#binder_foo" id exists
