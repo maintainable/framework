@@ -29,6 +29,12 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
     protected $_recognized;
 
     /**
+     * Cached DOMDocument parsed from response. @see assertSelect() 
+     * @var null|DOMDocument
+     */
+    protected $_responseDom;
+
+    /**
      * Test data available to sub-classes for testing requests
      */
     protected $expire  = '15 mins';
@@ -704,25 +710,32 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
      * @param   mixed   $content
      * @param   boolean $exists
      * @param   string  $msg
+     * @param   boolean $html
      * @throws  Mad_Test_Exception
      */
-    public function assertSelect($selector, $content=true, $exists=true, $msg=null)
+    public function assertSelect($selector, $content=true, $exists=true, $msg=null, $html=true)
     {
         if (! method_exists($this, 'assertSelectEquals')) {
             throw new Mad_Test_Exception('PHPUnit selector assertion support required');
         }
 
-        $actual = $this->response->getBody();
-        $html   = true;
+        // only parse response into dom once for better performance
+        if ($this->_responseDom === null) {
+            $body = $this->response->getBody();
+            $this->_responseDom = PHPUnit_Util_XML::domLoad($body, $html);
+        }
 
         if (is_string($content)) {
             if (preg_match('!^/.*/.?$!', $content)) {            
-                $this->assertSelectRegexp($selector, $content, $exists, $actual, $msg, $html);
+                $this->assertSelectRegexp($selector, $content, $exists, 
+                                          $this->_responseDom, $msg, $html);
             } else {
-                $this->assertSelectEquals($selector, $content, $exists, $actual, $msg, $html);
+                $this->assertSelectEquals($selector, $content, $exists, 
+                                          $this->_responseDom, $msg, $html);
             }
         } else {
-            $this->assertSelectCount($selector, $content, $actual, $msg, $html);
+            $this->assertSelectCount($selector, $content, 
+                                     $this->_responseDom, $msg, $html);
         }
     }
 
@@ -928,6 +941,7 @@ abstract class Mad_Test_Functional extends Mad_Test_Unit
     {
         $this->assertNotSame($this->_recognized, false, 'Request could not be processed because route was not recognized');
         $this->response = $this->controller->process($this->request, $this->response);
+        $this->_responseDom = null;
         $this->_logRequest();
     }
 
