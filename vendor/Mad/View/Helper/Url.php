@@ -3,8 +3,8 @@
  * @category   Mad
  * @package    Mad_View
  * @subpackage Helper
- * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    http://maintainable.com/framework-license.txt
+ * @copyright  (c) 2007-2008 Maintainable Software, LLC
+ * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 
 
@@ -13,8 +13,8 @@
  * @category   Mad
  * @package    Mad_View
  * @subpackage Helper
- * @copyright  (c) 2007 Maintainable Software, LLC
- * @license    http://maintainable.com/framework-license.txt
+ * @copyright  (c) 2007-2008 Maintainable Software, LLC
+ * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 class Mad_View_Helper_Url extends Mad_View_Helper_Base
 {
