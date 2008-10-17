@@ -493,28 +493,27 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */
     public static function establishConnection($spec=null)
     {
-        // based on mad env
+        // $spec is empty: $spec defaults to MAD_ENV string like "development"
+        // keep going to read YAML for this environment string
         if (empty($spec)) {
-            if (!MAD_ENV) {
+            if ( !defined('MAD_ENV') || !MAD_ENV ) {
                 throw new Mad_Model_Exception('Adapter Not Specified');
             }
-            self::establishConnection(MAD_ENV);
+            $spec = MAD_ENV;
+        } 
 
-        // read in yml config file
-        } elseif (is_string($spec)) {
+        // $spec is string: read YAML config for environment named by string
+        // keep going to process the resulting array
+        if (is_string($spec)) {
             $config = Horde_Yaml::loadFile(MAD_ROOT.'/config/database.yml');
-            self::establishConnection($config[$spec]);
+            $spec = $config[$spec];
+        }
 
-        // config array
-        } elseif (is_array($spec)) {
-            if (!isset($spec['adapter'])) {
-                throw new Mad_Model_Exception('Adapter Not Specified');
-            }
-            $adapter = $spec['adapter'];
-            $adapterName = "Mad_Model_ConnectionAdapter_".ucfirst($adapter);
-
-            $conn = (object)array('config' => $spec, 'adapterName' => $adapterName);
-            self::$_connectionSpec = $conn;
+        // $spec is an associative array            
+        if (is_array($spec)) {
+          
+            // validation of array is handled by horde_db
+            self::$_connectionSpec = $spec;
 
         } else {
             throw new Mad_Model_Exception("Invalid Connection Specification");
@@ -545,9 +544,14 @@ abstract class Mad_Model_Base extends Mad_Support_Object
 
         // connection based on spec
         } elseif ($spec = self::$_connectionSpec) {
-            $adapter = new $spec->adapterName($spec->config, self::logger());
+            if (empty($spec['logger'])) { 
+                $spec['logger'] = self::logger(); 
+            }
+            $adapter = Horde_Db_Adapter::getInstance($spec);
+
             $conn = self::$_activeConnection = $adapter; 
         }
+
         if (empty($conn)) {
             throw new Mad_Model_Exception("Connection Not Established");
         }
@@ -568,7 +572,7 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         self::$_activeConnection = null;
 
         if ($conn) { $conn->disconnect(); }
-        return $spec ? $spec->config : '';
+        return $spec ? $spec : '';
     }
 
     /**
@@ -803,7 +807,8 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */
     public function humanAttributeName($attr)
     {
-        return $this->columnForAttribute($attr)->getHumanName();
+        $col = $this->columnForAttribute($attr);
+        return Mad_Support_Inflector::humanize($col->getName());
     }
 
     /**

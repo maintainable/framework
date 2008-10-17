@@ -114,11 +114,11 @@ class Mad_Test_Fixture_Base
 
     /**
      * Load a fixture by name
-     * @param   Mad_Model_ConnectionAdapter_Abstract  $conn
+     * @param   object  $conn       Connection adapter
      * @param   string  $ymlName
      * @param   boolean $save
      */
-    public function __construct(Mad_Model_ConnectionAdapter_Abstract $conn, $ymlName, $fixturesPath=null)
+    public function __construct($conn, $ymlName, $fixturesPath=null)
     {
         $this->_connection = $conn;
         $this->_ymlName = $ymlName;
@@ -393,6 +393,7 @@ class Mad_Test_Fixture_Base
             $cols[] = $this->_connection->quoteColumnName($col);
             $vals[] = $this->_connection->quote($value);
         }
+
         $colStr   = implode(', ', $cols);
         $valStr   = implode(', ', $vals);
 

@@ -1,20 +1,20 @@
 development:
   database: madmodel
-  adapter:  mysql
+  adapter:  pdo_mysql
   host:     localhost
   username: root
   password:
 
 test:
   database: madmodel_test
-  adapter:  mysql
+  adapter:  pdo_mysql
   host:     localhost
   username: root
   password:
 
 production:
   database: madmodel
-  adapter:  mysql
+  adapter:  pdo_mysql
   host:     localhost
   username: root
   password:

@@ -4,7 +4,7 @@
  * @package    Mad_Model
  * @subpackage UnitTests
  * @copyright  (c) 2007-2008 Maintainable Software, LLC
- * @license    http://opensource.org/licenses/bsd-license.php BSD 
+ * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 
 /**
@@ -68,7 +68,7 @@ class Mad_Model_Migration_MigratorTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
 
         $dir = dirname(dirname(dirname(dirname(__FILE__)))).'/fixtures/migrations/';
         Mad_Model_Migration_Migrator::up($dir);
@@ -95,7 +95,7 @@ class Mad_Model_Migration_MigratorTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
     }
 
     public function testOneUp()
@@ -104,7 +104,7 @@ class Mad_Model_Migration_MigratorTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
 
         $dir = dirname(dirname(dirname(dirname(__FILE__)))).'/fixtures/migrations/';
         Mad_Model_Migration_Migrator::up($dir, 1);
@@ -118,7 +118,7 @@ class Mad_Model_Migration_MigratorTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
 
         Mad_Model_Migration_Migrator::up($dir, 2);
         $this->assertEquals(2, Mad_Model_Migration_Migrator::getCurrentVersion());
@@ -168,7 +168,7 @@ class Mad_Model_Migration_MigratorTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
 
 
         Mad_Model_Migration_Migrator::up($dir);
@@ -205,7 +205,7 @@ class Mad_Model_Migration_MigratorTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
 
         $user = new User;
         $columns = $user->columnNames();

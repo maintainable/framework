@@ -38,10 +38,10 @@ class Mad_Test_Fixture_Collection
 
     /**
      * Load a fixture by name
-     * @param   object        $connection
+     * @param   object        $conn       Connection Adapter
      * @param   string|array  $ymlNames
      */
-    public function __construct(Mad_Model_ConnectionAdapter_Abstract $conn, $ymlNames)
+    public function __construct($conn, $ymlNames)
     {
         Mad_Test_Fixture_Base::resetParsed();
         $this->_connection = $conn;

@@ -4,7 +4,7 @@
  * @package    Mad_Model
  * @subpackage UnitTests
  * @copyright  (c) 2007-2008 Maintainable Software, LLC
- * @license    http://opensource.org/licenses/bsd-license.php BSD 
+ * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 
 /**
@@ -137,13 +137,8 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
 
         $this->assertEquals('hello', $columns['one']->getDefault()); 
 
-        // see Mad_Model_ConnectionAdapter_Abstract_ColumnTest.  
-        // defaults were set to True and False but they are returned
-        // as strings with '1' and '0'.
-        //   testDoesNotTypeCastBooleanFalse()
-        //   testDoesNotTypeCastBooleanTrue()
-        $this->assertSame('1',    $columns['two']->getDefault()); 
-        $this->assertSame('0',   $columns['three']->getDefault()); 
+        $this->assertTrue($columns['two']->getDefault()); 
+        $this->assertFalse($columns['three']->getDefault()); 
 
         $this->assertEquals('1',     $columns['four']->getDefault()); 
     }
@@ -412,7 +407,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
     {
         $this->_conn->addColumn('users', 'contributor', 'boolean', array('default' => true));
         $user = new User;
-        $this->assertEquals('1', $user->contributor);
+        $this->assertTrue($user->contributor);
 
         // changeColumn() throws exception on error
         $this->_conn->changeColumn('users', 'contributor', 'boolean', array('default' => null));
@@ -421,21 +416,17 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         $this->assertNull($user->contributor);
     }
 
-    /**
-     * @todo Revisit this test if the boolean casting behavior changes.
-     * @see  Mad_Model_ConnectionAdapter_Abstract_ColumnTest
-     */
     public function testChangeColumnWithNewDefault()
     {
         $this->_conn->addColumn('users', 'administrator', 'boolean', array('default' => true));
         $user = new User;
-        $this->assertSame('1', $user->administrator);
+        $this->assertTrue($user->administrator);
 
         // changeColumn() throws exception on error
         $this->_conn->changeColumn('users', 'administrator', 'boolean', array('default' => false));
 
         $user = new User;
-        $this->assertSame('0', $user->administrator);
+        $this->assertFalse($user->administrator);
     }
 
     public function testChangeColumnDefault()
@@ -460,7 +451,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
 
         $m = new WeNeedReminders1;
         $m->up();
@@ -476,7 +467,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
     }
 
     public function testAddTableWithDecimals()
@@ -485,7 +476,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM big_numbers");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
 
         $m = new GiveMeBigNumbers;
         $m->up();
@@ -511,7 +502,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM big_numbers");
         } catch (Exception $e) {}
-        $this->assertType('PDOException', $e);
+        $this->assertType('Horde_Db_Exception', $e);
     }
 
     public function testCreateTableWithBinaryColumn()

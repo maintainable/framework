@@ -22,8 +22,8 @@ if (!defined('MAD_ROOT')) {
  * @category   Mad
  * @package    Mad_Model
  * @subpackage UnitTests
- * @copyright  (c) 2007-2008 Maintainable Software, LLC
- * @license    http://opensource.org/licenses/bsd-license.php BSD
+ * @copyright  (c) 2007 Maintainable Software, LLC
+ * @license    http://maintainable.com/framework-license.txt
  */
 class Mad_Model_BaseTest extends Mad_Test_Unit
 {
@@ -189,7 +189,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals(13, count($columns));
         
         foreach ($columns as $col) {
-            $this->assertType('Mad_Model_ConnectionAdapter_Mysql_Column', $col);
+            $this->assertRegexp('/Column$/', get_class($col));
         }
     }
 
@@ -198,7 +198,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $test = new UnitTest();
         $columns = $test->columnsHash();
         $this->assertEquals(13, count($columns));
-        $this->assertType('Mad_Model_ConnectionAdapter_Mysql_Column', $columns['id']);
+        $this->assertRegexp('/Column/', get_class($columns['id']));
     }
 
     public function testColumnNames()
@@ -328,7 +328,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     {
         $user = new User;
         $col = $user->columnForAttribute('name');
-        $this->assertType('Mad_Model_ConnectionAdapter_Mysql_Column', $col);
+        $this->assertRegexp('/Column$/', get_class($col));
         
         $this->assertEquals('string', $col->getType());
     }
@@ -367,7 +367,6 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $test = new UnitTest('1');
         $this->assertEquals('1', $test->id);
     }
-
 
     /*##########################################################################
     # Deprecated column accessors
@@ -572,7 +571,6 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $test->setIsAssocChanged(true);
         $this->assertTrue($test->isAssocChanged());
     }
-
 
 
     /*##########################################################################
@@ -920,6 +918,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals('3', $testCnt);
     }
 
+
     /*##########################################################################
     # Test SELECT using findBySql()
     ##########################################################################*/
@@ -1030,6 +1029,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertType('UnitTest', $test);
         $this->assertSame($test, $test->reload());
     }
+
 
     /*##########################################################################
     # Test INSERT using create() staticly
@@ -1244,6 +1244,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertNotEquals($updatedOn, $user->updated_on);
     }
 
+
     /*##########################################################################
     # Test UPDATEs
     ##########################################################################*/
@@ -1254,8 +1255,6 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     // the associated object before we save the base object
     public function testUpdateAttributesWithAssociations()
     {
-        $this->markTestSkipped();
-
         $this->fixtures('users', 'articles');
 
         $article = Article::find($this->articles('xml_rpc')->id, array('include' => 'User'));
@@ -1680,7 +1679,6 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
             $this->assertEquals('test first error', $errors[0]);
         }
     }
-
 
     /*##########################################################################
     # Test Callback Methods without Exceptions

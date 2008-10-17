@@ -155,7 +155,7 @@ abstract class Mad_Test_Unit extends PHPUnit_Framework_TestCase
         } else {
             $this->_fixtures->addFixture($ymlFiles);
         }
-        
+
         // Build models from fixture records
         foreach ($this->_fixtures->getFixtures() as $fixture) {
             $name  = $fixture->getYmlName();
@@ -167,7 +167,7 @@ abstract class Mad_Test_Unit extends PHPUnit_Framework_TestCase
             }
             
             // skip building model if class doesn't exist
-            if (!Mad_Support_Base::modelExists($class)) break;
+            if (!Mad_Support_Base::modelExists($class)) { break; }
             $model = new $class;
 
             $this->_records[$name] = array();

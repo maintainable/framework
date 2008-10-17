@@ -1,3 +1,9 @@
+Next Release
+
+ - Our Mad_Model_ConnectionAdapter package has been expanded and
+   moved into the Horde Project as Horde_Db.  We now bundle Horde_Db 
+   and support more databases.
+
 0.1.0 (17-Oct-2008)
 
-  - First Release
+ - First Release
