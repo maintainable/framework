@@ -236,7 +236,13 @@ class Horde_Db_Adapter_Abstract_Column
      */
     public function stringToDate($string)
     {
-        if (empty($string)) return null;
+        if (empty($string)) { return null; }
+
+        // preserve '0000-00-00' (http://bugs.php.net/bug.php?id=45647)
+        if (preg_replace('/[^\d]/', '', $string) == 0) { 
+            return '0000-00-00'; 
+        }
+
         return date('Y-m-d', strtotime($string));
     }
 
@@ -248,7 +254,13 @@ class Horde_Db_Adapter_Abstract_Column
      */
     public function stringToTime($string)
     {
-        if (empty($string)) return null;
+        if (empty($string)) { return null; }
+
+        // preserve '0000-00-00 00:00:00' (http://bugs.php.net/bug.php?id=45647)
+        if (preg_replace('/[^\d]/', '', $string) == 0) { 
+            return '0000-00-00 00:00:00'; 
+        }
+
         return date('Y-m-d H:i:s', strtotime($string));
     }
 
