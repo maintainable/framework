@@ -1,0 +1,10 @@
+Options +FollowSymLinks +ExecCGI
+	
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+	
+ErrorDocument 500 "<h2>Application error</h2><p>Application failed to start properly</p>"
