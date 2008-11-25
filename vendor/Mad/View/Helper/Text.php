@@ -17,16 +17,6 @@
 class Mad_View_Helper_Text extends Mad_View_Helper_Base
 {
     /**
-     * @var null|Solar_Markdown
-     */
-    protected $_markdown;
-
-    /**
-     * @var null|Horde_Text_Textile
-     */
-    protected $_textile;
-
-    /**
      * @var array
      */
     protected $_cycles = array();
@@ -47,56 +37,14 @@ class Mad_View_Helper_Text extends Mad_View_Helper_Base
         return htmlentities($var, ENT_QUOTES, 'utf-8');
     }
 
-    /** 
-     * Returns the text with all the Markdown codes turned into HTML tags.
-     *
-     * @param  string  $text  Markdown
-     * @return string         HTML
-     */
-    public function markdown($text)
-    {
-        if (! $this->_markdown) {
-            $this->_markdown = new Solar_Markdown();
-        }
-        return $this->_markdown->transform($text);
-    }
-
     /**
-     * Returns the text with all the Textile codes turned into HTML tags.
+     * Pluralize the $singular word unless $count is one.  If $plural
+     * form is not supplied, inflector will be used.
      *
-     * @param  string  $text  Textile
-     * @return string         HTML
+     * @param  integer      $count      Count determines singular or plural
+     * @param  string       $singular   Singular form
+     * @param  string|null  $plural     Plural form (optional)
      */
-    public function textilize($text)
-    {
-        if (! $this->_textile) {
-            $this->_textile = new Horde_Text_Textile();
-        }
-        return $this->_textile->transform($text);
-    }
-    
-    /**
-     * Returns the text with all the Textile codes turned into HTML tags, 
-     * but without the bounding <p> tag
-     *
-     * @param  string  $text  Textile
-     * @return string         HTML
-     */
-    public function textilizeWithoutParagraph($text)
-    {
-        $textiled = $this->textilize($text);
-
-        if (substr($textiled, 0, 3) == '<p>') {
-            $textiled = substr($textiled, 3);
-        }
-
-        if (substr($textiled, -4) == '</p>') {
-            $textiled = substr($textiled, 0, -4);
-        }
-
-        return $textiled;
-    }
-    
     public function pluralize($count, $singular, $plural = null)
     {
         if ($count == '1') {

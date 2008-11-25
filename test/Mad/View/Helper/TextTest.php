@@ -85,52 +85,7 @@ class Mad_View_Helper_TextTest extends Mad_Test_Unit
         $str = 'The quick brown fox jumps over the dog.';
         $this->assertEquals($str, $this->helper->highlight($str, 'black'));
     }
-    
-    public function testMarkdown()
-    {
-        $this->assertEquals(
-            '<h1>First Level Header</h1>',
-            $this->helper->markdown("First Level Header\n=================="));
-        $this->assertEquals(
-            '<h2>Second Level Header</h2>',
-            $this->helper->markdown("Second Level Header\n-----------------"));
-        $this->assertEquals(
-            '<h3>Header 3</h3>',
-            $this->helper->markdown('### Header 3'));
-        $this->assertEquals(
-            "<p>paragraph 1</p>\n\n<p>paragraph 2</p>",
-            $this->helper->markdown("paragraph 1\n\nparagraph 2"));
-        $this->assertEquals(
-            '<p><em>emphasis</em></p>',
-            $this->helper->markdown('*emphasis*'));
-    }
-    
-    public function testTextile()
-    {
-        $this->assertEquals(
-            '<h1>First Level Header</h1>',
-            $this->helper->textilize('h1. First Level Header'));
-        $this->assertEquals(
-            '<h2>Second Level Header</h2>',
-            $this->helper->textilize('h2. Second Level Header'));
-        $this->assertEquals(
-            '<h3>Second Level Header</h3>',
-            $this->helper->textilize('h3. Second Level Header'));
-        $this->assertEquals(
-            "<p>paragraph 1</p>\n\n<p>paragraph 2</p>",
-            $this->helper->textilize("paragraph 1\n\nparagraph 2"));                
-        $this->assertEquals(
-            '<p><em>emphasis</em></p>',
-            $this->helper->textilize('_emphasis_'));
-    }
-
-    public function testTextileWithoutParagraph()
-    {
-        $this->assertEquals(
-            '<em>emphasis</em>',
-            $this->helper->textilizeWithoutParagraph('_emphasis_'));
-    }
-    
+        
     public function testCycleClass()
     {
         $value = new Mad_View_Helper_Text_Cycle(array('one', 2, '3'));
