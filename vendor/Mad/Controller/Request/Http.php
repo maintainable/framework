@@ -472,6 +472,26 @@ class Mad_Controller_Request_Http
     }
 
     /**
+     * Get entire list of $_COOKIE parameters
+     * 
+     * @return  array
+     */
+    public function getCookieParams()
+    {
+        return $this->_cookie;
+    }
+
+    /**
+     * Get entire list of $_SERVER parameters
+     * 
+     * @return  array
+     */
+    public function getServerParams()
+    {
+        return $this->_server;
+    }
+    
+    /**
      * Get entire list of parameters set by {@link Mad_Controller_Route_Path} for
      * the current request
      * 
