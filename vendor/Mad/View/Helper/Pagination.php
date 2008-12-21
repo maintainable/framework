@@ -32,7 +32,6 @@ class Mad_View_Helper_Pagination extends Mad_View_Helper_Base
     {
         $totalPages = $entries->pageCount;
         if ($totalPages < 1)  { return; }
-        if ($totalPages == 1) { return 1; }
 
         $page = $entries->currentPage;
 
@@ -97,7 +96,7 @@ class Mad_View_Helper_Pagination extends Mad_View_Helper_Base
                 $params['page'] = $page; 
             }
             $paramStr = $this->_buildParamString($params);
-            return "<a href=\"/".$baseUrl.$paramStr."\">$text</a> ";
+            return "<a href=\"".$baseUrl.$paramStr."\">$text</a> ";
         }
     }
 
