@@ -16,8 +16,6 @@
  */
 class Mad_View_Helper_Javascript extends Mad_View_Helper_Javascript_Base
 {
-    protected $_json = null;
-
     public function escapeJavascript($javascript)
     {
         $escaped = str_replace(array('\\',   "\r\n", "\r",  "\n",  '"',  "'"), 
@@ -28,10 +26,11 @@ class Mad_View_Helper_Javascript extends Mad_View_Helper_Javascript_Base
 
     public function jsonEncode($data)
     {
-        if ($this->_json === null) {
-            $this->_json = new Solar_Json(array());
-        }
-        return $this->_json->encode($data);
+        if (! function_exists('json_encode')) { 
+            throw new Mad_View_Exception('json_encode() function required');
+        }                
+
+        return json_encode($data);
     }
     
     public function javascriptTag($content, $htmlOptions = array())

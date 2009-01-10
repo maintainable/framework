@@ -4,6 +4,12 @@ Next Release
    moved into the Horde Project as Horde_Db.  We now bundle Horde_Db 
    and support more databases.
 
+ - Removed dependency on Solar_Json.  JSON functionality now only works
+   if PHP's JSON extension is enabled.  If it is not enabled and a 
+   framework function needing it is called, an exception will be thrown. 
+   A workaround for older PHP versions is to define the global functions 
+   json_encode() and json_decode().
+   
 0.1.0 (17-Oct-2008)
 
  - First Release

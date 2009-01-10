@@ -33,8 +33,16 @@ class Mad_View_Helper_JavascriptTest extends Mad_Test_Unit
 
     public function testJsonEncode()
     {
-        $this->assertEquals('{"foo":"bar"}', $this->view->jsonEncode(array('foo'=>'bar')));
+        try {
+            $this->assertEquals('{"foo":"bar"}', 
+            $this->view->jsonEncode(array('foo'=>'bar')));
+        } catch (Mad_View_Exception $e) {
+            if (function_exists('json_encode')) { 
+                throw $e; 
+            } else {
+                $this->assertRegExp('/json_encode/', $e->getMessage());
+            }            
+        }
     }
-
 
 }

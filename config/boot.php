@@ -6,7 +6,6 @@ if (! defined('MAD_ENV')) {
     define('MAD_ENV', isset($_SERVER['MAD_ENV']) ? $_SERVER['MAD_ENV'] : 'development');
 }
 ini_set('date.timezone', 'US/Pacific');
-define('SOLAR_CONFIG_PATH', '');
 
 // include paths
 set_include_path(implode(PATH_SEPARATOR, array(

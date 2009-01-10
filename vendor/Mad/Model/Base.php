@@ -2326,8 +2326,11 @@ abstract class Mad_Model_Base extends Mad_Support_Object
      */
     public function fromJson($json)
     {
-        $solarJson = new Solar_Json(array());
-        $attributes = (array)$solarJson->decode($json);
+        if (! function_exists('json_decode')) { 
+            throw new Mad_Model_Exception('json_decode() function required');
+        }        
+
+        $attributes = (array)json_decode($json);
         $this->setAttributes($attributes);
         return $this;
     }

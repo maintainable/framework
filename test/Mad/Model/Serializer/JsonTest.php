@@ -44,7 +44,15 @@ class Mad_Model_Serializer_JsonTest extends Mad_Test_Unit
         $expected = '{"name":"Mike Naberezny",'.
                      '"Comments":[{"body":"Comment A"},{"body":"Comment B"}]}';
 
-        $this->assertEquals($expected, $serializer->serialize());
+        try {
+            $this->assertEquals($expected, $serializer->serialize());
+        } catch (Mad_Model_Exception $e) {
+            if (function_exists('json_encode')) { 
+                throw $e; 
+            } else {
+                $this->assertRegExp('/json_encode/', $e->getMessage());
+            }
+        }
     }
 
     public function testToJson()
@@ -56,7 +64,15 @@ class Mad_Model_Serializer_JsonTest extends Mad_Test_Unit
         $expected = '{"name":"Mike Naberezny",'.
                      '"Comments":[{"body":"Comment A"},{"body":"Comment B"}]}';
 
-        $this->assertEquals($expected, $record->toJson($options));
+        try {
+            $this->assertEquals($expected, $record->toJson($options));
+        } catch (Mad_Model_Exception $e) {
+            if (function_exists('json_encode')) { 
+                throw $e; 
+            } else {
+                $this->assertRegExp('/json_encode/', $e->getMessage());
+            }
+        }
     }
 
     public function testToJsonIncludeRoot()
@@ -68,19 +84,36 @@ class Mad_Model_Serializer_JsonTest extends Mad_Test_Unit
 
         $expected = '{ "user": {"name":"Mike Naberezny"} }';
 
-        $this->assertEquals($expected, $record->toJson($options));
+        try {
+            $this->assertEquals($expected, $record->toJson($options));
+        } catch (Mad_Model_Exception $e) {
+            if (function_exists('json_encode')) { 
+                throw $e; 
+            } else {
+                $this->assertRegExp('/json_encode/', $e->getMessage());
+            }
+        }
     }
 
     public function testFromJson()
     {
         $record = new Article;
         $json = '{"id":1,"title":"Easier XML-RPC for PHP5","user_id":1}';
-        $article = $record->fromJson($json);
-        
-        $this->assertType('Article', $article);
-        
-        $this->assertEquals(1, $article->id);
-        $this->assertEquals(1, $article->user_id);
-        $this->assertEquals("Easier XML-RPC for PHP5", $article->title);
+
+        try {
+            $article = $record->fromJson($json);
+
+            $this->assertType('Article', $article);
+            $this->assertEquals(1, $article->id);
+            $this->assertEquals(1, $article->user_id);
+            $this->assertEquals("Easier XML-RPC for PHP5", $article->title);
+        } catch (Mad_Model_Exception $e) {
+            if (function_exists('json_encode')) { 
+                throw $e; 
+            } else {
+                $this->assertRegExp('/json_decode/', $e->getMessage());
+            }
+        }
+
     }
 }

@@ -19,9 +19,12 @@ class Mad_Model_Serializer_Json extends Mad_Model_Serializer_Base
     
     public function serialize() 
     {
+        if (! function_exists('json_decode')) { 
+            throw new Mad_Model_Exception('json_decode() function required');
+        }
+        
         $serializedArray = $this->getSerializableRecord();
-
-        $solarJson = new Solar_Json(array());
-        return $solarJson->encode($serializedArray);
+        return json_encode($serializedArray);
     }
+
 }
