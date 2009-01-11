@@ -73,7 +73,7 @@ class Mad_Test_Fixture_Base
     /**
      * Log filter used for suppressing/resuming application logging.
      *
-     * @var Zend_Log_Filter_Suppress
+     * @var Horde_Log_Filter_Suppress
      */
     private static $_suppressLogFilter = null;
 
@@ -443,7 +443,7 @@ class Mad_Test_Fixture_Base
             return;
         }
         if (is_null(self::$_suppressLogFilter)) {
-            self::$_suppressLogFilter = new Zend_Log_Filter_Suppress();
+            self::$_suppressLogFilter = new Horde_Log_Filter_Suppress();
             $logger = self::logger();
             if (! is_null($logger)) {
                 $logger->addFilter(self::$_suppressLogFilter);

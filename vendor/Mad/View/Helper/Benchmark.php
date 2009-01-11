@@ -21,7 +21,7 @@
  *
  * You may give an optional logger level as the second argument
  * ('debug', 'info', 'warn', 'error').  The default is 'info'.
- * The level may also be given as a Zend_Log_* constant.
+ * The level may also be given as a Horde_Log::* constant.
  *
  * @category   Mad
  * @package    Mad_View

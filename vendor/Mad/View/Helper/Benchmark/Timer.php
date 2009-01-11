@@ -33,7 +33,7 @@ class Mad_View_Helper_Benchmark_Timer
      * Logger instance that will be used to record the
      * time after the benchmark has ended
      *
-     * @var null|Zend_Log
+     * @var null|Horde_Log_Logger
      */
     private $_logger;
     
@@ -54,9 +54,9 @@ class Mad_View_Helper_Benchmark_Timer
     /**
      * Start a new benchmark.
      *
-     * @param string          $message  Message to log after the benchmark has ended
-     * @param string|integer  $level    Log level to log after the benchmark has ended
-     * @param null|Zend_Log   $logger   Logger instance or NULL if none is available
+     * @param string                 $message  Message to log after the benchmark has ended
+     * @param string|integer         $level    Log level to log after the benchmark has ended
+     * @param null|Horde_Log_Logger  $logger   Logger instance or NULL if none is available
      */
     public function __construct($message, $level = 'info', $logger = null) 
     {

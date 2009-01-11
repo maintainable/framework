@@ -39,17 +39,17 @@ if (MAD_ENV == 'production') {
 }
 
 // initialize the default loger. writers and filters are specified in the environment files.
-$GLOBALS['MAD_DEFAULT_LOGGER'] = new Zend_Log();
-$writer = new Zend_Log_Writer_Stream(MAD_ROOT.DIRECTORY_SEPARATOR.'log'.
+$GLOBALS['MAD_DEFAULT_LOGGER'] = new Horde_Log_Logger();
+$writer = new Horde_Log_Handler_Stream(MAD_ROOT.DIRECTORY_SEPARATOR.'log'.
                                               DIRECTORY_SEPARATOR.MAD_ENV.'.log');
-$GLOBALS['MAD_DEFAULT_LOGGER']->addWriter($writer);
+$GLOBALS['MAD_DEFAULT_LOGGER']->addHandler($writer);
 
 // priority filters
 if (MAD_ENV == 'development') {
-    $filter = new Zend_Log_Filter_Priority(Zend_Log::INFO);
+    $filter = new Horde_Log_Filter_Level(Horde_Log::INFO);
     $GLOBALS['MAD_DEFAULT_LOGGER']->addFilter($filter);
 } elseif (MAD_ENV == 'production') {
-    $filter = new Zend_Log_Filter_Priority(Zend_Log::NOTICE);
+    $filter = new Horde_Log_Filter_Level(Horde_Log::NOTICE);
     $GLOBALS['MAD_DEFAULT_LOGGER']->addFilter($filter);
 }
 

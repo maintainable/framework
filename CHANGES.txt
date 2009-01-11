@@ -9,7 +9,9 @@ Next Release
    framework function needing it is called, an exception will be thrown. 
    A workaround for older PHP versions is to define the global functions 
    json_encode() and json_decode().
-   
+
+ - Replaced Zend_Log with Horde_Log.
+
 0.1.0 (17-Oct-2008)
 
  - First Release

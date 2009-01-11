@@ -55,7 +55,7 @@ class Mad_Mailer_Base
 
     /**
      * Logger object
-     * @var Zend_Log
+     * @var Horde_Log_Logger
      */
     private $_logger = null;
 

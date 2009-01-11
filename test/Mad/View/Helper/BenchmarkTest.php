@@ -30,7 +30,7 @@ class Mad_View_Helper_BenchmarkTest extends Mad_Test_Unit
         $this->view = new Mad_View_Base();
         $this->view->addHelper(new Mad_View_Helper_Benchmark($this->view));
 
-        $log = new Zend_Log($this->mock = new Zend_Log_Writer_Mock);
+        $log = new Horde_Log_Logger($this->mock = new Horde_Log_Handler_Mock);
         $this->view->logger = $log;
     }
     
@@ -69,7 +69,7 @@ class Mad_View_Helper_BenchmarkTest extends Mad_Test_Unit
 
     public function testWithMessageAndLevelAsInteger()
     {
-        $bench = $this->view->benchmark('debug_run', Zend_Log::DEBUG);
+        $bench = $this->view->benchmark('debug_run', Horde_Log::DEBUG);
         $bench->end();
         $this->assertEquals(1, count($this->mock->events));
         $this->assertLastLogged('debug_run', 'debug');

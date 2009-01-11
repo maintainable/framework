@@ -193,8 +193,8 @@ abstract class Mad_Test_Unit extends PHPUnit_Framework_TestCase
      */
     public function useMockLogger()
     {
-        $this->mock = new Zend_Log_Writer_Mock;
-        $logger = new Zend_Log($this->mock);
+        $this->mock = new Horde_Log_Handler_Mock;
+        $logger = new Horde_Log_Logger($this->mock);
         Mad_Model_Base::setLogger($logger);
 
         // changing logger requires us to reset our test's connection property
