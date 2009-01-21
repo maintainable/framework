@@ -78,8 +78,8 @@ class Mad_View_Helper_BenchmarkTest extends Mad_Test_Unit
 
     public function assertLastLogged($message = 'Benchmarking', $level = 'info')
     {
-        $last = end($this->mock->events);
-        $this->assertEquals(strtoupper($level), $last['priorityName']);
+        $last = end($this->mock->events);        
+        $this->assertEquals(strtoupper($level), $last['levelName']);
         $this->assertRegExp("/^$message \(.*\)$/", $last['message']);
     }
 }
