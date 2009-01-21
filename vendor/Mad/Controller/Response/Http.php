@@ -134,7 +134,6 @@ class Mad_Controller_Response_Http
 
         // send body
         print $this->getBody();
-        exit(0);
     }
 
 
@@ -253,6 +252,7 @@ class Mad_Controller_Response_Http
         $headers["HTTP/1.1 $this->_status"] = true;
 
         if ($this->_status == '200 OK') {
+            $headers["Connection: close"] = true;
             $headers["Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"] = true;
 
             // Try to keep browser from caching any screen to ensure current data.
