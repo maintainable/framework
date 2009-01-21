@@ -48,27 +48,27 @@ class Mad_Support_Base
      */
     public static function modelExists($class)
     {
-        static $pathnames = array();
+        static $classes = array();
 
-        $path = MAD_ROOT . DIRECTORY_SEPARATOR 
-              . 'app' . DIRECTORY_SEPARATOR . 'models';
+        // build array of all classes in the app/models models
+        if (empty($classes)) {
+			$path = MAD_ROOT . DIRECTORY_SEPARATOR
+				  . 'app' . DIRECTORY_SEPARATOR . 'models';
 
-        // build array of pathnames for all models in app/models
-        if (empty($pathnames)) {
-            foreach(new RecursiveIteratorIterator(
-                     new RecursiveDirectoryIterator($path)) as $f) {
-
-                if ($f->isFile() && substr($f->getFilename(), -4) == '.php') {
-                    $pathnames[] = $f->getPathname();
-                }
-            }
+			$pathLen = strlen($path) + 1;
+			foreach(new RecursiveIteratorIterator(
+					new RecursiveDirectoryIterator($path)) as $f) {
+				if ($f->isFile() && substr($f->getFilename(), -4) == '.php') {
+					// compute possible model pathname of $class
+					$pathname = $f->getPathname();
+					$thisClass = str_replace(DIRECTORY_SEPARATOR, '_', 
+					    substr($pathname, $pathLen, -4));
+					$classes[$thisClass] = true;
+				}
+			}
         }
 
-        // compute possible model pathname of $class
-        $pathname = $path . DIRECTORY_SEPARATOR
-                  . str_replace('_', DIRECTORY_SEPARATOR, $class) .'.php';
-
-        return in_array($pathname, $pathnames);
+        return isset($classes[$class]);
     }
     
     /**
