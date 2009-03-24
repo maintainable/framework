@@ -7,7 +7,7 @@
  * largely on ideas from Ruby on Rails (http://www.rubyonrails.org).
  *
  * @author  Maintainable Software, LLC. (http://www.maintainable.com)
- * @author  Mike Naberezny (mike@maintainable.com)
+ * @author  Mike Naberezny <mike@maintainable.com>
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * @package Horde_Routes
  */

@@ -7,7 +7,7 @@
  * largely on ideas from Ruby on Rails (http://www.rubyonrails.org).
  *
  * @author  Maintainable Software, LLC. (http://www.maintainable.com)
- * @author  Mike Naberezny (mike@maintainable.com)
+ * @author  Mike Naberezny <mike@maintainable.com>
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * @package Horde_Routes
  */
@@ -195,7 +195,9 @@ class Horde_Routes_Mapper
      */
     public function __construct($kargs = array())
     {
-        $defaultKargs = array('controllerScan' => 'Horde_Routes_Utils::controllerScan',
+        $callback = array('Horde_Routes_Utils', 'controllerScan');
+
+        $defaultKargs = array('controllerScan' => $callback,
                               'directory'      => null,
                               'alwaysScan'     => false,
                               'explicit'       => false);
@@ -307,9 +309,10 @@ class Horde_Routes_Mapper
     protected function _createGens()
     {
         // Use keys temporarily to assemble the list to avoid excessive
-        // list iteration testing with foreach
-        $controllerList = array();
-        $actionList = array();
+        // list iteration testing with foreach.  We include the '*' in the
+        // case that a generate contains a controller/action that has no
+        // hardcodes.
+        $actionList = $controllerList = array('*' => true);
 
         // Assemble all the hardcoded/defaulted actions/controllers used
         foreach ($this->matchList as $route) {
@@ -317,21 +320,15 @@ class Horde_Routes_Mapper
                 continue;
             }
             if (isset($route->defaults['controller'])) {
-                $controllerList[] = $route->defaults['controller'];
+                $controllerList[$route->defaults['controller']] = true;
             }
             if (isset($route->defaults['action'])) {
-                $actionList[] = $route->defaults['action'];
+                $actionList[$route->defaults['action']] = true;
             }
         }
 
-        // Setup the lists of all controllers/actions we'll add each route
-        // to.  We include the '*' in the case that a generate contains a
-        // controller/action that has no hardcodes.
-        $controllerList[] = "*";
-        $actionList[] = "*";
-
-        $actionList = array_unique($actionList);
-        $controllerList = array_unique($controllerList);
+        $actionList = array_keys($actionList);
+        $controllerList = array_keys($controllerList);
 
         // Go through our list again, assemble the controllers/actions we'll
         // add each route to. If its hardcoded, we only add it to that dict key.
@@ -433,8 +430,7 @@ class Horde_Routes_Mapper
                 if (empty($url)) {
                     $url = '/';
                 }
-            }
-            else {
+            } else {
                 return array(null, null, $matchLog);
             }
         }
@@ -774,7 +770,7 @@ class Horde_Routes_Mapper
      *       # '/regions/51/locations'
      *
      * Note: Since Horde Routes 0.2.0 and Python Routes 1.8, this method is
-     * not compatible with earlier versions inasmuch as the semicolon is no 
+     * not compatible with earlier versions inasmuch as the semicolon is no
      * longer used to delimit custom actions.  This was a change in Rails
      * itself (http://dev.rubyonrails.org/changeset/6485) and adopting it
      * here allows us to keep parity with Rails and ActiveResource.

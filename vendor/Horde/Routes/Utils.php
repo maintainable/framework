@@ -7,7 +7,7 @@
  * largely on ideas from Ruby on Rails (http://www.rubyonrails.org).
  *
  * @author  Maintainable Software, LLC. (http://www.maintainable.com)
- * @author  Mike Naberezny (mike@maintainable.com)
+ * @author  Mike Naberezny <mike@maintainable.com>
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * @package Horde_Routes
  */
@@ -23,20 +23,20 @@ class Horde_Routes_Utils
      * @var Horde_Routes_Mapper
      */
     public $mapper;
-    
+
     /**
      * Match data from last match; implements for urlFor() route memory
      * @var array
-     */    
+     */
     public $mapperDict = array();
-    
+
     /**
      * Callback function used for redirectTo()
      * @var callback
      */
     public $redirect;
 
-    
+
     /**
      * Constructor
      *
@@ -48,7 +48,7 @@ class Horde_Routes_Utils
         $this->mapper   = $mapper;
         $this->redirect = $redirect;
     }
-    
+
     /**
      * Generates a URL.
      *
@@ -281,20 +281,22 @@ class Horde_Routes_Utils
 
         foreach (new RecursiveIteratorIterator(
                  new RecursiveDirectoryIterator($dirname)) as $entry) {
-                     
+
             if ($entry->isFile()) {
-                 // match .php files that don't start with an underscore
-                 if (preg_match('/^[^_]{1,1}.*\.php$/', basename($entry->getFilename())) != 0) {
+                // match .php files that don't start with an underscore
+                if (preg_match('/^[^_]{1,1}.*\.php$/', basename($entry->getFilename())) != 0) {
                     // strip off base path: dirname/admin/users.php -> admin/users.php
                     $controller = preg_replace("/^$baseregexp(.*)\.php/", '\\1', $entry->getPathname());
-                    
+
                     // add to controller list
                     $controllers[] = $prefix . $controller;
                 }
             }
         }
 
-        usort($controllers, 'Horde_Routes_Utils::longestFirst');
+        $callback = array('Horde_Routes_Utils', 'longestFirst');
+        usort($controllers, $callback);
+
         return $controllers;
     }
 
@@ -410,7 +412,8 @@ class Horde_Routes_Utils
      * @param   string  $lst  Last string to compare
      * @return  integer       Difference of string length (first - last)
      */
-    public static function longestFirst($fst, $lst) {
+    public static function longestFirst($fst, $lst)
+    {
         return strlen($lst) - strlen($fst);
     }
 

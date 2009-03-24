@@ -7,7 +7,7 @@
  * largely on ideas from Ruby on Rails (http://www.rubyonrails.org).
  *
  * @author  Maintainable Software, LLC. (http://www.maintainable.com)
- * @author  Mike Naberezny (mike@maintainable.com)
+ * @author  Mike Naberezny <mike@maintainable.com>
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * @package Horde_Routes
  */
@@ -49,7 +49,7 @@ class Horde_Routes_Route
      * @var callback
      */
     public $filter;
-    
+
     /**
      * Is this an absolute path?  (Mapper will not prepend SCRIPT_NAME)
      * @var boolean
@@ -61,7 +61,7 @@ class Horde_Routes_Route
      * @var boolean
      */
     public $explicit;
-    
+
     /**
      * Default keyword arguments for this route
      * @var array
@@ -186,7 +186,7 @@ class Horde_Routes_Route
         unset($kargs['_filter']);
 
         $this->absolute = isset($kargs['_absolute']) ? $kargs['_absolute'] : false;
-        unset($kargs['absolute']);
+        unset($kargs['_absolute']);
 
         // Pull out the member/collection name if present, this applies only to
         // map.resource
@@ -238,7 +238,7 @@ class Horde_Routes_Route
         list($this->defaults, $defaultKeys) = $this->_defaults($routeKeys, $reservedKeys, $kargs);
 
         // Save the maximum keys we could utilize
-        $this->maxKeys = array_unique(array_merge($defaultKeys, $routeKeys));
+        $this->maxKeys = array_keys(array_flip(array_merge($defaultKeys, $routeKeys)));
         list($this->minKeys, $this->_routeBackwards) = $this->_minKeys($this->_routeList);
 
         // Populate our hardcoded keys, these are ones that are set and don't
@@ -353,15 +353,15 @@ class Horde_Routes_Route
     protected function _defaults($routeKeys, $reservedKeys, $kargs)
     {
         $defaults = array();
-        
+
         // Add in a controller/action default if they don't exist
         if ((!in_array('controller', $routeKeys)) &&
             (!in_array('controller', array_keys($kargs))) &&
             (!$this->explicit)) {
             $kargs['controller'] = 'content';
         }
-        
-        if (!in_array('action', $routeKeys) && 
+
+        if (!in_array('action', $routeKeys) &&
             (!in_array('action', array_keys($kargs))) &&
             (!$this->explicit)) {
             $kargs['action'] = 'index';
@@ -619,7 +619,7 @@ class Horde_Routes_Route
             $host = substr($host, 0, strpos(':', $host));
             $subMatch = '@^(.+?)\.' . $kargs['domainMatch'] . '$';
             $subdomain = preg_replace($subMatch, '$1', $host);
-            if (!in_array($subdomain, $kargs['subDomainsIgnore'] && $host != $subdomain)) {
+            if (!in_array($subdomain, $kargs['subDomainsIgnore']) && $host != $subdomain) {
                 $subDomain = $subdomain;
             }
         }
@@ -628,8 +628,8 @@ class Horde_Routes_Route
             if (isset($this->conditions['method'])) {
                 if (empty($kargs['environ']['REQUEST_METHOD'])) { return false; }
 
-                if (!in_array($kargs['environ']['REQUEST_METHOD'], $this->conditions['method'])) { 
-                    return false; 
+                if (!in_array($kargs['environ']['REQUEST_METHOD'], $this->conditions['method'])) {
+                    return false;
                 }
             }
 
@@ -815,7 +815,7 @@ class Horde_Routes_Route
             $newExtras = array();
             foreach ($kargs as $key => $value) {
                 if (in_array($key, $extras) && ($key != 'action' || $key != 'controller')) {
-                     $newExtras[$key] = $value;
+                    $newExtras[$key] = $value;
                 }
             }
             $url .= http_build_query($newExtras);
