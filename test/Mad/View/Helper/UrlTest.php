@@ -3,7 +3,7 @@
  * @category   Mad
  * @package    Mad_View
  * @subpackage UnitTests
- * @copyright  (c) 2007-2008 Maintainable Software, LLC
+ * @copyright  (c) 2007-2009 Maintainable Software, LLC
  * @license    http://opensource.org/licenses/bsd-license.php BSD 
  */
 
@@ -25,7 +25,7 @@ class Mad_View_Helper_UrlTest_MockController extends Mad_Controller_Base
  * @category   Mad
  * @package    Mad_View
  * @subpackage UnitTests
- * @copyright  (c) 2007-2008 Maintainable Software, LLC
+ * @copyright  (c) 2007-2009 Maintainable Software, LLC
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 class Mad_View_Helper_UrlTest extends Mad_Test_Unit

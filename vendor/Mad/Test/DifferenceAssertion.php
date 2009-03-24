@@ -2,7 +2,7 @@
 /**
  * @category   Mad
  * @package    Mad_Test
- * @copyright  (c) 2007-2008 Maintainable Software, LLC
+ * @copyright  (c) 2007-2009 Maintainable Software, LLC
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 
@@ -12,7 +12,7 @@
  *
  * @category   Mad
  * @package    Mad_Test
- * @copyright  (c) 2007-2008 Maintainable Software, LLC
+ * @copyright  (c) 2007-2009 Maintainable Software, LLC
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 class Mad_Test_DifferenceAssertion extends Mad_Test_Unit

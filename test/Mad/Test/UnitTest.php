@@ -3,7 +3,7 @@
  * @category   Mad
  * @package    Mad_Test
  * @subpackage UnitTests
- * @copyright  (c) 2007-2008 Maintainable Software, LLC
+ * @copyright  (c) 2007-2009 Maintainable Software, LLC
  * @license    http://opensource.org/licenses/bsd-license.php BSD 
  */
 
@@ -19,7 +19,7 @@ if (!defined('MAD_ROOT')) {
  * @category   Mad
  * @package    Mad_Test
  * @subpackage UnitTests
- * @copyright  (c) 2007-2008 Maintainable Software, LLC
+ * @copyright  (c) 2007-2009 Maintainable Software, LLC
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
 class Mad_Test_UnitTest extends Mad_Test_Unit
