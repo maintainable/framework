@@ -36,15 +36,6 @@ class Mad_View_Helper_FormOptions extends Mad_View_Helper_Base
         return $tag->toCollectionSelectTag($collection, $valueMethod, $textMethod,
                                            $options, $htmlOptions);
     }
-
-    public function countrySelect($objectName, $method, $priorityCountries = null,
-                                  $options = array(), $htmlOptions = array())
-    {
-        $object = isset($options['object']) ? $options['object'] : null;
-        unset($options['object']);
-        $tag = new $this->_instanceTag($objectName, $method, $this->_view, $object);
-        return $tag->toCountrySelectTag($priorityCountries, $options, $htmlOptions);        
-    }
     
     public function timeZoneSelect($objecttName, $method, $priorityZones = null,
                                    $options = array(), $htmlOptions = array())
