@@ -19,8 +19,8 @@
 class Mad_Script_Generator extends Mad_Script_Base
 {
     /**
-     * Template to parse skeleton code
-     * @var obejct  {@link TemplatePhplib}
+     * Template
+     * @var Mad_View_Base
      */
     protected $_tpl;
 
@@ -334,12 +334,12 @@ class Mad_Script_Generator extends Mad_Script_Base
           "\t 1. Generate controller class                                              \n".
           "\t    generate controller #ControllerName                                    \n".
           "\t      eg:                                                                  \n".
-          "\t       ./script/generate controller Browse                                 \n".
+          "\t       ./script/generate controller Posts                                  \n".
           "\t                                                                           \n".
           "\t 2. Generate model class                                                   \n".
           "\t     generate model #ModelName                                             \n".
           "\t       eg:                                                                 \n".
-          "\t       ./script/generate model Binder briefcases                           \n".
+          "\t       ./script/generate model Post                                        \n".
           "\t                                                                           \n".
           "\t 3. This help.                                                             \n".
           "\t     ./script/generate                                                     \n".
