@@ -19,13 +19,15 @@ class Mad_Support_Base
      */
     public static function initialize()
     {
+        spl_autoload_register(array('Mad_Support_Base', 'autoload'));
         Mad_Model_Stream::install();
         Mad_View_Stream::install();
         Mad_Support_PhpErrorHandler::install();
     }
 
     /**
-     * Encapsulates functionality needed for __autoload()
+     * Encapsulates functionality needed for autoloading
+     * @see spl_autoload_register
      *
      * @params  string  $class  Class name
      */

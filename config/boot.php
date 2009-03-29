@@ -24,12 +24,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once 'Mad/Support/Base.php';
 Mad_Support_Base::initialize();
 
-// All classes are autoloaded
-function __autoload($class) 
-{
-    Mad_Support_Base::autoload($class);
-}
-
 // error reporting
 if (MAD_ENV == 'production') {
     error_reporting(0);
