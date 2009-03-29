@@ -12,6 +12,8 @@ Next Release
 
  - Replaced Zend_Log with Horde_Log.
 
+ - Replaced Mad_Support_Timer with Horde_Support_Timer.
+
 0.1.0 (17-Oct-2008)
 
  - First Release

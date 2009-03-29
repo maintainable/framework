@@ -552,9 +552,8 @@ abstract class Horde_Db_Adapter_Abstract
      */
     protected function _logInfo($sql, $name, $runtime=null)
     {
-        /*@TODO */
         $name = (empty($name) ? '' : $name)
-            . (empty($runtime) ? '' : " ($runtime ms)");
+              . (empty($runtime) ? '' : sprintf(" (%.4fs)", $runtime));
         $this->_logger->info($this->_formatLogEntry($name, $sql));
     }
 

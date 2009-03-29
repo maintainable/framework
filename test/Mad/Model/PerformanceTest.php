@@ -30,27 +30,27 @@ class Mad_Model_PerformanceTest extends Mad_Test_Unit
     public function testPerf()
     {
         /*
-        $t = new Mad_Support_Timer;
+        $t = new Horde_Support_Timer;
         
         $this->fixtures('articles', 'users', 'comments', 'categories', 'tags', 'taggings');
         $a = Article::find(1);
 
         // cloning objects
-        $t->start();
+        $t->push();
         for ($i = 0; $i < 10000; $i++) {
             $obj = clone $a;
             foreach ($a->comments as $c) {
                 // nada
             }
         }
-        print 'clone: '.$t->finish()."\n";
+        print 'clone: '.$t->pop()."\n";
         
         // new objects
-        $t->start();
+        $t->push();
         for ($i = 0; $i < 10000; $i++) {
             $obj = new Article;
         }
-        print 'new: '.$t->finish()."\n";
+        print 'new: '.$t->pop()."\n";
         */
     }
 }

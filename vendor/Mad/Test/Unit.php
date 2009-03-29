@@ -298,8 +298,8 @@ abstract class Mad_Test_Unit extends PHPUnit_Framework_TestCase
     {
         // log test timing
         $test = get_class($this).'::'.$this->getName();
-        $t = new Mad_Support_Timer;
-        $t->start();
+        $t = new Horde_Support_Timer;
+        $t->push();
         $this->_logInfo($test, 'START ');
 
         $this->_connect();
@@ -307,7 +307,7 @@ abstract class Mad_Test_Unit extends PHPUnit_Framework_TestCase
         $this->_disconnect();
 
         // log test timing
-        $elapsed = $t->finish();
+        $elapsed = $t->pop();
         $this->_logInfo($test, 'FINISH', $elapsed);
     }
 
@@ -357,7 +357,7 @@ abstract class Mad_Test_Unit extends PHPUnit_Framework_TestCase
     {
         $logger = Mad_Test_Unit::logger();
         if (! is_null($logger)) {
-            $runtime = (is_null($runtime) ? '' : " ($runtime ms)");
+            $runtime = (is_null($runtime) ? '' : sprintf(" (%.4fs)", $runtime));
             $logger->debug("***************** $phase $test $runtime");
         }
     }

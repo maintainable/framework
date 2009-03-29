@@ -93,8 +93,8 @@ class Mad_Controller_Dispatcher
      */
     public function dispatch($request=null, $response=null)
     {
-        $t = new Mad_Support_Timer;
-        $t->start();
+        $t = new Horde_Support_Timer;
+        $t->push();
 
         if ($response === null) {
             $response = new Mad_Controller_Response_Http();
@@ -123,7 +123,7 @@ class Mad_Controller_Dispatcher
             $response   = $controller->process($request, $response);
         }
 
-        $time = $t->finish();
+        $time = $t->pop();
         $this->_logRequest($request, $time);
 
         $response->send();
@@ -225,7 +225,7 @@ class Mad_Controller_Dispatcher
      * @param   Mad_Controller_Request_Http $request
      * @param   int $totalTime
      */
-    protected function _logRequest(Mad_Controller_Request_Http $request, $totalTime)
+    protected function _logRequest($request, $totalTime)
     {
         $queryTime  = 0; // total time to execute queries
         $queryCount = 0; // total queries performed
@@ -237,7 +237,8 @@ class Mad_Controller_Dispatcher
 
         $paramStr = 'PARAMS=' . $this->_formatLogParams($request->getParameters());
 
-        $msg = "$method $uri $totalTime ms (DB=$queryTime [$queryCount] PHP=$phpTime) $paramStr";
+        $msg = sprintf("$method $uri %.4fs (DB=%.4fs [$queryCount] PHP=%.4fs) $paramStr",
+                        $totalTime, $queryTime, $phpTime);
         $msg = wordwrap($msg, 80, "\n\t  ", 1);
 
         Mad_Controller_Dispatcher::logger()->info($msg);
