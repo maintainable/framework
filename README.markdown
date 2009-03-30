@@ -3,14 +3,12 @@ Maintainable PHP Framework
 
 This is a framework that is based around the Model-View-Controller 
 pattern and is modeled after Ruby on Rails.  It aims for compatibility 
-with PHP version 5.1.4 and later.  
+with PHP version 5.1.4 and later.  More information can be found at: 
+[http://framework.maintainable.com](http://framework.maintainable.com).
 
 The framework was developed at 
 [Maintainable Software](http://maintainable.com), a software development
 company in the San Francisco Bay Area.
-
-More information can be found at: 
-[http://framework.maintainable.com](http://framework.maintainable.com).
 
 
 Repository Layout
@@ -56,8 +54,10 @@ the required files out of this repository:
       generate
       task
     /test
-      AllTests.php
       /fixtures
+      /functional
+      /unit
+      AllTests.php
     /tmp
     /log
     /vendor
@@ -83,7 +83,7 @@ names for methods (e.g. `respondTo` rather than `respond_to`).
 
 You can generate stubs with `./script/generate`.  You'll probably want to
 start with `./script/generate model post`, which will create a `Post` model
-file with associated migration and test files.  Type `./script/generate`
+file with associated migration and test files.  Use `./script/generate`
 with no arguments for help.
 
 Tasks such as `db:migrate` are run as `./script/task db:migrate`.  For a
@@ -127,7 +127,7 @@ State of Development
 --------------------
 
 Most of the development was done around the time Rails 1.2.  As such, Rails 
-developers will notice many of the important additions from Rails 2.0 
+developers will notice many of the important additions since Rails 2.0 
 are not implemented.
 
 The Maintainable Framework was built almost entirely by two people 
@@ -159,16 +159,20 @@ include reasonable test coverage.  Please refrain from sending us huge
 patches.  Incremental improvements are best.
 
 
-Contributors
-------------
+Developers
+----------
 
-We'd like to thank the following individuals who have contributed to
-this effort in a significant way:
-                                             
-* [Chuck Hagenbuch](http://github.com/chuck)
-* [Derek DeVries](http://github.com/devrieda)
 * [Mike Naberezny](http://github.com/mnaberez)
-* [Sebastian Bergmann](http://github.com/sebastianbergmann)
+* [Derek DeVries](http://github.com/devrieda)
 
-We would also like to thank all the folks who have provided patches or
-support in other ways.
+
+Acknowledgements
+----------------
+
+We would like to thank [Chuck Hagenbuch](http://github.com/chuck) of the
+[Horde Project](http://horde.org) and [Sebastian Bergmann](http://github.com/sebastianbergmann)
+of [PHPUnit](http://phpunit.de) for helping us with maintenance by
+integrating some of our code into their projects.
+
+We would also like to thank all the folks who have provided patches 
+or support in other ways.
