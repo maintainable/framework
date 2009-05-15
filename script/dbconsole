@@ -1,0 +1,47 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Set environment
+ */
+define('MAD_ENV', isset($_SERVER['MAD_ENV']) ? $_SERVER['MAD_ENV'] : 'development');
+require_once dirname(dirname(__FILE__)).'/config/environment.php';
+
+// sets $config
+$config = Horde_Yaml::loadFile(MAD_ROOT.'/config/database.yml');
+$spec = $config[MAD_ENV];
+
+function findCmd($command) 
+{
+    $dirsOnPath = explode(PATH_SEPARATOR, getenv("PATH"));
+
+    foreach ($dirsOnPath as $dir) {
+        $cmd = $dir.DIRECTORY_SEPARATOR.$command;
+        if (is_executable($cmd)) { return $cmd; }
+    }    
+    die("Couldn't find database client: $command. $check your \$PATH and try again.");
+}
+
+if (strstr($spec["adapter"], "mysql")) {
+    $args = array(
+        'host'      => '--host',
+        'port'      => '--port',
+        'socket'    => '--socket',
+        'username'  => '--user',
+        'encoding'  => '--default-character-set',
+        'password'  => '--password',  
+    );
+
+    $opts = array();
+    foreach ($args as $opt => $arg) {
+        if (isset($spec[$opt])) {
+            $opts[] = "$arg=".$spec[$opt];
+        }
+    }
+    $opts[] = $spec["database"];
+
+    pcntl_exec(findCmd("mysql"), $opts);
+
+} else {
+    die("Unknown command-line client for ".$spec['database']);
+}
