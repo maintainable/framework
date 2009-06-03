@@ -203,7 +203,7 @@ abstract class Mad_Controller_Base
      * @param   Mad_Controller_Response_Http  $response
      * @return  Mad_Controller_Response_Http
      */
-    public function process(Mad_Controller_Request_Http $request, Mad_Controller_Response_Http $response)
+    public function process($request, $response)
     {
         $this->_request   = $request;
         $this->_response  = $response;
