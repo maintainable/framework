@@ -885,6 +885,16 @@ abstract class Mad_Controller_Base
     }
 
     /**
+     * Get the name of the layout in use, or False if the layout is disabled.
+     *
+     * @return  string|false
+     */
+    protected function getLayout()
+    {                                 
+        return $this->_useLayout ? $this->_layoutName : false;
+    }
+
+    /**
      * Add helper(s) for use in this controller
      * 
      * When the argument is a string, the method will provide the "Helper" 

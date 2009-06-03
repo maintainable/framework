@@ -401,7 +401,24 @@ class Mad_Controller_BaseTest extends Mad_Test_Functional
         $this->get('/unit_test/test_set_layout/');
         $this->assertTemplate('/app/views/layouts/application.html');
     }
+    
+    public function testGetLayoutReturnsLayoutName()
+    {
+        $this->get('/unit_test/test_get_layout_returns_layout_name/');
 
+        $expected = 'application';
+        $this->assertEquals(var_export($expected, true),
+                            $this->response->getBody());
+    }
+
+    public function testGetLayoutReturnsFalseWhenLayoutIsNotInUse()
+    {
+        $this->get('/unit_test/test_get_layout_returns_false_when_layout_is_not_in_use/');
+
+        $expected = false;
+        $this->assertEquals(var_export($expected, true),
+                            $this->response->getBody());
+    }
 
     /*##########################################################################
     # Test Render/Redirect Methods

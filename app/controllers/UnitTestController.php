@@ -218,6 +218,23 @@ class UnitTestController extends ApplicationController
         $this->render(array('action' => 'testAction'));
     }
 
+    public function testGetLayoutReturnsLayoutName()
+    {                         
+        $this->setLayout('application');
+        
+        $value = var_export($this->getLayout(), true);
+        $this->render(array('text' => $value));
+    }
+ 
+    public function testGetLayoutReturnsFalseWhenLayoutIsNotInUse()
+    {                         
+        $this->setLayout('application');
+        $this->useLayout(false);         
+        
+        $value = var_export($this->getLayout(), true);
+        $this->render(array('text' => $value));
+    }
+
     // test setting param data in action
     public function testParamData()
     {
