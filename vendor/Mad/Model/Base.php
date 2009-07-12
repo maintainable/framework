@@ -942,7 +942,7 @@ abstract class Mad_Model_Base extends Mad_Support_Object
     {
         $tblAlias = isset($tblAlias) ? "$tblAlias." : null;
         foreach ($this->_attributes as $name => $value) {
-            $cols[] = $tblAlias.strtolower($name);
+            $cols[] = $tblAlias.($name);
         }
         return isset($cols) ? $cols : array();
     }

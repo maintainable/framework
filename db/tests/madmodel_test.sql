@@ -51,6 +51,12 @@ CREATE TABLE unit_tests (
   KEY integer_string (integer_value, string_value)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS mixed_case_monkeys;
+CREATE TABLE mixed_case_monkeys (
+  monkeyID  int(11) auto_increment,
+  fleaCount int(11),
+  PRIMARY KEY (monkeyID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS articles; 
 CREATE TABLE articles (

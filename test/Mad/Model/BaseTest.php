@@ -481,6 +481,14 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals("Unrecognized attribute 'random_attribute'", $e->getMessage());
     }
 
+    public function testGetMixedCaseAttribute()
+    {
+        $this->fixtures('mixed_case_monkeys');
+
+        $monkey = MixedCaseMonkey::find(1);
+        $this->assertEquals($monkey->fleaCount, 42);
+    }
+
     // test get nonexistent attributes
     public function testSetInvalidAttribute()
     {
