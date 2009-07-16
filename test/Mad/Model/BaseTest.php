@@ -1285,6 +1285,18 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals('1000', $test2->integer_value);
     }
 
+    // test updating mixed case attribute
+    public function testUpdateMixedCaseAttribute()
+    {
+        $this->fixtures('mixed_case_monkeys');
+
+        $monkey = MixedCaseMonkey::find(1);
+        $monkey->updateAttribute('fleaCount', 45);
+
+        $monkey2 = MixedCaseMonkey::find($monkey->monkeyID);
+        $this->assertEquals(45, $monkey2->fleaCount);
+    }
+
     // test updating multiple attribute with array
     public function testUpdateAttributesWithArray()
     {

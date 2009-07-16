@@ -3022,8 +3022,7 @@ abstract class Mad_Model_Base extends Mad_Support_Object
     {
         $this->_recordTimestamps();
 
-        foreach ($this->_attributes as $name => $value) {
-            $column = strtolower($name);
+        foreach ($this->_attributes as $column => $value) {
 
             if ($column != $this->primaryKey()) {
                 $sets[] = $this->connection->quoteColumnName($column)." = ".
