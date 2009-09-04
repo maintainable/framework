@@ -175,6 +175,10 @@ class Mad_Model_Stream
     {
         return parent::find($type, $options, $bindVars);
     }
+    public static function first($options=array(), $bindVars=null)
+    {
+        return parent::first($options, $bindVars);
+    }
     public static function count($options=array(), $bindVars=null)
     {
         return parent::count($options, $bindVars);

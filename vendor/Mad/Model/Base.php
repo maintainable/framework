@@ -1094,6 +1094,24 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         return $m->_find($type, $options, $bindVars);
     }
 
+
+    /**
+     * A convenience wrapper for find('first'). You can pass in all the
+     *  same arguments to this method as you can to find('first').
+     *
+     * @see Mad_Model_Base::find()
+     *
+     * @param   array $options
+     * @param   array $bindVars
+     */
+    public static function first($options=null, $bindVars=null)
+    {
+        // hack to get name of this class (because of static)
+        $bt = debug_backtrace();
+        $m = new $bt[1]['class'];
+        return $m->_find('first', $options, $bindVars);
+    }
+
     /**
      * Count how many records match the given criteria
      * <code>

@@ -934,6 +934,18 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals('3', $testCnt);
     }
 
+    /*##########################################################################
+    # Test SELECT using find() shortcuts
+    ##########################################################################*/
+
+    // test finding first record
+    public function testFirst()
+    {
+        $test = UnitTest::first(array('conditions' => "integer_value = 1"));
+        $this->assertType('UnitTest', $test);
+        $this->assertEquals($test->id, $this->unit_tests('unit_test_1')->id);
+    }
+
 
     /*##########################################################################
     # Test SELECT using findBySql()
