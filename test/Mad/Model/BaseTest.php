@@ -723,6 +723,14 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertEquals('1', $tests[0]->id);
     }
 
+    // test finding data using WHERE conditions with BIND variable = NULL
+    public function testFindallConditionsBindNull()
+    {
+        $test = UnitTest::find('all', array('conditions' => "text_value=:text_value"),
+                                      array(':text_value' => NULL));
+        $this->assertEquals(0, count($test));
+    }
+
     // test finding data using WHERE condition with AND
     public function testFindAllConditionsAnd()
     {

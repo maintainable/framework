@@ -1478,7 +1478,7 @@ abstract class Mad_Model_Base extends Mad_Support_Object
         if (!isset($matches[1])) return;
 
         foreach ($matches[1] as $replacement) {
-            if (!isset($bindVars[$replacement])) {
+            if (!array_key_exists($replacement, $bindVars)) {
                 $msg = "missing value for $replacement in $sql";
                 throw new Mad_Model_Exception($msg);
             }
