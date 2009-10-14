@@ -18,11 +18,6 @@
  *  php ./script/generate.php model {ModelName} {table_name}
  * </code>
  *
- * Each model class has a Mad_Model_DO class that maps it's attributes to the database.
- * This is stored under the /app/mappings directory:
- *  model: /app/models/Folder.php
- *  data object: /app/mappings/FolderDO.php.
- *
  * @category   Mad
  * @package    Mad_Model
  * @copyright  (c) 2007-2009 Maintainable Software, LLC
