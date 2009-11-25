@@ -345,9 +345,9 @@ class Mad_Script_Generator extends Mad_Script_Base
         $msg =
           "\tUsage:                                                                     \n".
           "\t 1. Generate controller class                                              \n".
-          "\t    generate controller #ControllerName                                    \n".
+          "\t    generate controller #ControllerName #Views                             \n".
           "\t      eg:                                                                  \n".
-          "\t       ./script/generate controller Posts                                  \n".
+          "\t       ./script/generate controller Posts index show edit delete           \n".
           "\t                                                                           \n".
           "\t 2. Generate model class                                                   \n".
           "\t     generate model #ModelName                                             \n".
