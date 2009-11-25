@@ -179,18 +179,17 @@ class Mad_Script_Generator extends Mad_Script_Base
         if (!$name) {
             $this->_exit("You did not specify the name of the Controller to generate");
         }
-        // strip off controller if it's there
+        // strip off controller if it's there and camelize
         $name = str_replace('Controller', '', $name);
-
+        $class = Mad_Support_Inflector::camelize($name);
 
         // CREATE DIRECTORIES
-        $this->_createDir(MAD_ROOT.'/app/views/'.Mad_Support_Inflector::camelize($name).'/');
+        $this->_createDir(MAD_ROOT.'/app/views/'.$class.'/');
 
         // CREATE DIRECTORIES
         $this->_createDir(MAD_ROOT.'/test/functional/');
 
         // CREATE FILES
-        $class = Mad_Support_Inflector::camelize($name);
         $contrName  = $class.'Controller';
         $helperName = $class.'Helper';
 
@@ -198,7 +197,12 @@ class Mad_Script_Generator extends Mad_Script_Base
         $this->_tpl->author     = $this->_author;
         $this->_tpl->className  = $contrName;
         $this->_tpl->helperName = $helperName;
-
+        
+        // get the names of all needed functions/views
+        $views = array();
+        foreach ($this->_args as $arg)
+            $views[] = $arg;
+        $this->_tpl->views = $views;
 
         // create Controller stub
         $content = $this->_tpl->render('controller.php');
@@ -213,6 +217,15 @@ class Mad_Script_Generator extends Mad_Script_Base
         $this->_tpl->package = 'Controllers';
         $content = $this->_tpl->render('functional_test.php');
         $this->_createFile(MAD_ROOT."/test/functional/{$contrName}Test.php", $content);
+        
+        // create view stubs
+        foreach ($views as $view)
+        {
+          $this->_tpl->class = $class;
+          $this->_tpl->view = $view;
+          $content = $this->_tpl->render('view.php');
+          $this->_createFile(MAD_ROOT."/app/views/{$class}/{$view}.html", $content);
+        }
     }
 
     /**

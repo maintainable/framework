@@ -6,8 +6,10 @@ class <?= $this->className ?> extends ApplicationController
     protected function _initialize()
     {
     }
-
-    public function index()
+    
+<?  foreach ($this->views as $view) : ?>
+    public function <?= $view ?>()
     {
     }
+<?  endforeach; ?>
 }
