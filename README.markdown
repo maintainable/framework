@@ -23,46 +23,9 @@ and lay out the repository as separate PEAR packages.
 Starting a New Application
 --------------------------
 
-There is currently no equivalent to the `rails` command for starting
-a new application.  Create the following directory structure, copying
-the required files out of this repository:  
-
-    /app
-      /controllers
-        ApplicationController.php
-      /helpers
-        ApplicationHelper.php
-      /models
-      /views
-    /config
-      /environments
-        development.php
-        production.php
-        test.php
-      boot.php
-      database.yml
-      environment.php
-      routes.php  
-    /db
-      /migrate
-    /lib
-      /tasks
-    /public
-      .htaccess
-      index.php
-    /script
-      generate
-      task
-    /test
-      /fixtures
-      /functional
-      /unit
-      AllTests.php
-    /tmp
-    /log
-    /vendor
-      <all files>
-    Rakefile    
+You can use `php script/createapp appname` to generate an application 
+directory in the current directory. Adjust the path to the createapp 
+script to create the application in a different place.    
                             
 If you are familiar with Rails, using the framework should be rather
 straightfoward at this point.  If not, our book 
