@@ -197,14 +197,9 @@ class Mad_Script_Generator extends Mad_Script_Base
         $this->_tpl->author     = $this->_author;
         $this->_tpl->className  = $contrName;
         $this->_tpl->helperName = $helperName;
-        
-        // get the names of all needed functions/views
-        $views = array();
-        foreach ($this->_args as $arg)
-            $views[] = $arg;
-        $this->_tpl->views = $views;
 
         // create Controller stub
+        $this->_tpl->views = $this->_args;
         $content = $this->_tpl->render('controller.php');
         $this->_createFile(MAD_ROOT."/app/controllers/{$contrName}.php", $content);
 
@@ -214,15 +209,14 @@ class Mad_Script_Generator extends Mad_Script_Base
 
         // create Functional Test stub
         $this->_tpl->classFile = "controllers/{$contrName}.php";
-        $this->_tpl->package = 'Controllers';
+        $this->_tpl->package   = 'Controllers';
         $content = $this->_tpl->render('functional_test.php');
         $this->_createFile(MAD_ROOT."/test/functional/{$contrName}Test.php", $content);
         
         // create view stubs
-        foreach ($views as $view)
-        {
+        foreach ($this->_args as $view) {
           $this->_tpl->class = $class;
-          $this->_tpl->view = $view;
+          $this->_tpl->view  = $view;
           $content = $this->_tpl->render('view.php');
           $this->_createFile(MAD_ROOT."/app/views/{$class}/{$view}.html", $content);
         }
