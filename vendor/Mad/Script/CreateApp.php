@@ -123,8 +123,8 @@ class Mad_Script_CreateApp extends Mad_Script_Base
             if (is_dir($to)) {
                 // append slashes if needed
                 if ($to[strlen($to)-1] != '/')
-                    $to .= '/'; 
-                $to .= basename($from); 
+                    $to .= '/';
+                $to .= basename($from);
             }
 
             // copy the file
@@ -137,7 +137,7 @@ class Mad_Script_CreateApp extends Mad_Script_Base
 
             // append slashes if needed
             if ($from[strlen($from)-1] != '/')
-                $from .= '/'; 
+                $from .= '/';
             if ($to[strlen($to)-1]!='/')
                 $to .= '/';
 
@@ -146,7 +146,7 @@ class Mad_Script_CreateApp extends Mad_Script_Base
             while ($file = readdir($dirHandle)) {
                 // and copy them if they're valid files/directories
                 if($file != '.' && $file != '..')
-                    $this->_copy($source . '/' . $file, $dest . '/' . $file); 
+                    $this->_copy($source . '/' . $file, $dest . '/' . $file);
             }
             closedir($dirHandle);
         }

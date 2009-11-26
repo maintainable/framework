@@ -23,7 +23,7 @@ and lay out the repository as separate PEAR packages.
 Starting a New Application
 --------------------------
 
-You can use `php script/createapp appname` to generate an application 
+You can use `./script/createapp appname` to generate an application 
 directory in the current directory. Adjust the path to the createapp 
 script to create the application in a different place.    
                             
