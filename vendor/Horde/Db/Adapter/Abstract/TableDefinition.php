@@ -72,7 +72,7 @@ class Horde_Db_Adapter_Abstract_TableDefinition implements ArrayAccess
     }
 
     /**
-     * Instantiates a new column for the table.
+     * Instantiates one or several new columns for the table.
      * The +type+ parameter must be one of the following values:
      * <tt>:primary_key</tt>, <tt>:string</tt>, <tt>:text</tt>,
      * <tt>:integer</tt>, <tt>:float</tt>, <tt>:datetime</tt>,
@@ -108,27 +108,33 @@ class Horde_Db_Adapter_Abstract_TableDefinition implements ArrayAccess
      */
     public function column($name, $type, $options=array())
     {
-        if ($this[$name]) {
-            $column = $this[$name];
-        } else {
-            $column = new Horde_Db_Adapter_Abstract_ColumnDefinition(
-                $this->_base, $name, $type);
+        if (is_array($name)) {
+            foreach ($name as $col)
+              $this->column($col, $type, $options);
         }
+        else {
+            if ($this[$name]) {
+                $column = $this[$name];
+            } else {
+                $column = new Horde_Db_Adapter_Abstract_ColumnDefinition(
+                    $this->_base, $name, $type);
+            }
 
-        $natives = $this->_native();
-        $opt = $options;
+            $natives = $this->_native();
+            $opt = $options;
 
-        if (isset($opt['limit']) || isset($natives[$type])) {
-            $nativeLimit = isset($natives[$type]['limit']) ? $natives[$type]['limit'] : null;
-            $column->setLimit(isset($opt['limit']) ? $opt['limit'] : $nativeLimit);
+            if (isset($opt['limit']) || isset($natives[$type])) {
+                $nativeLimit = isset($natives[$type]['limit']) ? $natives[$type]['limit'] : null;
+                $column->setLimit(isset($opt['limit']) ? $opt['limit'] : $nativeLimit);
+            }
+
+            $column->setPrecision(isset($opt['precision']) ? $opt['precision'] : null);
+            $column->setScale(isset($opt['scale'])         ? $opt['scale']     : null);
+            $column->setDefault(isset($opt['default'])     ? $opt['default']   : null);
+            $column->setNull(isset($opt['null'])           ? $opt['null']      : null);
+
+            $this[$name] ? $this[$name] = $column : $this->_columns[] = $column;
         }
-
-        $column->setPrecision(isset($opt['precision']) ? $opt['precision'] : null);
-        $column->setScale(isset($opt['scale'])         ? $opt['scale']     : null);
-        $column->setDefault(isset($opt['default'])     ? $opt['default']   : null);
-        $column->setNull(isset($opt['null'])           ? $opt['null']      : null);
-
-        $this[$name] ? $this[$name] = $column : $this->_columns[] = $column;
         return $this;
     }
 
@@ -137,7 +143,7 @@ class Horde_Db_Adapter_Abstract_TableDefinition implements ArrayAccess
      */
     public function timestamps()
     {
-        return $this->column('created_at', 'datetime')->column('updated_at', 'datetime');
+        return $this->column(array('created_at', 'updated_at'), 'datetime');
     }
 
     /**
