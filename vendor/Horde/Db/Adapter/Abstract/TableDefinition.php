@@ -140,14 +140,46 @@ class Horde_Db_Adapter_Abstract_TableDefinition implements ArrayAccess
 
     /**
      * Adds created_at and updated_at columns to the table
+     *
+     * This method returns <tt>self</tt>.
      */
     public function timestamps()
     {
         return $this->column(array('created_at', 'updated_at'), 'datetime');
     }
 
+    /*
+     * Add one or several references to foreign keys
+     *
+     * This method returns <tt>self</tt>.
+     */
+    public function belongsTo($columns)
+    {
+        if (is_array($columns)) {
+            foreach ($columns as $col)
+              $cols[] = $col . '_id';
+        }
+        else {
+            $cols = $columns . '_id';
+        }
+
+        return $this->column($cols, 'integer');
+    }
+
+    /*
+     * Alias for the belongsTo() method
+     *
+     * This method returns <tt>self</tt>.
+     */
+    public function references($columns)
+    {
+        return $this->belongsTo($columns);
+    }
+
     /**
      * Use __call to implement sexy migrations
+     *
+     * This method returns <tt>self</tt>.
      */
     public function __call($method, $arguments)
     {
