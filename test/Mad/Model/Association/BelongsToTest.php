@@ -131,6 +131,11 @@ class Mad_Model_Association_BelongsToTest extends Mad_Test_Unit
         $options = array('foreignKey' => 'asdf');
         $assoc = Mad_Model_Association_Base::factory('belongsTo', 'User', $options, new Article);
         $this->assertEquals('asdf', $assoc->getFkName());
+
+        // className differs from association name
+        $options = array('className' => 'User');
+        $assoc = Mad_Model_Association_Base::factory('belongsTo', 'Author', $options, new Article);
+        $this->assertEquals('author_id', $assoc->getFkName());
     }
 
     // test getting an association by name for a model

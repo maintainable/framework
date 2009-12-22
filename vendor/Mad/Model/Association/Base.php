@@ -492,10 +492,8 @@ abstract class Mad_Model_Association_Base
                 $this->_fkName = $this->_options['foreignKey'];
 
             } elseif ($macro == 'belongsTo') {
-                $table = $this->getAssocModel()->tableName();
-                $singularTable = Mad_Support_Inflector::singularize($table);
-                $this->_fkName = "{$singularTable}_id";
-
+                $associationName = Mad_Support_Inflector::underscore($this->getAssocName());
+                $this->_fkName = "{$associationName}_id";
             } else {
                 $table = $this->getModel()->tableName();
                 $singularTable = Mad_Support_Inflector::singularize($table);
