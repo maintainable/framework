@@ -87,7 +87,11 @@ class Mad_View_Helper_NumberTest extends Mad_Test_Unit
         $this->assertEquals("123,456.78", $this->helper->numberWithDelimiter(123456.78));
         $this->assertEquals("123,456.789", $this->helper->numberWithDelimiter(123456.789));
         $this->assertEquals("123,456.78901", $this->helper->numberWithDelimiter(123456.78901));
-        $this->assertEquals("123,456,789.78901", $this->helper->numberWithDelimiter(123456789.78901));
+
+	// This test needs a precision > 12
+	if (ini_get ('precision') >= 14) {
+	        $this->assertEquals("123,456,789.78901", $this->helper->numberWithDelimiter(123456789.78901));
+	}
         $this->assertEquals("0.78901", $this->helper->numberWithDelimiter(0.78901));
         $this->assertEquals("123,456.78", $this->helper->numberWithDelimiter("123456.78"));
 
