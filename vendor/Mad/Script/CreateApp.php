@@ -56,7 +56,7 @@ class Mad_Script_CreateApp extends Mad_Script_Base
           throw Exception("Unable to get working directory");
 
         // create application directory
-        $this->_dir = $dir;
+        $this->_dir = $dir . '/';
         $this->_createDir($name);
         $this->_dir .= '/' . $name;
 
