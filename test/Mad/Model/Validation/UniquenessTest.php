@@ -84,11 +84,40 @@ class Mad_Model_Validation_UniquenessTest extends Mad_Test_Unit
     {
         $this->fixtures('unit_tests');
 
-        $options    = array('scope' => 'string_value');
+        $options    = array('scope' => 'text_value');
         $validation = Mad_Model_Validation_Base::factory('uniqueness', 'string_value', $options);
 
-        $this->model->string_value = 'string a 3000';
-        $this->model->string_value   = 'name a';
+        $this->model->text_value   = 'string a';
+        $this->model->string_value = 'name a';
+        $validation->validate('save', $this->model);
+        $this->assertEquals(array('has already been taken'), $this->model->errors->on('string_value'));
+    }
+
+    public function testUniqueScopesArrayValid()
+    {
+        $this->fixtures('unit_tests');
+
+        $options    = array('scope' => array('text_value', 'email_value'));
+        $validation = Mad_Model_Validation_Base::factory('uniqueness', 'string_value', $options);
+
+        $this->model->text_value   = 'string a';
+        $this->model->string_value = 'name a';
+        $this->model->email_value  = 'bar@example.com';
+
+        $validation->validate('save', $this->model);
+        $this->assertEquals(array(), $this->model->errors->on('string_value'));
+    }
+
+    public function testUniqueScopeArrayInvalid()
+    {
+        $this->fixtures('unit_tests');
+
+        $options    = array('scope' => array('text_value', 'email_value'));
+        $validation = Mad_Model_Validation_Base::factory('uniqueness', 'string_value', $options);
+
+        $this->model->text_value   = 'string a';
+        $this->model->string_value = 'name a';
+        $this->model->email_value  = 'foo@example.com';
         $validation->validate('save', $this->model);
         $this->assertEquals(array('has already been taken'), $this->model->errors->on('string_value'));
     }
