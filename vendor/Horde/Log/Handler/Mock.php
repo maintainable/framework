@@ -54,4 +54,5 @@ class Horde_Log_Handler_Mock extends Horde_Log_Handler_Base
     {
         $this->shutdown = true;
     }
+
 }

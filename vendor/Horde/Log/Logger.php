@@ -75,11 +75,11 @@ class Horde_Log_Logger
      */
     public function __call($method, $params)
     {
-        $level = strtoupper($method);
-        if (($level = array_search($level, $this->_levels)) !== false) {
+        $levelName = strtoupper($method);
+        if (($level = array_search($levelName, $this->_levels)) !== false) {
             $this->log(array_shift($params), $level);
         } else {
-            throw new Horde_Log_Exception('Bad log level');
+            throw new Horde_Log_Exception('Bad log level ' . $levelName);
         }
     }
 
@@ -140,6 +140,17 @@ class Horde_Log_Logger
     }
 
     /**
+     * Does this logger have the level $name already?
+     *
+     * @param string   $name   The level name to check for
+     * @return boolean Whether the logger already has the specific level name
+     */
+    public function hasLevel($name)
+    {
+        return (boolean)array_search($name, $this->_levels);
+    }
+
+    /**
      * Add a custom log level
      *
      * @param  string  $name    Name of level
@@ -151,8 +162,7 @@ class Horde_Log_Logger
         // Log level names must be uppercase for predictability.
         $name = strtoupper($name);
 
-        if (isset($this->_levels[$level])
-            || array_search($name, $this->_levels)) {
+        if (isset($this->_levels[$level]) || $this->hasLevel($name)) {
             throw new Horde_Log_Exception('Existing log levels cannot be overwritten');
         }
 
