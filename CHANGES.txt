@@ -1,5 +1,14 @@
 Next Release
 
+ - The validator validatesUniquenessOf() now accepts an
+   array in its "scope" option.  Contributed by Dmitriy Karpus.
+
+ - Migrations can now use a shorthand notation similar to that
+   introduced in Rails 2.0.  Contributed by Philipp Gildein.
+
+ - Added ./script/createapp that can be used to bootstrap a new
+   application.  Contributed by Philipp Gildein.
+
  - Mad_Controller_Request clears the contents of the superglobals
    by default.  This behavior can now be disabled with a constructor
    option.  Requested by John Herren.
