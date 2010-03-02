@@ -1,5 +1,9 @@
 Next Release
 
+ - Mad_Controller_Request clears the contents of the superglobals
+   by default.  This behavior can now be disabled with a constructor
+   option.  Requested by John Herren.
+
  - Our Mad_Model_ConnectionAdapter package has been expanded and
    moved into the Horde Project as Horde_Db.  We now bundle Horde_Db 
    and support more databases.
