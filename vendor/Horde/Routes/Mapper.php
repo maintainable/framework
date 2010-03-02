@@ -140,6 +140,18 @@ class Horde_Routes_Mapper
     public $utils;
 
     /**
+     * Cache
+     * @var Horde_Cache_Base
+     */
+    public $cache;
+
+    /**
+     * Cache lifetime for the same value of $this->matchList
+     * @var integer
+     */
+    public $cacheLifetime = 86400;
+
+    /**
      * Have regular expressions been created for all connected routes?
      * @var boolean
      */
@@ -302,12 +314,33 @@ class Horde_Routes_Mapper
     }
 
     /**
+     * Set an optional Horde_Cache_Base object for the created rules.
+     *
+     * @param Horde_Cache_Base $cache Cache object
+     */
+    public function setCache(Horde_Cache_Base $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
      * Create the generation hashes (arrays) for route lookups
      *
      * @return void
      */
     protected function _createGens()
     {
+        // Checked for a cached generator dictionary for $this->matchList
+        if ($this->cache) {
+            $cacheKey = 'horde.routes.' . sha1(serialize($this->matchList));
+            $cachedDict = $cache->get($cacheKey, $this->cacheLifetime);
+            if ($gendict = @unserialize($cachedDict)) {
+                $this->_gendict = $gendict;
+                $this->_createdGens = true;
+                return;
+            }
+        }
+
         // Use keys temporarily to assemble the list to avoid excessive
         // list iteration testing with foreach.  We include the '*' in the
         // case that a generate contains a controller/action that has no
@@ -367,6 +400,12 @@ class Horde_Routes_Mapper
         if (!isset($gendict['*'])) {
             $gendict['*'] = array();
         }
+
+        // Write to the cache
+        if ($this->cache) {
+            $this->cache->set($cacheKey, serialize($gendict), $this->cacheLifetime);
+        }
+
         $this->_gendict = $gendict;
         $this->_createdGens = true;
     }
@@ -513,11 +552,20 @@ class Horde_Routes_Mapper
      * Usage:
      *   $m->generate(array('controller' => 'content', 'action' => 'view', 'id' => 10));
      *
-     * @param   array        $kargs  Keyword arguments (key/value pairs)
-     * @return  null|string          URL text or null
+     * @param   array        $routeArgs  Optional explicit route list
+     * @param   array        $kargs      Keyword arguments (key/value pairs)
+     * @return  null|string              URL text or null
      */
-    public function generate($kargs = array())
+    public function generate($first = null, $second = null)
     {
+        if ($second) {
+            $routeArgs = $first;
+            $kargs = is_null($second) ? array() : $second;
+        } else {
+            $routeArgs = array();
+            $kargs = is_null($first) ? array() : $first;
+        }
+
         // Generate ourself if we haven't already
         if (!$this->_createdGens) {
             $this->_createGens();
@@ -557,13 +605,15 @@ class Horde_Routes_Mapper
             }
         }
 
-        $actionList = isset($this->_gendict[$controller]) ? $this->_gendict[$controller] : $this->_gendict['*'];
-
-        list($keyList, $sortCache) =
-            (isset($actionList[$action])) ? $actionList[$action] : ((isset($actionList['*'])) ? $actionList['*'] : array(null, null));
-
-        if ($keyList === null) {
-            return null;
+        if ($routeArgs) {
+            $keyList = $routeArgs;
+        } else {
+            $actionList = isset($this->_gendict[$controller]) ? $this->_gendict[$controller] : $this->_gendict['*'];
+            list($keyList, $sortCache) =
+                (isset($actionList[$action])) ? $actionList[$action] : ((isset($actionList['*'])) ? $actionList['*'] : array(null, null));
+            if ($keyList === null) {
+                return null;
+            }
         }
 
         $keys = array_keys($kargs);
