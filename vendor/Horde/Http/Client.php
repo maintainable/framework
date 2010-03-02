@@ -1,198 +1,209 @@
 <?php
 /**
- * @package Horde_Http_Client
+ * Copyright 2007-2010 The Horde Project (http://www.horde.org/)
+ *
+ * @author   Chuck Hagenbuch <chuck@horde.org>
+ * @license  http://opensource.org/licenses/bsd-license.php BSD
+ * @category Horde
+ * @package  Horde_Http
  */
-class Horde_Http_Client {
 
+/**
+ * @author   Chuck Hagenbuch <chuck@horde.org>
+ * @license  http://opensource.org/licenses/bsd-license.php BSD
+ * @category Horde
+ * @package  Horde_Http
+ */
+class Horde_Http_Client
+{
     /**
-     * URI to make our next request to
-     *
-     * This can be set directly, in the contructor, or overridden in
-     * any of the request methods.
-     *
-     * @var string
+     * The current HTTP request
+     * @var Horde_Http_Request_Base
      */
-    public $uri = null;
+    protected $_request;
 
     /**
-     * @var array
-     */
-    protected $_headers = array();
-
-    /**
-     * The most recent HTTP request
-     *
-     * An array with these values:
-     *   'uri'
-     *   'method'
-     *   'headers'
-     *   'data'
-     *
-     * @var array
+     * The previous HTTP request
+     * @var Horde_Http_Request_Base
      */
     protected $_lastRequest;
 
     /**
      * The most recent HTTP response
-     *
-     * Horde_Http_Client_Response
+     * @var Horde_Http_Response_Base
      */
     protected $_lastResponse;
 
     /**
+     * Use POST instead of PUT and DELETE, sending X-HTTP-Method-Override with
+     * the intended method name instead.
+     *
+     * @var boolean
+     */
+    protected $_httpMethodOverride = false;
+
+    /**
      * Horde_Http_Client constructor.
      *
-     * @param string $uri Specify the URI to access.
-     * @param array $headers Hash of header + value pairs to send with our request.
+     * @param array $args Any Http_Client settings to initialize in the
+     *                    constructor. Available settings are:
+     *                    - client.httpMethodOverride
+     *                    - request
+     *                    - request.uri
+     *                    - request.headers
+     *                    - request.method
+     *                    - request.data
+     *                    - request.username
+     *                    - request.password
+     *                    - request.authenticationScheme
+     *                    - request.proxyServer
+     *                    - request.proxyPort
+     *                    - request.proxyUser
+     *                    - request.proxyPass
+     *                    - request.proxyAuthenticationScheme
+     *                    - request.timeout
      */
-    public function __construct($uri = null, $headers = array())
+    public function __construct($args = array())
     {
-        $this->uri = $uri;
-        $this->setHeaders($headers);
-    }
-
-    /**
-     * Set one or more headers
-     *
-     * @param mixed $headers A hash of header + value pairs, or a single header name
-     * @param string $value  A header value
-     */
-    public function setHeaders($headers, $value = null)
-    {
-        if (!is_array($headers)) {
-            $headers = array($headers => $value);
+        // Set or create request object
+        if (isset($args['request'])) {
+            $this->_request = $args['request'];
+            unset($args['request']);
+        } else {
+            $requestFactory = new Horde_Http_Request_Factory();
+            $this->_request = $requestFactory->create();
         }
 
-        foreach ($headers as $header => $value) {
-            $this->_headers[$header] = $value;
+        foreach ($args as $key => $val) {
+            list($object, $objectkey) = explode('.', $key, 2);
+            if ($object == 'request') {
+                $this->$object->$objectkey = $val;
+            } elseif ($object == 'client') {
+                $objectKey = '_' . $objectKey;
+                $this->$objectKey = $val;
+            }
         }
-    }
-
-    /**
-     * Get the current value of $header
-     *
-     * @param string $header Header name to get
-     * @return string $header's current value
-     */
-    public function getHeader($header)
-    {
-        return isset($this->_headers[$header]) ? $this->_headers[$header] : null;
     }
 
     /**
      * Send a GET request
      *
-     * @return Horde_Http_Client_Response
+     * @throws Horde_Http_Exception
+     * @return Horde_Http_Response_Base
      */
-    public function GET($uri = null, $headers = array())
+    public function get($uri = null, $headers = array())
     {
-        return $this->sendRequest('GET', $uri, null, $headers);
+        return $this->request('GET', $uri, null, $headers);
     }
 
     /**
      * Send a POST request
      *
-     * @return Horde_Http_Client_Response
+     * @throws Horde_Http_Exception
+     * @return Horde_Http_Response_Base
      */
-    public function POST($uri = null, $data = null, $headers = array())
+    public function post($uri = null, $data = null, $headers = array())
     {
-        return $this->sendRequest('POST', $uri, $data, $headers);
+        return $this->request('POST', $uri, $data, $headers);
     }
 
     /**
      * Send a PUT request
      *
-     * @return Horde_Http_Client_Response
+     * @throws Horde_Http_Exception
+     * @return Horde_Http_Response_Base
      */
-    public function PUT($uri = null, $data = null, $headers = array())
+    public function put($uri = null, $data = null, $headers = array())
     {
-        // FIXME: suport method override (X-Method-Override: PUT).
-        return $this->sendRequest('PUT', $uri, $data, $headers);
+        if ($this->_httpMethodOverride) {
+            $headers = array_merge(array('X-HTTP-Method-Override' => 'PUT'), $headers);
+            return $this->post($uri, $data, $headers);
+        }
+
+        return $this->request('PUT', $uri, $data, $headers);
     }
 
     /**
      * Send a DELETE request
      *
-     * @return Horde_Http_Client_Response
+     * @throws Horde_Http_Exception
+     * @return Horde_Http_Response_Base
      */
-    public function DELETE($uri = null, $headers = array())
+    public function delete($uri = null, $headers = array())
     {
-        // FIXME: suport method override (X-Method-Override: DELETE).
-        return $this->sendRequest('DELETE', $uri, null, $headers);
+        if ($this->_httpMethodOverride) {
+            $headers = array_merge(array('X-HTTP-Method-Override' => 'DELETE'), $headers);
+            return $this->post($uri, null, $headers);
+        }
+
+        return $this->request('DELETE', $uri, null, $headers);
+    }
+
+    /**
+     * Send a HEAD request
+     * @TODO
+     *
+     * @throws Horde_Http_Exception
+     * @return  ? Probably just the status
+     */
+    public function head($uri = null, $headers = array())
+    {
+        return $this->request('HEAD', $uri, null, $headers);
     }
 
     /**
      * Send an HTTP request
      *
-     * @param string $method HTTP request method (GET, PUT, etc.)
-     * @param string $uri URI to request, if different from $this->uri
-     * @param mixed $data Request data. Can be an array of form data that will be
-     *                    encoded automatically, or a raw string.
-     * @param array $headers Any headers specific to this request. They will
-     *                       be combined with $this->_headers, and override
-     *                       headers of the same name for this request only.
+     * @param string $method  HTTP request method (GET, PUT, etc.)
+     * @param string $uri     URI to request, if different from $this->uri
+     * @param mixed $data     Request data. Can be an array of form data that
+     *                        will be encoded automatically, or a raw string.
+     * @param array $headers  Any headers specific to this request. They will
+     *                        be combined with $this->_headers, and override
+     *                        headers of the same name for this request only.
      *
-     * @return Horde_Http_Client_Response
+     * @throws Horde_Http_Exception
+     * @return Horde_Http_Response_Base
      */
-    public function sendRequest($method, $uri = null, $data = null, $headers = array())
+    public function request($method, $uri = null, $data = null, $headers = array())
     {
-        if (is_null($uri)) {
-            $uri = $this->uri;
+        if ($method !== null) {
+            $this->request->method = $method;
+        }
+        if ($uri !== null) {
+            $this->request->uri = $uri;
+        }
+        if ($data !== null) {
+            $this->request->data = $data;
+        }
+        if (count($headers)) {
+            $this->request->setHeaders($headers);
         }
 
-        if (is_array($data)) {
-            $data = http_build_query($data, '', '&');
-        }
-
-        $headers = array_merge($this->_headers, $headers);
-
-        // Store the last request for ease of debugging.
-        $this->_lastRequest = array(
-            'uri' => $uri,
-            'method' => $method,
-            'headers' => $headers,
-            'data' => $data,
-        );
-
-        $opts = array('http' => array(
-            'method' => $method,
-            'header' => implode("\n", $headers),
-            'content' => $data));
-        $context = stream_context_create($opts);
-
-        ini_set('display_errors', 0);
-        ini_set('track_errors', 1);
-        $stream = fopen($uri, 'rb', false, $context);
-        ini_restore('track_errors');
-        ini_restore('display_errors');
-
-        if (!$stream) {
-            throw new Horde_Http_Client_Exception('Problem with ' . $uri . ': ' . $php_errormsg);
-        }
-
-        $meta = stream_get_meta_data($stream);
-        $headers = isset($meta['wrapper_data']) ? $meta['wrapper_data'] : array();
-
-        $this->_lastResponse = new Horde_Http_Client_Response($uri, $stream, $headers);
+        $this->_lastRequest = $this->_request;
+        $this->_lastResponse = $this->_request->send();
         return $this->_lastResponse;
     }
 
     /**
-     * Return the most recent request.
+     * Get a client parameter
+     *
+     * @param string $name  The parameter to get.
+     * @return mixed        Parameter value.
      */
-    public function getLastRequest()
+    public function __get($name)
     {
-        return $this->_lastRequest;
+        return isset($this->{'_' . $name}) ? $this->{'_' . $name} : null;
     }
 
     /**
-     * Return the most recent Horde_Http_Client_Response
+     * Set a client parameter
      *
-     * @return Horde_Http_Client_Response
+     * @param string $name   The parameter to set.
+     * @param mixed  $value  Parameter value.
      */
-    public function getLastResponse()
+    public function __set($name, $value)
     {
-        return $this->_lastResponse;
+        $this->{'_' . $name} = $value;
     }
-
 }
