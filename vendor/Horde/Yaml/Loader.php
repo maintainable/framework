@@ -6,21 +6,22 @@
  * implementation (http://spyc.sourceforge.net/), and portions are
  * copyright 2005-2006 Chris Wanstrath.
  *
- * @author  Chris Wanstrath (chris@ozmm.org)
- * @author  Chuck Hagenbuch (chuck@horde.org)
- * @author  Mike Naberezny (mike@maintainable.com)
- * @license http://opensource.org/licenses/bsd-license.php BSD 
- * @package Horde_Yaml
+ * @author   Chris Wanstrath <chris@ozmm.org>
+ * @author   Chuck Hagenbuch <chuck@horde.org>
+ * @author   Mike Naberezny <mike@maintainable.com>
+ * @license  http://opensource.org/licenses/bsd-license.php BSD
+ * @category Horde
+ * @package  Horde_Yaml
  */
 
 /**
  * Parse YAML strings into PHP data structures
  *
- * @package Horde_Yaml
+ * @category Horde
+ * @package  Horde_Yaml
  */
-class Horde_Yaml_Loader 
+class Horde_Yaml_Loader
 {
-
     /**
      * List of nodes with references
      * @var array
@@ -160,9 +161,9 @@ class Horde_Yaml_Loader
                             $chk = $parent->data[key($parent->data)];
                             if ($chk === '>') {
                                 $this->_inBlock = true;
-                                $this->_blockEnd = ' ';
+                                $this->_blockEnd = '';
                                 $parent->data[key($parent->data)] =
-                                    str_replace('>','', $parent->data[key($parent->data)]);
+                                    str_replace('>', '', $parent->data[key($parent->data)]);
                                 $parent->data[key($parent->data)] .= trim($line) . ' ';
                                 $this->_allNodes[$node->parent]->children = false;
                                 $this->_lastIndent = $node->indent;
@@ -170,7 +171,7 @@ class Horde_Yaml_Loader
                                 $this->_inBlock = true;
                                 $this->_blockEnd = "\n";
                                 $parent->data[key($parent->data)] =
-                                    str_replace('|','', $parent->data[key($parent->data)]);
+                                    str_replace('|', '', $parent->data[key($parent->data)]);
                                 $parent->data[key($parent->data)] .= trim($line) . "\n";
                                 $this->_allNodes[$node->parent]->children = false;
                                 $this->_lastIndent = $node->indent;
@@ -182,7 +183,7 @@ class Horde_Yaml_Loader
                 // Any block we had going is dead now
                 if ($this->_inBlock) {
                     $this->_inBlock = false;
-                    if ($this->_blockEnd = "\n") {
+                    if ($this->_blockEnd == "\n") {
                         $last =& $this->_allNodes[$this->_lastNode];
                         $last->data[key($last->data)] =
                             trim($last->data[key($last->data)]);
@@ -226,7 +227,7 @@ class Horde_Yaml_Loader
                 if ($isset) {
                     $nodeval = $node->data[$key];
                 }
-                if (($is_array && $isset && !is_array($nodeval))
+                if (($is_array && $isset && !is_array($nodeval) && !is_object($nodeval))
                     && (strlen($nodeval) && ($nodeval[0] == '&' || $nodeval[0] == '*') && $nodeval[1] != ' ')) {
                     $this->_haveRefs[] =& $this->_allNodes[$node->id];
                 } elseif ($is_array && $isset && is_array($nodeval)) {
@@ -313,14 +314,22 @@ class Horde_Yaml_Loader
      */
     protected function _toType($value)
     {
+        // Check for PHP specials
+        self::_unserialize($value);
+        if (!is_scalar($value)) {
+            return $value;
+        }
+
+        // Used in a lot of cases.
+        $lower_value = strtolower($value);
+
         if (preg_match('/^("(.*)"|\'(.*)\')/', $value, $matches)) {
             $value = (string)str_replace(array('\'\'', '\\\''), "'", end($matches));
             $value = str_replace('\\"', '"', $value);
         } elseif (preg_match('/^\\[(\s*)\\]$/', $value)) {
             // empty inline mapping
             $value = array();
-        }
-        elseif (preg_match('/^\\[(.+)\\]$/', $value, $matches)) {
+        } elseif (preg_match('/^\\[(.+)\\]$/', $value, $matches)) {
             // Inline Sequence
 
             // Take out strings sequences and mappings
@@ -354,14 +363,20 @@ class Horde_Yaml_Loader
                 $array = $array + $this->_toType($v);
             }
             $value = $array;
-        } elseif (strtolower($value) == 'null' || $value == '' || $value == '~') {
+        } elseif ($lower_value == 'null' || $value == '' || $value == '~') {
             $value = null;
+        } elseif ($lower_value == '.nan') {
+            $value = NAN;
+        } elseif ($lower_value == '.inf') {
+            $value = INF;
+        } elseif ($lower_value == '-.inf') {
+            $value = -INF;
         } elseif (ctype_digit($value)) {
             $value = (int)$value;
-        } elseif (in_array(strtolower($value),
+        } elseif (in_array($lower_value,
                            array('true', 'on', '+', 'yes', 'y'))) {
             $value = true;
-        } elseif (in_array(strtolower($value),
+        } elseif (in_array($lower_value,
                            array('false', 'off', '-', 'no', 'n'))) {
             $value = false;
         } elseif (is_numeric($value)) {
@@ -375,6 +390,71 @@ class Horde_Yaml_Loader
         }
 
         return $value;
+    }
+
+    /**
+     * Handle PHP serialized data.
+     *
+     * @param string &$data Data to check for serialized PHP types.
+     */
+    protected function _unserialize(&$data)
+    {
+        if (substr($data, 0, 5) != '!php/') {
+            return;
+        }
+
+        $first_space = strpos($data, ' ');
+        $type = substr($data, 5, $first_space - 5);
+        $class = null;
+        if (strpos($type, '::') !== false) {
+            list($type, $class) = explode('::', $type);
+
+            if (!in_array($class, Horde_Yaml::$allowedClasses)) {
+                throw new Horde_Yaml_Exception("$class is not in the list of allowed classes");
+            }
+        }
+
+        switch ($type) {
+        case 'object':
+            if (!class_exists($class)) {
+                throw new Horde_Yaml_Exception("$class is not defined");
+            }
+
+            $reflector = new ReflectionClass($class);
+            if (!$reflector->implementsInterface('Serializable')) {
+                throw new Horde_Yaml_Exception("$class does not implement Serializable");
+            }
+
+            $class_data = substr($data, $first_space + 1);
+            $serialized = 'C:' . strlen($class) . ':"' . $class . '":' . strlen($class_data) . ':{' . $class_data . '}';
+            $data = unserialize($serialized);
+            break;
+
+        case 'array':
+        case 'hash':
+            $array_data = substr($data, $first_space + 1);
+            $array_data = Horde_Yaml::load('a: ' . $array_data);
+
+            if (is_null($class)) {
+                $data = $array_data['a'];
+            } else {
+                if (!class_exists($class)) {
+                    throw new Horde_Yaml_Exception("$class is not defined");
+                }
+
+                $array = new $class;
+                if (!$array instanceof ArrayAccess) {
+                    throw new Horde_Yaml_Exception("$class does not implement ArrayAccess");
+                }
+
+                foreach ($array_data['a'] as $key => $val) {
+                    $array[$key] = $val;
+                }
+
+                $data = $array;
+            }
+            break;
+        }
     }
 
     /**
@@ -577,27 +657,44 @@ class Horde_Yaml_Loader
      */
     protected function _nodeArrayizeData(&$node)
     {
-        if (is_array($node->data) && $node->children == true) {
-            // This node has children, so we need to find them
-            $childs = $this->_gatherChildren($node->id);
-            // We've gathered all our children's data and are ready to use it
-            $key = key($node->data);
-            $key = empty($key) ? 0 : $key;
-            // If it's an array, add to it of course
-            if (isset ($node->data[$key])) {
-                if (is_array($node->data[$key])) {
-                    $node->data[$key] = $this->_array_kmerge($node->data[$key], $childs);
+        if ($node->children == true) {
+            if (is_array($node->data)) {
+                // This node has children, so we need to find them
+                $children = $this->_gatherChildren($node->id);
+
+                // We've gathered all our children's data and are ready to use it
+                $key = key($node->data);
+                $key = empty($key) ? 0 : $key;
+                // If it's an array, add to it of course
+                if (isset($node->data[$key])) {
+                    if (is_array($node->data[$key])) {
+                        $node->data[$key] = $this->_array_kmerge($node->data[$key], $children);
+                    } else {
+                        $node->data[$key] = $children;
+                    }
                 } else {
-                    $node->data[$key] = $childs;
+                    $node->data[$key] = $children;
                 }
             } else {
-                $node->data[$key] = $childs;
+                // Same as above, find the children of this node
+                $children = $this->_gatherChildren($node->id);
+                $node->data = array();
+                $node->data[] = $children;
             }
-        } elseif (!is_array($node->data) && $node->children == true) {
-            // Same as above, find the children of this node
-            $childs = $this->_gatherChildren($node->id);
-            $node->data = array();
-            $node->data[] = $childs;
+        } else {
+            // The node is a single string. See if we need to unserialize it.
+            if (is_array($node->data)) {
+                $key = key($node->data);
+                $key = empty($key) ? 0 : $key;
+
+                if (!isset($node->data[$key]) || is_array($node->data[$key]) || is_object($node->data[$key])) {
+                    return true;
+                }
+
+                self::_unserialize($node->data[$key]);
+            } elseif (is_string($node->data)) {
+                self::_unserialize($node->data);
+            }
         }
 
         // We edited $node by reference, so just return true

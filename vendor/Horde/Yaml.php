@@ -6,7 +6,12 @@
  * implementation (http://spyc.sourceforge.net/), and portions are
  * copyright 2005-2006 Chris Wanstrath.
  *
- * @package Horde_Yaml
+ * @author   Chris Wanstrath <chris@ozmm.org>
+ * @author   Chuck Hagenbuch <chuck@horde.org>
+ * @author   Mike Naberezny <mike@maintainable.com>
+ * @license  http://opensource.org/licenses/bsd-license.php BSD
+ * @category Horde
+ * @package  Horde_Yaml
  */
 
 /**
@@ -17,9 +22,10 @@
  * subsection of the YAML spec, but if the syck extension is present,
  * that will be used for parsing.
  *
- * @package Horde_Yaml
+ * @category Horde
+ * @package  Horde_Yaml
  */
-class Horde_Yaml 
+class Horde_Yaml
 {
     /**
      * Callback used for alternate YAML loader, typically exported
@@ -30,7 +36,23 @@ class Horde_Yaml
      */
     public static $loadfunc = 'syck_load';
 
-    
+    /**
+     * Callback used for alternate YAML dumper, typically exported
+     * by a faster PHP extension.  This function's first argument
+     * must accept a mixed variable to be dumped.
+     *
+     * @var callback
+     */
+    public static $dumpfunc = 'syck_dump';
+
+    /**
+     * Whitelist of classes that can be instantiated automatically
+     * when loading YAML docs that include serialized PHP objects.
+     *
+     * @var array
+     */
+    public static $allowedClasses = array('ArrayObject');
+
     /**
      * Load a string containing YAML and parse it into a PHP array.
      * Returns an empty array on failure.
@@ -44,9 +66,9 @@ class Horde_Yaml
             $msg = 'YAML to parse must be a string and cannot be empty.';
             throw new InvalidArgumentException($msg);
         }
-        
+
         if (is_callable(self::$loadfunc)) {
-            $array = call_user_func(self::$loadfunc, $yaml);
+            return call_user_func(self::$loadfunc, $yaml);
             return is_array($array) ? $array : array();
         }
 
@@ -68,7 +90,7 @@ class Horde_Yaml
      *
      * If the file cannot be opened, an exception is thrown.  If the
      * file is read but parsing fails, an empty array is returned.
-     * 
+     *
      * @param  string  $filename     Filename to load
      * @return array                 PHP array representation of YAML content
      * @throws IllegalArgumentException  If $filename is invalid
@@ -80,15 +102,10 @@ class Horde_Yaml
             $msg = 'Filename must be a string and cannot be empty';
             throw new InvalidArgumentException($msg);
         }
-        
-        $oldTrackErrors = ini_set('track_errors', 1);
 
         $stream = @fopen($filename, 'rb');
-
-        ini_set('track_errors', $oldTrackErrors);
-
         if (!$stream) {
-            throw new Horde_Yaml_Exception($php_errormsg);
+            throw new Horde_Yaml_Exception('Failed to open file: ', error_get_last());
         }
 
         return self::loadStream($stream);
@@ -105,10 +122,9 @@ class Horde_Yaml
         if (! is_resource($stream) || get_resource_type($stream) != 'stream') {
             throw new InvalidArgumentException('Stream must be a stream resource');
         }
-        
+
         if (is_callable(self::$loadfunc)) {
-            $array = call_user_func(self::$loadfunc, stream_get_contents($stream));
-            return is_array($array) ? $array : array();
+            return call_user_func(self::$loadfunc, stream_get_contents($stream));
         }
 
         $loader = new Horde_Yaml_Loader;
@@ -131,7 +147,11 @@ class Horde_Yaml
      */
     public static function dump($value, $options = array())
     {
-        $dumper = new Horde_Yaml_Dumper;
+        if (is_callable(self::$dumpfunc)) {
+            return call_user_func(self::$dumpfunc, $value);
+        }
+
+        $dumper = new Horde_Yaml_Dumper();
         return $dumper->dump($value, $options);
     }
 

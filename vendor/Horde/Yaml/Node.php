@@ -6,21 +6,22 @@
  * implementation (http://spyc.sourceforge.net/), and portions are
  * copyright 2005-2006 Chris Wanstrath.
  *
- * @author  Chris Wanstrath (chris@ozmm.org)
- * @author  Chuck Hagenbuch (chuck@horde.org)
- * @author  Mike Naberezny (mike@maintainable.com)
- * @license http://opensource.org/licenses/bsd-license.php BSD 
- * @package Horde_Yaml
+ * @author   Chris Wanstrath <chris@ozmm.org>
+ * @author   Chuck Hagenbuch <chuck@horde.org>
+ * @author   Mike Naberezny <mike@maintainable.com>
+ * @license  http://opensource.org/licenses/bsd-license.php BSD
+ * @category Horde
+ * @package  Horde_Yaml
  */
- 
+
 /**
  * A node, used for parsing YAML.
  *
- * @package Horde_Yaml
+ * @category Horde
+ * @package  Horde_Yaml
  */
-class Horde_Yaml_Node 
+class Horde_Yaml_Node
 {
-
     /**
      * @var string
      */

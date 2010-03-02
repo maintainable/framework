@@ -6,19 +6,21 @@
  * implementation (http://spyc.sourceforge.net/), and portions are
  * copyright 2005-2006 Chris Wanstrath.
  *
- * @author  Chris Wanstrath (chris@ozmm.org)
- * @author  Chuck Hagenbuch (chuck@horde.org)
- * @author  Mike Naberezny (mike@maintainable.com)
- * @license http://opensource.org/licenses/bsd-license.php BSD 
- * @package Horde_Yaml
+ * @author   Chris Wanstrath <chris@ozmm.org>
+ * @author   Chuck Hagenbuch <chuck@horde.org>
+ * @author   Mike Naberezny <mike@maintainable.com>
+ * @license  http://opensource.org/licenses/bsd-license.php BSD
+ * @category Horde
+ * @package  Horde_Yaml
  */
 
 /**
- * Dump PHP data structures to YAML. 
+ * Dump PHP data structures to YAML.
  *
- * @package Horde_Yaml
+ * @category Horde
+ * @package  Horde_Yaml
  */
-class Horde_Yaml_Dumper 
+class Horde_Yaml_Dumper
 {
     protected $_options = array();
 
@@ -29,9 +31,9 @@ class Horde_Yaml_Dumper
      * to convert the array into valid YAML.
      *
      * Options:
-     *    `indent`: 
+     *    `indent`:
      *       number of spaces to indent children (default 2)
-     *    `wordwrap`: 
+     *    `wordwrap`:
      *       wordwrap column number (default 40)
      *
      * @param  array|Traversable  $array     PHP array or traversable object
@@ -77,7 +79,11 @@ class Horde_Yaml_Dumper
      */
     protected function _yamlize($key, $value, $indent)
     {
-        if (is_array($value) || $value instanceof Traversable) {
+        if ($value instanceof Serializable) {
+            // Dump serializable objects as !php/object::classname serialize_data
+            $data = '!php/object::' . get_class($value) . ' ' . $value->serialize();
+            $string = $this->_dumpNode($key, $data, $indent);
+        } elseif (is_array($value) || $value instanceof Traversable) {
             // It has children.  Make it the right kind of item.
             $string = $this->_dumpNode($key, null, $indent);
 
@@ -124,20 +130,35 @@ class Horde_Yaml_Dumper
      */
     protected function _dumpNode($key, $value, $indent)
     {
+        $literal = false;
         // Do some folding here, for blocks.
         if (strpos($value, "\n") !== false
             || strpos($value, ': ') !== false
             || strpos($value, '- ') !== false) {
             $value = $this->_doLiteralBlock($value, $indent);
+            $literal = true;
         } else {
             $value = $this->_fold($value, $indent);
         }
 
         if (is_bool($value)) {
             $value = ($value) ? 'true' : 'false';
+        } elseif (is_float($value)) {
+            if (is_nan($value)) {
+                $value = '.NAN';
+            } elseif ($value === INF) {
+                $value = '.INF';
+            } elseif ($value === -INF) {
+                $value = '-.INF';
+            }
         }
 
         $spaces = str_repeat(' ', $indent);
+
+        // Quote strings if necessary, and not folded
+        if (!$literal && strpos($value, "\n") === false && strchr($value, '#')) {
+            $value = "'{$value}'";
+        }
 
         if (is_int($key)) {
             // It's a sequence.
