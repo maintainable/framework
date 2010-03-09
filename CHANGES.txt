@@ -1,5 +1,8 @@
 Next Release
 
+ - Removed Horde/Http_Client from vendor/ since it is not used by
+   the framework itself.
+
  - The validator validatesUniquenessOf() now accepts an
    array in its "scope" option.  Contributed by Dmitriy Karpus.
 
