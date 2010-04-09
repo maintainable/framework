@@ -169,7 +169,9 @@ class Mad_Controller_Dispatcher
                 throw new Mad_Controller_Exception($msg);
             }
         }
-        return new $controllerName();
+        $controllerClassName = Mad_Support_Inflector::classify($controllerName);
+
+        return new $controllerClassName();
     }
 
     /**

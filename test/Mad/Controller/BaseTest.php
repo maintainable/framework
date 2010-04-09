@@ -266,6 +266,17 @@ class Mad_Controller_BaseTest extends Mad_Test_Functional
         $this->assertTrue($attributes['_executedMethodMissing']);
     }
 
+    /*##########################################################################
+    # Test Namespaced Controllers
+    ##########################################################################*/
+
+    public function testNamespacedController()
+    {
+        $this->get('/admin/users/');
+
+        $this->assertResponse('success');
+        $this->assertEquals('Admin_Users', $this->controller->getControllerName());
+    }
 
     /*##########################################################################
     # Test Cookie/Session Data

@@ -1215,7 +1215,7 @@ abstract class Mad_Controller_Base
      */
     private function _initViewHelpers()
     {
-        $controllerHelper = $this->_shortName.'Helper';
+        $controllerHelper = Mad_Support_Inflector::classify($this->_shortName.'Helper');
         $this->_view->addHelper(new $controllerHelper($this->_view));
     }
 

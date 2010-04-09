@@ -12,5 +12,7 @@ $map->connect('error/:exception', array(
               'exception'  => null
              ));
 
+$map->connect('admin/users', array('controller' => 'Admin_Users'));
+
 // default
 $map->connect(':controller/:action/:id', array('id' => null));
