@@ -11,5 +11,6 @@ class <?= $this->className ?> extends ApplicationController
     public function <?= $view ?>()
     {
     }
+
 <?  endforeach; ?>
 }
