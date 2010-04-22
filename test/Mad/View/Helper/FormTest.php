@@ -514,6 +514,30 @@ class Mad_View_Helper_FormTest extends Mad_Test_Functional
         $this->assertEquals($expected, ob_get_clean());
     }
 
+    public function testLabel()
+    {
+        $expected = '<label for="post_secret">Secret</label>';
+        $this->assertEquals($expected, $this->view->label('post', 'secret'));
+    }
+
+    public function testLabelWithSeperator()
+    {
+        $expected = '<label for="post_secret_elixir">Secret Elixir</label>';
+        $this->assertEquals($expected, $this->view->label('post', 'secret_elixir'));
+    }
+
+    public function testLabelWithValue()
+    {
+        $expected = '<label for="post_secret">Value</label>';
+        $this->assertEquals($expected, $this->view->label('post', 'secret', array('value' => 'Value')));
+    }
+
+    public function testLabelWithFor()
+    {
+        $expected = '<label for="for">Secret</label>';
+        $this->assertEquals($expected, $this->view->label('post', 'secret', array('for' => 'for')));
+    }
+
     // @todo test_form_for_with_string_url_option
     // @todo test_form_for_with_hash_url_option
     // @todo test_remote_form_for_with_html_options_adds_options_to_form_tag

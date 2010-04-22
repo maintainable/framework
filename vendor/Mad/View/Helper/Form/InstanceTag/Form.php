@@ -66,7 +66,7 @@ class Mad_View_Helper_Form_InstanceTag_Form extends Mad_View_Helper_Form_Instanc
                 $options['id'] = "{$this->objectName}_{$this->objectProperty}_$prettyTagValue";
             }
         }
-        
+
         $options = $this->addDefaultNameAndId($options);
         return $this->tag('input', $options);
     }
@@ -79,7 +79,7 @@ class Mad_View_Helper_Form_InstanceTag_Form extends Mad_View_Helper_Form_Instanc
         if (isset($options['size'])) {
             $size = $options['size'];
             unset($options['size']);
-            
+
             list($options['cols'], $options['rows']) = explode('x', $size);
         }
 
@@ -89,7 +89,7 @@ class Mad_View_Helper_Form_InstanceTag_Form extends Mad_View_Helper_Form_Instanc
         } else {
             $value = $this->valueBeforeTypeCast($this->object(), $options);
         }
-        
+
         return $this->contentTag('textarea', htmlentities($value, ENT_QUOTES, 'utf-8'), $options);
     }
 
@@ -108,13 +108,28 @@ class Mad_View_Helper_Form_InstanceTag_Form extends Mad_View_Helper_Form_Instanc
             $options['checked'] = 'checked';
         }
         $options = $this->addDefaultNameAndId($options);
-        
+
         // hidden must output first in PHP to not overwrite checkbox value
-        $tags = $this->tag('input', array('name'  => $options['name'], 
-                                          'type'  => 'hidden', 
-                                          'value' => $uncheckedValue)). 
+        $tags = $this->tag('input', array('name'  => $options['name'],
+                                          'type'  => 'hidden',
+                                          'value' => $uncheckedValue)).
                 $this->tag('input', $options);
         return $tags;
+    }
+
+    public function toLabelTag($options = array())
+    {
+        if (!isset($options['for'])) {
+            $options['for'] = $this->tagId();
+        }
+        if (!isset($options['value'])) {
+            $options['value'] = ucwords(str_replace(array('_', '.', ':'), ' ',
+                    $this->objectProperty));
+        }
+
+        $value = $options['value'];
+        unset($options['value']);
+        return $this->contentTag('label', $value, $options, false);
     }
 
     protected function isCheckBoxChecked($value, $checkedValue)

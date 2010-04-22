@@ -35,9 +35,9 @@ class Mad_View_Helper_FormTag extends Mad_View_Helper_Base
 
     public function textFieldTag($name, $value = null, $options = array())
     {
-        return $this->tag('input', array_merge(array('type'  => 'text', 
-                                                     'name'  => $name, 
-                                                     'id'    => $name, 
+        return $this->tag('input', array_merge(array('type'  => 'text',
+                                                     'name'  => $name,
+                                                     'id'    => $name,
                                                      'value' => $value),
                                                $options));
     }
@@ -46,17 +46,17 @@ class Mad_View_Helper_FormTag extends Mad_View_Helper_Base
     {
         return $this->textFieldTag($name, $value, array_merge($options, array('type' => 'hidden')));
     }
-    
+
     public function fileFieldTag($name, $options = array())
     {
         return $this->textFieldTag($name, null, array_merge($options, array('type' => 'file')));
     }
-    
+
     public function passwordFieldTag($name = 'password', $value = null, $options = array())
     {
         return $this->textFieldTag($name, $value, array_merge($options, array('type' => 'password')));
     }
-    
+
     public function textAreaTag($name, $content = null, $options = array())
     {
         if (isset($options['size'])) {
@@ -67,45 +67,45 @@ class Mad_View_Helper_FormTag extends Mad_View_Helper_Base
             }
         }
 
-        return $this->contentTag('textarea', $content, 
+        return $this->contentTag('textarea', $content,
                                  array_merge(array('name' => $name, 'id' => $name), $options));
     }
-    
+
     public function checkBoxTag($name, $value = '1', $checked = false, $options = array())
     {
-        $htmlOptions = array_merge(array('type' => 'checkbox', 
-                                         'name' => $name, 
-                                         'id' => $name, 
+        $htmlOptions = array_merge(array('type' => 'checkbox',
+                                         'name' => $name,
+                                         'id' => $name,
                                          'value' => $value), $options);
         if ($checked) {
             $htmlOptions['checked'] = 'checked';
         }
-        
+
         return $this->tag('input', $htmlOptions);
     }
-    
+
     public function radioButtonTag($name, $value, $checked = false, $options = array())
     {
         $prettyTagValue = preg_replace('/\s/', '_', $value);
         $prettyTagValue = strtolower(preg_replace('/(?!-)\W/', '', $prettyTagValue));
-        
-        $htmlOptions = array_merge(array('type'  => 'radio', 
-                                         'name'  => $name, 
+
+        $htmlOptions = array_merge(array('type'  => 'radio',
+                                         'name'  => $name,
                                          'id'    => "{$name}_{$prettyTagValue}",
                                          'value' => $value), $options);
         if ($checked) {
             $htmlOptions['checked'] = 'checked';
-        }        
+        }
 
         return $this->tag('input', $htmlOptions);
     }
-    
+
     public function submitTag($value = 'Save changes', $options = array())
     {
         if (isset($options['disableWith'])) {
             $disableWith = $options['disableWith'];
             unset($options['disableWith']);
-            
+
             $options['onclick'] = implode(';', array(
                 "this.setAttribute('originalValue', this.value)",
                 "this.disabled=true",
@@ -116,11 +116,11 @@ class Mad_View_Helper_FormTag extends Mad_View_Helper_Base
                 "return result"
             ));
         }
-        
+
         return $this->tag('input', array_merge(array('type' => 'submit', 'name' => 'commit', 'value' => $value),
                                                $options));
     }
-    
+
     public function imageSubmitTag($source, $options = array())
     {
         // source is passed to Mad_View_Helper_Asset->imagePath
@@ -161,11 +161,11 @@ class Mad_View_Helper_FormTag extends Mad_View_Helper_Base
             unset($options['multipart']);
             $options['enctype'] = 'multipart/form-data';
         }
-        
+
         $options['action'] = $this->urlFor($urlForOptions); // , *parameters_for_url
         // @todo :
         // html_options["action"]  = url_for(url_for_options, *parameters_for_url)
-        
+
         return $options;
     }
 }
