@@ -14,7 +14,7 @@
  * @copyright  (c) 2007-2009 Maintainable Software, LLC
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
-class Mad_Model_Errors extends Mad_Support_ArrayObject implements Iterator
+class Mad_Model_Errors implements Iterator, Countable
 {
     public static $defaultErrorMessages = array(
         'inclusion'            => "is not included in the list",
@@ -322,4 +322,5 @@ class Mad_Model_Errors extends Mad_Support_ArrayObject implements Iterator
         }
         return false;
     }
+
 }
