@@ -12,7 +12,7 @@
  * @copyright  (c) 2007-2009 Maintainable Software, LLC
  * @license    http://opensource.org/licenses/bsd-license.php BSD
  */
-class Mad_Model_PaginatedCollection extends Mad_Support_ArrayObject implements Iterator
+class Mad_Model_PaginatedCollection implements ArrayAccess, Iterator, Countable
 {
     /**
      * The collection of objects
@@ -72,8 +72,7 @@ class Mad_Model_PaginatedCollection extends Mad_Support_ArrayObject implements I
     ##########################################################################*/
 
     /** 
-     * Proxy to parent Mad_Support_ArrayObject#toXml, except that 
-     * we know the explicit model type. 
+     * Delegate toXml() to Mad_Model_Collection
      */
     public function toXml($options = array()) 
     {
@@ -158,21 +157,6 @@ class Mad_Model_PaginatedCollection extends Mad_Support_ArrayObject implements I
         } else {
             return current($this->_collection) !== false;
         }
-    }
-
-
-    /*##########################################################################
-    # IteratorAggregate Interface
-    ##########################################################################*/
-
-    /**
-     * Return the iterator of this array. This allows for a foreach construct to be used.
-     *
-     * @return  object  {@link ArrayIterator}
-     */
-    public function getIterator()
-    {
-        return $this;
     }
 
 
