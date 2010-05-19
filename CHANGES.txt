@@ -1,7 +1,7 @@
 Next Release
 
  - Mad_Model_Collection and Mad_Model_Errors no longer extend
-   Mad_Model_ArrayObject.  The now implement ArrayAccess and
+   Mad_Model_ArrayObject.  They now implement ArrayAccess and
    Iterator directly.
 
  - Removed Horde/Http_Client from vendor/ since it is not used by
