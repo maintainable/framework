@@ -140,7 +140,7 @@ class Mad_View_Helper_Url extends Mad_View_Helper_Base
 
         if ($htmlOptions) {
             $href = isset($htmlOptions['href']) ? $htmlOptions['href'] : null;
-            // @todo convert_otpions_to_javascript!(html_options, url)
+            // @todo convert_options_to_javascript!(html_options, url)
             $tagOptions = $this->tagOptions($htmlOptions);
         } else {
             $tagOptions = null;
