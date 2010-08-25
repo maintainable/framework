@@ -36,6 +36,7 @@ class Mad_View_Helper_UrlTest extends Mad_Test_Unit
         $this->view = new Mad_View_Base($controller);
         $this->view->addHelper(new Mad_View_Helper_Url($this->view));
         $this->view->addHelper(new Mad_View_Helper_Tag($this->view));
+        $this->view->addHelper(new Mad_View_Helper_Javascript($this->view));
     }
 
     public function testLinkTagWithStraightUrl()
@@ -44,22 +45,56 @@ class Mad_View_Helper_UrlTest extends Mad_Test_Unit
                             $this->view->linkTo('Hello', 'http://www.example.com'));
     }
     
+    public function testLinkTagWithoutHostOption()
+    {
+        $this->assertEquals('<a href="/weblog/show">Test Link</a>',
+                            $this->view->linkTo('Test Link', array('controller' => 'weblog', 'action' => 'show')));
+    }
+
+    public function testLinkTagWithHostOption()
+    {
+        $this->assertEquals('<a href="http://www.example.com/weblog/show">Test Link</a>',
+                            $this->view->linkTo('Test Link', array('controller' => 'weblog', 'action' => 'show', 'host' => 'www.example.com')));
+    }
+
     public function testLinkTagWithQuery()
     {
         $this->assertEquals('<a href="http://www.example.com?q1=v1&amp;q2=v2">Hello</a>',
                             $this->view->linkTo('Hello', 'http://www.example.com?q1=v1&amp;q2=v2'));
     }
-    
+
     public function testLinkTagWithQueryAndNoName()
     {
         $this->assertEquals("<a href=\"http://www.example.com?q1=v1&amp;q2=v2\">http://www.example.com?q1=v1&amp;q2=v2</a>",
                             $this->view->linkTo(null, 'http://www.example.com?q1=v1&amp;q2=v2'));
     }
-    
+
     public function testLinkTagWithImg()
     {
         $this->assertEquals("<a href=\"http://www.example.com\"><img src='/favicon.jpg' /></a>",
                             $this->view->linkTo("<img src='/favicon.jpg' />", "http://www.example.com"));
+    }
+
+    public function testLinkWithNilHtmlOptions()
+    {
+        $this->assertEquals("<a href=\"/mock/myaction\">Hello</a>",
+                            $this->view->linkTo("Hello", array('action' => 'myaction'), null));
+    }
+
+    public function testLinkTagWithCustomOnclick()
+    {
+        $this->assertEquals("<a href=\"http://www.example.com\" onclick=\"alert('yay!')\">Hello</a>",
+                            $this->view->linkTo("Hello", "http://www.example.com", array('onclick' => "alert('yay!')")));
+    }
+
+    public function testLinkTagWithJavascriptConfirm()
+    {
+        $this->assertEquals("<a href=\"http://www.example.com\" onclick=\"return confirm('Are you sure?');\">Hello</a>",
+                            $this->view->linkTo("Hello", "http://www.example.com", array('confirm' => "Are you sure?")));
+        $this->assertEquals("<a href=\"http://www.example.com\" onclick=\"return confirm('You can\\'t possibly be sure, can you?');\">Hello</a>",
+                            $this->view->linkTo("Hello", "http://www.example.com", array('confirm' => "You can't possibly be sure, can you?")));
+        $this->assertEquals("<a href=\"http://www.example.com\" onclick=\"return confirm('You can\\'t possibly be sure,\\n can you?');\">Hello</a>",
+                            $this->view->linkTo("Hello", "http://www.example.com", array('confirm' => "You can't possibly be sure,\n can you?")));
     }
 
     public function testLinkToUnless()

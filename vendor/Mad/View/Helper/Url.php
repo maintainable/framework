@@ -83,56 +83,19 @@ class Mad_View_Helper_Url extends Mad_View_Helper_Base
     /**
      * Creates a link tag of the given +name+ using a URL created by the set
      * of +options+. See the valid options in the documentation for
-     * url_for. It's also possible to pass a string instead
+     * urlFor. It's also possible to pass a string instead
      * of an options hash to get a link tag that uses the value of the string as the
-     * href for the link, or use +:back+ to link to the referrer - a JavaScript back
-     * link will be used in place of a referrer if none exists. If nil is passed as
-     * a name, the link itself will become the name.
+     * href for the link. If nil is passed as a name, the link itself will become the name.
      *
      * ==== Options
-     * * <tt>:confirm => 'question?'</tt> -- This will add a JavaScript confirm
+     * * <tt>'confirm' => 'question?'</tt> -- This will add a JavaScript confirm
      *   prompt with the question specified. If the user accepts, the link is
      *   processed normally, otherwise no action is taken.
-     * * <tt>:popup => true || array of window options</tt> -- This will force the
-     *   link to open in a popup window. By passing true, a default browser window
-     *   will be opened with the URL. You can also specify an array of options
-     *   that are passed-thru to JavaScripts window.open method.
-     * * <tt>:method => symbol of HTTP verb</tt> -- This modifier will dynamically
-     *   create an HTML form and immediately submit the form for processing using
-     *   the HTTP verb specified. Useful for having links perform a POST operation
-     *   in dangerous actions like deleting a record (which search bots can follow
-     *   while spidering your site). Supported verbs are :post, :delete and :put.
-     *   Note that if the user has JavaScript disabled, the request will fall back
-     *   to using GET. If you are relying on the POST behavior, you should check
-     *   for it in your controller's action by using the request object's methods
-     *   for post?, delete? or put?.
-     * * The +html_options+ will accept a hash of html attributes for the link tag.
-     *
-     * Note that if the user has JavaScript disabled, the request will fall back
-     * to using GET. If :href=>'#' is used and the user has JavaScript disabled
-     * clicking the link will have no effect. If you are relying on the POST 
-     * behavior, your should check for it in your controller's action by using the 
-     * request object's methods for post?, delete? or put?. 
-     *
-     * You can mix and match the +html_options+ with the exception of
-     * :popup and :method which will raise an ActionView::ActionViewError
-     * exception.
+     * * The +htmlOptions+ will accept a hash of html attributes for the link tag.
      *
      * ==== Examples
-     *   link_to "Visit Other Site", "http://www.rubyonrails.org/", :confirm => "Are you sure?"
-     *   # => <a href="http://www.rubyonrails.org/" onclick="return confirm('Are you sure?');">Visit Other Site</a>
-     *
-     *   link_to "Help", { :action => "help" }, :popup => true
-     *   # => <a href="/testing/help/" onclick="window.open(this.href);return false;">Help</a>
-     *
-     *   link_to "View Image", { :action => "view" }, :popup => ['new_window_name', 'height=300,width=600']
-     *   # => <a href="/testing/view/" onclick="window.open(this.href,'new_window_name','height=300,width=600');return false;">View Image</a>
-     *
-     *   link_to "Delete Image", { :action => "delete", :id => @image.id }, :confirm => "Are you sure?", :method => :delete
-     *   # => <a href="/testing/delete/9/" onclick="if (confirm('Are you sure?')) { var f = document.createElement('form'); 
-     *        f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;
-     *        var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); 
-     *        m.setAttribute('value', 'delete'); f.appendChild(m);f.submit(); };return false;">Delete Image</a>
+     *   linkTo("Visit Other Site", "http://www.example.org/", array('confirm' => "Are you sure?"));
+     *   # => <a href="http://www.example.org/" onclick="return confirm('Are you sure?');">Visit Other Site</a>
      */
     public function linkTo($name, $options = array(), $htmlOptions = array())
     {
@@ -140,7 +103,7 @@ class Mad_View_Helper_Url extends Mad_View_Helper_Base
 
         if ($htmlOptions) {
             $href = isset($htmlOptions['href']) ? $htmlOptions['href'] : null;
-            // @todo convert_options_to_javascript!(html_options, url)
+            $htmlOptions = $this->convertOptionsToJavascript($htmlOptions, $url);
             $tagOptions = $this->tagOptions($htmlOptions);
         } else {
             $tagOptions = null;
@@ -408,5 +371,26 @@ class Mad_View_Helper_Url extends Mad_View_Helper_Base
 
             return $urlString == $requestUri;
         }
+    }
+
+    private function convertOptionsToJavascript($htmlOptions, $url = '')
+    {
+        foreach (array('confirm', 'popup', 'method', 'href') as $option){
+            $$option = isset($htmlOptions[$option]) ? $htmlOptions[$option] : false;
+            unset($htmlOptions[$option]);
+        }
+
+        $onclick = '';
+        if ($confirm) {
+            $onclick = "return {$this->confirmJavascriptFunction($confirm)};";
+        }
+
+        $htmlOptions['onclick'] = empty($htmlOptions['onclick']) ? $onclick : $htmlOptions['onclick'].$onclick;
+        return $htmlOptions;
+    }
+
+    private function confirmJavascriptFunction($confirm)
+    {
+        return "confirm('{$this->escapeJavascript($confirm)}')";
     }
 }
