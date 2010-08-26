@@ -87,15 +87,32 @@ class Mad_View_Helper_Url extends Mad_View_Helper_Base
      * of an options hash to get a link tag that uses the value of the string as the
      * href for the link. If nil is passed as a name, the link itself will become the name.
      *
+     * ==== Signatures
+     *   linkTo($name, $options = array(), $htmlOptions = array())
+     *
      * ==== Options
      * * <tt>'confirm' => 'question?'</tt> -- This will add a JavaScript confirm
      *   prompt with the question specified. If the user accepts, the link is
      *   processed normally, otherwise no action is taken.
+     * * <tt>'method' => symbol of HTTP verb</tt> - This modifier will dynamically
+     *   create an HTML form and immediately submit the form for processing using
+     *   the HTTP verb specified. Useful for having links perform a POST operation
+     *   in dangerous actions like deleting a record (which search bots can follow
+     *   while spidering your site). Supported verbs are <tt>post</tt> and <tt>delete</tt>.
+     *   Note that if the user has JavaScript disabled, the request will fall back
+     *   to using GET. If you are relying on the POST behavior, you should check
+     *   for it in your controller's action by using the request object's methods
+     *   for <tt>isPost()</tt> or <tt>getMethod()</tt>.
      * * The +htmlOptions+ will accept a hash of html attributes for the link tag.
      *
      * ==== Examples
      *   linkTo("Visit Other Site", "http://www.example.org/", array('confirm' => "Are you sure?"));
      *   # => <a href="http://www.example.org/" onclick="return confirm('Are you sure?');">Visit Other Site</a>
+     *   linkTo("Delete Image", array('controller' => 'images', 'action' => 'destroy', 'id' => $this->image->id), array('confirm' => "Are you sure?", 'method' => 'delete'))
+     *   # => <a href="http://www.example.org/images/destroy/9" onclick="if (confirm('Are you sure?')) { var f = document.createElement('form');
+     *        f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;
+     *        var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method');
+     *        m.setAttribute('value', 'delete'); f.appendChild(m);f.submit(); };return false;">Delete Image</a>
      */
     public function linkTo($name, $options = array(), $htmlOptions = array())
     {
@@ -381,8 +398,12 @@ class Mad_View_Helper_Url extends Mad_View_Helper_Base
         }
 
         $onclick = '';
-        if ($confirm) {
+        if ($confirm && $method) {
+            $onclick = "if ({$this->confirmJavascriptFunction($confirm)}) { {$this->methodJavascriptFunction($method, $url, $href)} };return false;";
+        } elseif ($confirm) {
             $onclick = "return {$this->confirmJavascriptFunction($confirm)};";
+        } elseif ($method) {
+            $onclick = "{$this->methodJavascriptFunction($method, $url, $href)}return false;";
         }
 
         $htmlOptions['onclick'] = empty($htmlOptions['onclick']) ? $onclick : $htmlOptions['onclick'].$onclick;
@@ -392,5 +413,28 @@ class Mad_View_Helper_Url extends Mad_View_Helper_Base
     private function confirmJavascriptFunction($confirm)
     {
         return "confirm('{$this->escapeJavascript($confirm)}')";
+    }
+
+    private function methodJavascriptFunction($method, $url, $href)
+    {
+        $action = ($href && strlen($url) > 0) ? "'{$url}'" : 'this.href';
+        $submitFunction =
+            "var f = document.createElement('form'); f.style.display = 'none'; " .
+            "this.parentNode.appendChild(f); f.method = 'POST'; f.action = {$action};";
+
+        if ($method != 'post') {
+            $submitFunction .= "var m = document.createElement('input'); m.setAttribute('type', 'hidden'); ";
+            $submitFunction .= "m.setAttribute('name', '_method'); m.setAttribute('value', '{$method}'); f.appendChild(m);";
+        }
+
+        /* @todo implement this
+        if protect_against_forgery?
+          submit_function << "var s = document.createElement('input'); s.setAttribute('type', 'hidden'); "
+          submit_function << "s.setAttribute('name', '#{request_forgery_protection_token}'); s.setAttribute('value', '#{escape_javascript form_authenticity_token}'); f.appendChild(s);"
+        end
+        */
+
+        $submitFunction .= "f.submit();";
+        return $submitFunction;
     }
 }

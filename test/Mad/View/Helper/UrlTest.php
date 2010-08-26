@@ -97,6 +97,30 @@ class Mad_View_Helper_UrlTest extends Mad_Test_Unit
                             $this->view->linkTo("Hello", "http://www.example.com", array('confirm' => "You can't possibly be sure,\n can you?")));
     }
 
+    public function testLinkTagUsingPostJavascript()
+    {
+        $this->assertEquals("<a href=\"http://www.example.com\" onclick=\"var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit();return false;\">Hello</a>",
+                            $this->view->linkTo("Hello", "http://www.example.com", array('method' => 'post')));
+    }
+
+    public function testLinkTagUsingDeleteJavascript()
+    {
+        $this->assertEquals("<a href=\"http://www.example.com\" onclick=\"var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);f.submit();return false;\">Destroy</a>",
+                            $this->view->linkTo("Destroy", "http://www.example.com", array('method' => 'delete')));
+    }
+
+    public function testLinkTagUsingPostJavascriptAndConfirm()
+    {
+        $this->assertEquals("<a href=\"http://www.example.com\" onclick=\"if (confirm('Are you serious?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;f.submit(); };return false;\">Hello</a>",
+                            $this->view->linkTo("Hello", "http://www.example.com", array('method' => 'post', 'confirm' => "Are you serious?")));
+    }
+
+    public function testLinkTagUsingDeleteJavascriptAndConfirm()
+    {
+        $this->assertEquals("<a href=\"/images/destroy/1\" onclick=\"if (confirm('Are you serious?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);f.submit(); };return false;\">Destroy</a>",
+                            $this->view->linkTo("Destroy", array('controller' => 'images', 'action' => 'destroy', 'id' => 1), array('method' => 'delete', 'confirm' => "Are you serious?")));
+    }
+
     public function testLinkToUnless()
     {
         $this->assertEquals('Showing',
