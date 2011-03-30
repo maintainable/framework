@@ -409,7 +409,7 @@ class Mad_Model_Serializer_XmlTest extends Mad_Test_Unit
                '<user-id type="integer">1</user-id></article>';
         $article = $record->fromXml($xml);
 
-        $this->assertType('Article', $article);
+        $this->assertInstanceOf('Article', $article);
         
         $this->assertEquals(1, $article->id);
         $this->assertEquals("Easier XML-RPC for PHP5", $article->title);

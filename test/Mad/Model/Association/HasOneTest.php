@@ -179,7 +179,7 @@ class Mad_Model_Association_HasOneTest extends Mad_Test_Unit
         $this->fixtures('users', 'comments');
 
         $user = $this->users('mike');
-        $this->assertType('Comment', $user->latestComment);
+        $this->assertInstanceOf('Comment', $user->latestComment);
         $this->assertEquals('Comment B', $user->latestComment->body);
     }
 

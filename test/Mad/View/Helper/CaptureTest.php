@@ -48,7 +48,7 @@ class Mad_View_Helper_CaptureTest extends Mad_Test_Unit
             $capture->end();
             $this->fail();
         } catch (Exception $e) {
-            $this->assertType('Mad_View_Exception', $e);
+            $this->assertInstanceOf('Mad_View_Exception', $e);
             $this->assertRegExp('/capture already ended/i', $e->getMessage());
         }
     }

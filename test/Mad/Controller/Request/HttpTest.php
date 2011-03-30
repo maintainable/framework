@@ -168,13 +168,13 @@ class Mad_Controller_Request_HttpTest extends Mad_Test_Unit
     {
         $files = $this->_req->getFilesParams();
         $picture = $files['picture'];
-        $this->assertType('Mad_Controller_FileUpload', $picture);
+        $this->assertInstanceOf('Mad_Controller_FileUpload', $picture);
 
         $icon = $files['document']['icon'];
-        $this->assertType('Mad_Controller_FileUpload', $icon);
+        $this->assertInstanceOf('Mad_Controller_FileUpload', $icon);
 
         $photo = $files['document']['photo'];
-        $this->assertType('Mad_Controller_FileUpload', $photo);
+        $this->assertInstanceOf('Mad_Controller_FileUpload', $photo);
     }
     
     // test getting the path vars set from routing

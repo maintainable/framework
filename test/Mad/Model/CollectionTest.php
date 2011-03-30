@@ -138,7 +138,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     public function testCurrentResults()
     {
         $model = $this->_results->current();
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('1', $model->id);
     }
 
@@ -146,7 +146,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     public function testCurrentModels()
     {
         $model = $this->_models->current();
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('1', $model->id);
     }
 
@@ -171,7 +171,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
 
         $model = $this->_results->next();
 
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('2', $model->id);
     }
     // test getting current value
@@ -182,7 +182,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
 
         $model = $this->_models->next();
 
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('2', $model->id);
     }
 
@@ -190,22 +190,22 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     public function testRewindResults()
     {
         $model = $this->_results->next();
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('2', $model->id);
 
         $model = $this->_results->rewind();
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('1', $model->id);
     }
     // test getting current value
     public function testRewindModels()
     {
         $model = $this->_models->next();
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('2', $model->id);
 
         $model = $this->_models->rewind();
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('1', $model->id);
     }
 
@@ -219,7 +219,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     {
         $i = 0;
         foreach ($this->_results as $model) {
-            $this->assertType('UnitTest', $model);
+            $this->assertInstanceOf('UnitTest', $model);
             $i++;
         }
         $this->assertEquals(6, $i);
@@ -230,7 +230,7 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     {
         $i = 0;
         foreach ($this->_models as $model) {
-            $this->assertType('UnitTest', $model);
+            $this->assertInstanceOf('UnitTest', $model);
             $i++;
         }
         $this->assertEquals(6, $i);
@@ -242,14 +242,14 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     {
         $i = 0;
         foreach ($this->_results as $model) {
-            $this->assertType('UnitTest', $model);
+            $this->assertInstanceOf('UnitTest', $model);
             $i++;
         }
         $this->assertEquals(6, $i);
 
         $j = 0;
         foreach ($this->_results as $model) {
-            $this->assertType('UnitTest', $model);
+            $this->assertInstanceOf('UnitTest', $model);
             $j++;
         }
         $this->assertEquals(6, $j);
@@ -260,14 +260,14 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     {
         $i = 0;
         foreach ($this->_models as $model) {
-            $this->assertType('UnitTest', $model);
+            $this->assertInstanceOf('UnitTest', $model);
             $i++;
         }
         $this->assertEquals(6, $i);
 
         $j = 0;
         foreach ($this->_models as $model) {
-            $this->assertType('UnitTest', $model);
+            $this->assertInstanceOf('UnitTest', $model);
             $j++;
         }
         $this->assertEquals(6, $j);
@@ -280,12 +280,12 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     // test accessing elements of the array
     public function testAccessFirstElementResults()
     {
-        $this->assertType('UnitTest', $this->_results[0]);
+        $this->assertInstanceOf('UnitTest', $this->_results[0]);
     }
     // test accessing elements of the array
     public function testAccessFirstElementModels()
     {
-        $this->assertType('UnitTest', $this->_models[0]);
+        $this->assertInstanceOf('UnitTest', $this->_models[0]);
     }
 
     // test accessing elements of the array
@@ -340,13 +340,13 @@ class Mad_Model_CollectionTest extends Mad_Test_Unit
     public function testElementUnsetResults()
     {
         unset($this->_results[0]);
-        $this->assertType('UnitTest', $this->_results[0]);
+        $this->assertInstanceOf('UnitTest', $this->_results[0]);
     }
     // test unsetting an element of the object
     public function testElementUnsetModels()
     {
         unset($this->_models[0]);
-        $this->assertType('UnitTest', $this->_models[0]);
+        $this->assertInstanceOf('UnitTest', $this->_models[0]);
     }
 
 

@@ -28,6 +28,6 @@ class Mad_Madness_InitializerTest extends Mad_Test_Unit
     public function testRun()
     {
         $config = Mad_Madness_Initializer::run();
-        $this->assertType('Mad_Madness_Configuration', $config);
+        $this->assertInstanceOf('Mad_Madness_Configuration', $config);
     }
 }

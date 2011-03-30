@@ -28,7 +28,7 @@ class Mad_Support_ArrayObjectTest extends Mad_Test_Unit
     public function testIsAnInstanceofArrayObject()
     {
         $o = new Mad_Support_ArrayObject();
-        $this->assertType('ArrayObject', $o);
+        $this->assertInstanceOf('ArrayObject', $o);
     }
     
     // offsetGet()

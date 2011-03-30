@@ -451,14 +451,14 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('Horde_Db_Exception', $e);
+        $this->assertInstanceOf('Horde_Db_Exception', $e);
 
         $m = new WeNeedReminders1;
         $m->up();
 
         $result = Reminder::create(array('content'   => 'hello world', 
                                          'remind_at' => '2005-01-01 11:10:01'));
-        $this->assertType('Reminder', $result);                        
+        $this->assertInstanceOf('Reminder', $result);                        
 
         $this->assertEquals('hello world', Reminder::find('first')->content);
 
@@ -467,7 +467,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM reminders");
         } catch (Exception $e) {}
-        $this->assertType('Horde_Db_Exception', $e);
+        $this->assertInstanceOf('Horde_Db_Exception', $e);
     }
 
     public function testAddTableWithDecimals()
@@ -476,7 +476,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM big_numbers");
         } catch (Exception $e) {}
-        $this->assertType('Horde_Db_Exception', $e);
+        $this->assertInstanceOf('Horde_Db_Exception', $e);
 
         $m = new GiveMeBigNumbers;
         $m->up();
@@ -488,7 +488,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
             'my_house_population' => '3',
             'value_of_e'          => "2.7182818284590452353602875"
         ));
-        $this->assertType('BigNumber', $result);
+        $this->assertInstanceOf('BigNumber', $result);
 
         $b = BigNumber::find('first');
         $this->assertNotNull($b->bank_balance);
@@ -502,7 +502,7 @@ class Mad_Model_Migration_BaseTest extends Mad_Test_Unit
         try {
             $this->_conn->selectValues("SELECT * FROM big_numbers");
         } catch (Exception $e) {}
-        $this->assertType('Horde_Db_Exception', $e);
+        $this->assertInstanceOf('Horde_Db_Exception', $e);
     }
 
     public function testCreateTableWithBinaryColumn()

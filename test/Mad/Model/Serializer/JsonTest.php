@@ -103,7 +103,7 @@ class Mad_Model_Serializer_JsonTest extends Mad_Test_Unit
         try {
             $article = $record->fromJson($json);
 
-            $this->assertType('Article', $article);
+            $this->assertInstanceOf('Article', $article);
             $this->assertEquals(1, $article->id);
             $this->assertEquals(1, $article->user_id);
             $this->assertEquals("Easier XML-RPC for PHP5", $article->title);

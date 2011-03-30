@@ -97,7 +97,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->fixtures('fax_jobs', 'fax_recipients');
 
         $job = Fax_Job::find($this->fax_jobs('fax_job_1')->id);
-        $this->assertType("Fax_Job", $job);
+        $this->assertInstanceOf("Fax_Job", $job);
         $this->assertEquals('fax_jobs', $job->tableName());
     }
 
@@ -303,7 +303,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $test = new UnitTest();
         $model = $test->instantiate(array('id' => 'asdf'));
         
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('asdf', $model->id);
     }
 
@@ -312,7 +312,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $test = new User();
         $model = $test->instantiate(array('id' => '123', 'type' => 'Client'));
 
-        $this->assertType('Client', $model);
+        $this->assertInstanceOf('Client', $model);
         $this->assertEquals('123', $model->id);
     }
 
@@ -870,14 +870,14 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     public function testFindFirst()
     {
         $test = UnitTest::find('first');
-        $this->assertType('UnitTest', $test);
+        $this->assertInstanceOf('UnitTest', $test);
     }
 
     // test finding first record
     public function testFindFirstConditions()
     {
         $test = UnitTest::find('first', array('conditions' => "boolean_value = '0'"));
-        $this->assertType('UnitTest', $test);
+        $this->assertInstanceOf('UnitTest', $test);
         $this->assertTrue($test->integer_value == 2 || $test->integer_value == 4);
     }
 
@@ -886,7 +886,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     {
         $test = UnitTest::find('first', array('conditions' => "string_value=:str"),
                                         array(':str' => 'name a'));
-        $this->assertType('UnitTest', $test);
+        $this->assertInstanceOf('UnitTest', $test);
         $this->assertEquals('1', $test->integer_value);
     }
 
@@ -902,7 +902,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     public function testFindFirstOrder()
     {
         $test = UnitTest::find('first', array('order' => 'integer_value DESC'));
-        $this->assertType('UnitTest', $test);
+        $this->assertInstanceOf('UnitTest', $test);
         $this->assertEquals('6', $test->id);
     }
 
@@ -942,7 +942,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     public function testFirst()
     {
         $test = UnitTest::first(array('conditions' => "integer_value = 1"));
-        $this->assertType('UnitTest', $test);
+        $this->assertInstanceOf('UnitTest', $test);
         $this->assertEquals($test->id, $this->unit_tests('unit_test_1')->id);
     }
 
@@ -1054,7 +1054,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     public function testReloadReturnsTheObjectHandleForChainingConvenience()
     {
         $test = UnitTest::find(1);
-        $this->assertType('UnitTest', $test);
+        $this->assertInstanceOf('UnitTest', $test);
         $this->assertSame($test, $test->reload());
     }
 
@@ -1213,7 +1213,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
         $this->assertFalse(UnitTest::exists(0));
 
         $test = UnitTest::find('first', array('conditions' => "string_value = 'asdf'"));
-        $this->assertType('UnitTest', $test);
+        $this->assertInstanceOf('UnitTest', $test);
     }
 
     // test updating records
@@ -1351,7 +1351,7 @@ class Mad_Model_BaseTest extends Mad_Test_Unit
     public function testUpdatePk()
     {
         $test = UnitTest::update(1, array('string_value' => 'derek name test'));
-        $this->assertType('UnitTest', $test);
+        $this->assertInstanceOf('UnitTest', $test);
 
         // check if name was updated
         $test2 = UnitTest::find(1);

@@ -79,7 +79,7 @@ class Mad_Test_UnitTest extends Mad_Test_Unit
         try {
             $this->unit_tests('unit_test_3');
         } catch (Exception $e) {}
-        $this->assertType('Mad_Test_Exception', $e);
+        $this->assertInstanceOf('Mad_Test_Exception', $e);
     }
 
     // test fixtures 'only' option

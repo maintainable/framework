@@ -52,12 +52,12 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
     // test instantiation
     public function testConstructArray()
     {
-        $this->assertType('Mad_Model_PaginatedCollection', $this->_array);
+        $this->assertInstanceOf('Mad_Model_PaginatedCollection', $this->_array);
     }
 
     public function testConstructModel()
     {
-        $this->assertType('Mad_Model_PaginatedCollection', $this->_models);
+        $this->assertInstanceOf('Mad_Model_PaginatedCollection', $this->_models);
     }
 
     // test converting to string
@@ -126,14 +126,14 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
     public function testCurrentArray()
     {
         $model = $this->_array->current();
-        $this->assertType('File', $model);
+        $this->assertInstanceOf('File', $model);
         $this->assertEquals('11', $model->id);
     }
     // test getting current value
     public function testCurrentModels()
     {
         $model = $this->_models->current();
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('6', $model->id);
     }
 
@@ -158,7 +158,7 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
 
         $model = $this->_array->next();
 
-        $this->assertType('File', $model);
+        $this->assertInstanceOf('File', $model);
         $this->assertEquals('12', $model->id);
     }
     // test getting current value
@@ -169,7 +169,7 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
 
         $model = $this->_models->next();
 
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('7', $model->id);
     }
 
@@ -177,22 +177,22 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
     public function testRewindArray()
     {
         $model = $this->_array->next();
-        $this->assertType('File', $model);
+        $this->assertInstanceOf('File', $model);
         $this->assertEquals('12', $model->id);
 
         $model = $this->_array->rewind();
-        $this->assertType('File', $model);
+        $this->assertInstanceOf('File', $model);
         $this->assertEquals('11', $model->id);
     }
     // test getting current value
     public function testRewindModels()
     {
         $model = $this->_models->next();
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('7', $model->id);
 
         $model = $this->_models->rewind();
-        $this->assertType('UnitTest', $model);
+        $this->assertInstanceOf('UnitTest', $model);
         $this->assertEquals('6', $model->id);
     }
 
@@ -206,7 +206,7 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
     {
         $i = 0;
         foreach ($this->_array as $item) {
-            $this->assertType('File', $item);
+            $this->assertInstanceOf('File', $item);
             $i++;
         }
         $this->assertEquals(5, $i);
@@ -217,7 +217,7 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
     {
         $i = 0;
         foreach ($this->_models as $item) {
-            $this->assertType('UnitTest', $item);
+            $this->assertInstanceOf('UnitTest', $item);
             $i++;
         }
         $this->assertEquals(5, $i);
@@ -229,14 +229,14 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
     {
         $i = 0;
         foreach ($this->_array as $item) {
-            $this->assertType('File', $item);
+            $this->assertInstanceOf('File', $item);
             $i++;
         }
         $this->assertEquals(5, $i);
 
         $j = 0;
         foreach ($this->_array as $item) {
-            $this->assertType('File', $item);
+            $this->assertInstanceOf('File', $item);
             $j++;
         }
         $this->assertEquals(5, $j);
@@ -247,14 +247,14 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
     {
         $i = 0;
         foreach ($this->_models as $item) {
-            $this->assertType('UnitTest', $item);
+            $this->assertInstanceOf('UnitTest', $item);
             $i++;
         }
         $this->assertEquals(5, $i);
 
         $j = 0;
         foreach ($this->_models as $item) {
-            $this->assertType('UnitTest', $item);
+            $this->assertInstanceOf('UnitTest', $item);
             $j++;
         }
         $this->assertEquals(5, $j);
@@ -268,12 +268,12 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
     // test accessing elements of the array
     public function testAccessFirstElementArray()
     {
-        $this->assertType('File', $this->_array[0]);
+        $this->assertInstanceOf('File', $this->_array[0]);
     }
     // test accessing elements of the array
     public function testAccessFirstElementModel()
     {
-        $this->assertType('UnitTest', $this->_models[0]);
+        $this->assertInstanceOf('UnitTest', $this->_models[0]);
     }
 
     // test accessing elements of the array
@@ -313,26 +313,26 @@ class Mad_Model_PaginatedCollectionTest extends Mad_Test_Unit
     public function testElementSetDoesNothingArray()
     {
         $this->_array[0] = 'test';
-        $this->assertType('File', $this->_array[0]);
+        $this->assertInstanceOf('File', $this->_array[0]);
     }
     // test setting an element of the object
     public function testElementSetDoesNothingModel()
     {
         $this->_models[0] = 'test';
-        $this->assertType('UnitTest', $this->_models[0]);
+        $this->assertInstanceOf('UnitTest', $this->_models[0]);
     }
 
     // test unsetting an element of the object
     public function testElementUnsetArray()
     {
         unset($this->_array[0]);
-        $this->assertType('File', $this->_array[0]);
+        $this->assertInstanceOf('File', $this->_array[0]);
     }
     // test unsetting an element of the object
     public function testElementUnsetModel()
     {
         unset($this->_models[0]);
-        $this->assertType('UnitTest', $this->_models[0]);
+        $this->assertInstanceOf('UnitTest', $this->_models[0]);
     }
 
 

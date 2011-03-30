@@ -29,7 +29,7 @@ class Mad_Controller_StatusCodesTest extends Mad_Test_Unit
 {
     public function testStatusCodesPropertyIsInitializedByClass()
     {
-        $this->assertType('array', Mad_Controller_StatusCodes::$statusCodes);
+        $this->assertInternalType('array', Mad_Controller_StatusCodes::$statusCodes);
         $this->assertTrue(isset(Mad_Controller_StatusCodes::$statusCodes[200]));
     }
 

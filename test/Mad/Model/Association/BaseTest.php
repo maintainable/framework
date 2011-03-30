@@ -41,35 +41,35 @@ class Mad_Model_Association_BaseTest extends Mad_Test_Unit
     public function testFactoryBelongsTo()
     {
         $assoc = Mad_Model_Association_Base::factory('belongsTo', 'User', array(), new Article);
-        $this->assertType('Mad_Model_Association_BelongsTo', $assoc);
+        $this->assertInstanceOf('Mad_Model_Association_BelongsTo', $assoc);
     }
 
     // test creating a hasOne
     public function testFactoryhasOne()
     {
         $assoc = Mad_Model_Association_Base::factory('hasOne', 'Avatar', array(), new User);
-        $this->assertType('Mad_Model_Association_HasOne', $assoc);
+        $this->assertInstanceOf('Mad_Model_Association_HasOne', $assoc);
     }
 
     // test creating a hasMany
     public function testFactoryHasMany()
     {
         $assoc = Mad_Model_Association_Base::factory('hasMany', 'Articles', array(), new User);
-        $this->assertType('Mad_Model_Association_HasMany', $assoc);
+        $this->assertInstanceOf('Mad_Model_Association_HasMany', $assoc);
     }
 
     // test creating a hasMany :through
     public function testFactoryHasManyThrough()
     {
         $assoc = Mad_Model_Association_Base::factory('hasMany', 'Tags', array('through' => 'Taggings'), new Article);
-        $this->assertType('Mad_Model_Association_HasManyThrough', $assoc);
+        $this->assertInstanceOf('Mad_Model_Association_HasManyThrough', $assoc);
     }
 
     // test creating a hasAndBelongsToMany
     public function testFactoryMasAndBelongsToMany()
     {
         $assoc = Mad_Model_Association_Base::factory('hasAndBelongsToMany', 'Categories', array(), new Article);
-        $this->assertType('Mad_Model_Association_HasAndBelongsToMany', $assoc);
+        $this->assertInstanceOf('Mad_Model_Association_HasAndBelongsToMany', $assoc);
     }
 
 
@@ -170,11 +170,11 @@ class Mad_Model_Association_BaseTest extends Mad_Test_Unit
 
         $job = Fax_Job::find($this->fax_jobs('fax_job_1')->id);
         $recipients = $job->fax_recipients;
-        $this->assertType('Mad_Model_Collection', $recipients);
-        $this->assertType('Fax_Recipient',        $recipients[0]);
+        $this->assertInstanceOf('Mad_Model_Collection', $recipients);
+        $this->assertInstanceOf('Fax_Recipient',        $recipients[0]);
 
         $recipient = Fax_Recipient::find($this->fax_recipients('fax_recipient_1')->id);
-        $this->assertType('Fax_Job', $recipient->fax_job);
+        $this->assertInstanceOf('Fax_Job', $recipient->fax_job);
     }
 
 
@@ -397,7 +397,7 @@ class Mad_Model_Association_BaseTest extends Mad_Test_Unit
                                                           array('Categories' => 
                                                           array('Categories' => 
                                                                 'Categories')))));
-        $this->assertType('Category', $cat);
+        $this->assertInstanceOf('Category', $cat);
     }
 
 
