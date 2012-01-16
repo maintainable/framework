@@ -83,7 +83,7 @@ URL Routes
 
 Request Routing is configured in ``/config/routes.php``. This file defines what
 code gets run when a particular URL is requested. This is explained in more detail
-under <a href="4_controller.php#c4.2">Request Routing</a>. TODO
+under :ref:`routing`.
 
 Vendor Libraries
 ----------------
@@ -98,5 +98,32 @@ classes are prefixed ``Mad_`` by this convention.
 Naming Conventions
 ------------------
 
-TODO table
+The framework has important naming conventions that are crucial to
+how the code integrates together. By sticking to these conventions,
+it makes code more consistent and less work gluing the pieces together.
 
+Models
+^^^^^^
+
++-------+-------+-----------------+
+| Table | Class | File            |
++=======+=======+=================+
+| users | User  | models/User.php |
++-------+-------+-----------------+
+
+Controllers
+^^^^^^^^^^^
+
++-------------+-----------------+---------------------------------+--------+
+| URL         | Class           | File                            | Method |
++=============+=================+=================================+========+
+| /users/show | UsersController | controllers/UsersController.php | show() |
++-------------+-----------------+---------------------------------+--------+
+
+Views
+^^^^^
++-------------+-----------------------+--------------------------+
+| URL         | HTML File             | Ajax Response            |
++=============+=======================+==========================+
+| /users/show | views/users/show.html | views/users/show.js      |
++-------------+-----------------------+--------------------------+
