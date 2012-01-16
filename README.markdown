@@ -1,41 +1,33 @@
 Maintainable PHP Framework
 ==========================
 
-This is a framework that is based around the Model-View-Controller 
-pattern and is modeled after Ruby on Rails.  It aims for compatibility 
-with PHP version 5.1.4 and later.  More information can be found at: 
-[http://framework.maintainable.com](http://framework.maintainable.com).
-
-The framework was developed at 
-[Maintainable Software](http://maintainable.com), a software development
-company in the San Francisco Bay Area.
+This is a framework based around the Model-View-Controller pattern
+and modeled after Ruby on Rails 1.2.  It is compatible with PHP
+version 5.1.4 and later.  Documentation can be found at:
+[http://php-framework.readthedocs.org](http://php-framework.readthedocs.org).
 
 
 Repository Layout
 -----------------
 
 The repository shares the same layout as an application built with the
-framework.  This is mostly because of historical reasons.  In the
-future, we'd like to remove some of the coupling between components
-and lay out the repository as separate PEAR packages.  
+framework.  This is mostly because of historical reasons.
 
 
 Starting a New Application
 --------------------------
 
-You can use `./script/createapp appname` to generate an application 
-directory in the current directory. Adjust the path to the createapp 
-script to create the application in a different place.    
-                            
+You can use `./script/createapp appname` to generate an application
+directory in the current directory. Adjust the path to the createapp
+script to create the application in a different place.
+
 If you are familiar with Rails, using the framework should be rather
-straightfoward at this point.  If not, our book 
-[Rails for PHP Developers](http://railsforphp.com) provides an 
-introduction to Rails.
+straightfoward at this point.
 
 The framework expects its `index.php` file is located in the `DocumentRoot` of
 an Apache `VirtualHost` and that `mod_rewrite` is enabled.  If you aren't familiar
-with how to set this up, the framework is probably not for you.  We haven't 
-made any attempt to support running it out of a subdirectory or on shared hosting.  
+with how to set this up, the framework is probably not for you.  We haven't
+made any attempt to support running it out of a subdirectory or on shared hosting.
 
 One noticeable difference from Rails is that files are named with uppercase
 as in `PostsController.php` rather than `posts_controller.php`.  This is
@@ -61,7 +53,7 @@ Applications built with the framework use class naming conventions similar to
 Rails, e.g. classes named `Post` and `PostsController`.  However, the
 framework itself is built entirely with PEAR-style naming conventions and
 does not pollute the global space.
-                                   
+
 Classes required by the framework are placed in the `vendor/` directory,
 which is a simple PEAR-style directory.  Any framework classes are
 prefixed with `Mad_` (Mike and Derek) and placed under `vendor/Mad/`.
@@ -70,15 +62,15 @@ There are some libraries from other projects included in the `vendor/`
 directory as well that are dependencies.  We have no interest in building
 a monolith and try to share our code with other projects as we can.  Most
 of the dependencies in `vendor/` started out as `Mad_` classes that found
-homes elsewhere.  We hope in the future that the framework will continue 
+homes elsewhere.  We hope in the future that the framework will continue
 to shrink in this way.
 
 
 Running Tests
 -------------
 
-The repository has the same layout as an application.  The framework tests 
-are run the same way as an application's tests would be.  Change to the 
+The repository has the same layout as an application.  The framework tests
+are run the same way as an application's tests would be.  Change to the
 `test/` directory and run `phpunit AllTests`.
 
 Before you can run the tests, you need to create a database and configure
@@ -89,18 +81,9 @@ using the file `db/tests/madmodel_test.sql`.
 State of Development
 --------------------
 
-Most of the development was done around the time Rails 1.2.  As such, Rails 
-developers will notice many of the important additions since Rails 2.0 
-are not implemented.
-
-The Maintainable Framework was built almost entirely by two people 
-([Mike](http://github.com/mnaberez) and [Derek](http://github.com/devrieda)) 
-who work on it only on a part-time basis.  It has been an interesting 
-experiment and a useful project for us.
-
-However, we mostly work on the framework only when we need it for a customer 
-or our own applications.  We have a lot of other work to do and competing in 
-the PHP framework world isn't on our agenda.
+Most of the development was done around the time of Rails 1.2.  As such,
+Rails developers will notice many of the important additions since
+Rails 2.0 are not implemented.
 
 
 Contributing Patches
@@ -110,15 +93,15 @@ The best way to contribute patches is to fork the repository on GitHub and
 then send us a pull request with your changes.
 
 It's unlikely that we'll accept patches that deviate from the "Rails way".
-For example, a patch that implements support for Smarty templates will not 
+For example, a patch that implements support for Smarty templates will not
 be accepted.  It's best to make your own fork for those kinds of changes.
 
-If you implement a useful Rails feature that we have not yet implemented, 
+If you implement a useful Rails feature that we have not yet implemented,
 it's more likely your patch will be accepted.  We will also accept patches
 that improve the implementation of existing features.
 
 We will not accept patches unless they use the same coding standards and
-include reasonable test coverage.  Please refrain from sending us huge 
+include reasonable test coverage.  Please refrain from sending us huge
 patches.  Incremental improvements are best.
 
 
@@ -137,5 +120,5 @@ We would like to thank [Chuck Hagenbuch](http://github.com/chuck) of the
 of [PHPUnit](http://phpunit.de) for helping us with maintenance by
 integrating some of our code into their projects.
 
-We would also like to thank all the folks who have provided patches 
+We would also like to thank all the folks who have provided patches
 or support in other ways.
