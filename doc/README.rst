@@ -1,6 +1,8 @@
 Documentation
 =============
 
+This directory contains documentation for the framework.
+
 Read
 ----
 
@@ -10,8 +12,7 @@ at `Read the Docs <http://readthedocs.org/>`_.
 Build
 -----
 
-This directory contains documentation for the framework.  It is written
-using `Sphinx <http://sphinx.pocoo.org/>`_.
+This documentation is written using `Sphinx <http://sphinx.pocoo.org/>`_.
 
 On many systems with Python installed, Sphinx can be installed with::
 
