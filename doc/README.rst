@@ -2,7 +2,7 @@ Documentation
 =============
 
 This directory contains documentation for the framework.  It is written
-using `Sphinx <http://sphinx.pocoo.org/>_.
+using `Sphinx <http://sphinx.pocoo.org/>`_.
 
 On many systems with Python installed, Sphinx can be installed with::
 
