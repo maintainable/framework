@@ -63,9 +63,10 @@ release = '0.1.0'
 # List of documents that shouldn't be included in the build.
 #unused_docs = []
 
-# List of directories, relative to source directory, that shouldn't be searched
-# for source files.
-exclude_trees = []
+# A list of glob-style patterns that should be excluded when looking for source
+# files. [1] They are matched against the source file names relative to the source
+# directory, using slashes as directory separators on all platforms.
+exclude_patterns = ["README.rst"]
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
