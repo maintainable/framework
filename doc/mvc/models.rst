@@ -255,7 +255,7 @@ Change the type and limit of the ``phone`` column of the ``users`` table::
 
     $this->changeColumn('users', 'phone', 'integer', array('limit' => '10'));
 
-Change a column's precision/scale:
+Change a column's precision/scale::
 
     $this->changeColumn('users', 'cash_on_hand', 'decimal',
                          array('precision' => '5', 'scale' => '2'));
