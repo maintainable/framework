@@ -37,8 +37,8 @@ unit test stub file, the migration, and the yml fixture file:
 - ``/app/db/migrate/001_create_users.php``
 - ``/app/test/fixtures/users.yml``
 
-We will talk more about the testing files in the chapter describing the
-<a href="6_unit_test.php">Test</a> TODO package.
+We will talk more about the testing files in the :ref:`unittests` chapter.
+
 
 Tables and Classes
 ==================
@@ -48,9 +48,13 @@ table. The mapping of the table class is determined by specific naming conventio
 The table should be named as the plural and underscored version of the
 model class name.
 
-TODO table
++------------+------------+-----------------+-------------------------+-------------------------+
+| Table Name | Model Name | Model File      | Test File               | Fixture File            |
++============+============+=================+=========================+=========================+
+| users      | User       | models/User.php | test/units/UserTest.php | test/fixtures/users.yml |
++------------+------------+-----------------+-------------------------+-------------------------+
 
-We can create a object to access data in this table by
+We can create an object to access data in this table by
 instantiating a new ``User`` object::
 
     // wrap the 'users' table by creating a User object</em>
@@ -436,4 +440,469 @@ The options available as the second argument to ``find()`` are as follows:
 - ``limit``: limit of the result set
 - ``include``: eager load associated models
 
+TODO finish section
+
+Associations
+============
+
+The real fun in Mad_Model comes with the associations.  Mad_Model allows you
+to tie model objects together through database foreign-key relationships.
+
+Once we have the correct relationships declared in the ``_initialize``
+method of the model, we can refer directly to related objects of that model. If
+we were to say that "Folder has many Documents", we could then reference the
+documents within a folder model through the relationship::
+
+    // print the name of each document within the folder.
+    $folder = Folder::find(123);
+    foreach ($folder->documents as $document) {
+        print $document->name;
+    }
+
+There are four different relationships that can be defined between models:
+
+- ``belongsTo``: specify a one-to-one association
+- ``hasOne``: specify a one-to-one association
+- ``hasMany``: specify a one-to-many association
+- ``hasAndBelongsToMany``: specify a many-to-many association
+
+In all the relationship methods, the first argument is the name of the association to
+be added. By default, you will want to make this the Name of the associated class. For
+example, a Document "belongsTo" a Folder::
+
+    class Document extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->belongsTo('Folder')
+        }
+    }
+
+The plurality of the class name changes with one-to-many and many-to-many relationships
+so that it reads in a more natural way. Notice how a Document belongsTo Folder, while a
+Folder hasMany Documents::
+
+    class Folder extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->hasMany('Documents')
+        }
+    }
+
+While this makes our associations nice and easy to read, the name of the association
+is not tied down to the name of the model. This comes in handy if you need multiple
+relationships to the same model.
+
+The second argument in all relationship definitions is an array of options to configure
+the relationship. If you create a custom name for an association (not based directly on
+the name of the associated model), you will have to specify which model class it refers
+to using the ``className`` option::
+
+    class Folder extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->hasMany('Docs', array('className'  => 'Documents'));
+        }
+    }
+
+We can now refer to this association as ``docs` instead of ``documents``::
+
+    $folder = Folder::find(123);
+    foreach ($folder->docs as $doc) {
+        print $doc->name;
+    }
+
+Each association has specific options, as well as specific properties/methods that
+are dynamically added when the association is declared.
+
+Belongs-To
+----------
+
+The ``belongsTo()`` method allows us to specify a ``one-to-one`` relationship
+with another model. This declaration must be made in the model that contains the
+foreign key.
+
+.. image:: /images/belongs_to.gif
+
+Options:
+
+- ``className``: specify the model class of the associated object
+- ``foreignKey``: specify the foreign key column name used in the relationship
+- ``include``: eager loaded associations to include when this association is called
+
+In this example, Folder belongsTo Document::
+
+    class Document extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->belongsTo('Folder')
+        }
+    }
+
+We can now use the relationship referring to the associated object as ``folder``::
+
+    $doc = Document::find(123);
+    print $doc->folder->name;
+
+Properties/methods added with ``belongsTo``:
+
+- ``{assocName}``: access associated object
+- ``{assocName} =``: assign associated object
+- ``build{AssocName}``: assign associated object by building a new one (associated object doesn't save)
+- ``create{AssocName}``: assign associated object by creating a new one (saves associated object)
+
+Access the associated object::
+
+    $folder = $document->folder;
+
+Assign the associated object and save it::
+
+    $document->folder = Folder::find(123);
+    $document->save();
+
+Build a new object to use in the association and save it::
+
+    $folder = $document->buildFolder(array('name' => 'New Folder'));
+    $document->save();
+
+    // build new object to use as association & save new association.
+    // This option will automatically save the associated object, but !not!
+    // the actual association with the current object until you use save().
+    $folder = $document->createFolder(array('name' => 'New Folder'));
+    $document->save();
+
+Has-One
+-------
+
+The ``hasOne()`` method also allows us to specify a ``one-to-one``
+relationship with another model. This declaration is made in the model that
+contains the primary key.
+
+.. image:: /images/has_one.gif
+
+Options:
+
+- ``className``: specify the model class of the associated object
+- ``foreignKey``: specify the foreign key column name used in the relationship
+- ``include``: eager loaded associations to include when this association is called
+
+In this example, User hasOne AvatarImage::
+
+    class User extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->hasOne('AvatarImage')
+        }
+    }
+
+We can now use the relationship referring to the associated object as ``avatarImage``::
+
+    $user = User::find(123);
+    print $user->avatarImage->name;
+
+Properties/methods added with ``hasOne``:
+
+- ``{assocName}``: access associated object
+- ``{assocName} =``: assign associated object
+- ``build{AssocName}``: assign associated object by building a new one (associated object doesn't save)
+- ``create{AssocName}``: assign associated object by creating a new one (saves associated object)
+
+Access associated object::
+
+    $avatarImage = $user->avatarImage;
+
+Assign associated object and save new association::
+
+    $user->avatarImage = new AvatarImage(array('name' => 'profile.gif'));
+    $user->save();
+
+Build new object to use as association & save new object/association::
+
+    $user->buildAvatarImage(array('name' => 'profile.gif'));
+    $user->save();
+
+    // build new object to use as association & save new association.
+    // This option will automatically save the associated object, but !not!
+    // the actual association with the current object until you use save().
+    $user->createAvatarImage(array('name' => 'privileged.gif'));
+    $user->save();
+
+Has-Many
+--------
+
+The ``hasMany()`` method allows us to specify a ``one-to-many``
+relationship with another model. This declaration is made in the model that
+contains the primary key.
+
+.. image:: /images/has_many.gif
+
+Options:
+
+- ``className``: specify the model class of the associated object
+- ``foreignKey``: specify the foreign key column name used in the relationship
+- ``conditions``: conditions that the association must meet (WHERE conditions). These must be prefixed with table name.
+- ``order``: ordering of the results to bring back (ORDER BY statement). These must be prefixed with table name.
+
+In this example, Folder hasMany Documents::
+
+    class Folder extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->hasMany('Documents')
+        }
+    }
+
+We can now use the relationship referring to the associated objects as documents::
+
+    // use the relationship
+    $folder = Folder::find(123);
+    foreach ($folder->documents as $document) {
+        print $document->name;
+    }
+
+Properties/methods added with ``hasMany``:
+
+- ``{assocName}s``: access collection of associated objects
+- ``{assocName}s =``: assign collection of associated objects
+- ``{assocName}Ids``: access array of associated object's primary keys
+- ``{assocName}Ids =``: assign array of associated primary keys
+- ``{assocName}Count``: count associated objects
+- ``add{AssocName}``: add an object to the associated objects
+- ``replace{AssocName}s``: replace associated objects with new assignment of objects
+- ``delete{AssocName}s``: delete specific associated objects
+- ``clear{AssocName}s``: clear all associated objects
+- ``find{AssocName}s``: find subset of associated objects
+- ``build{AssocName}``: add associated object by building a new one (associated object doesn't save)
+- ``create{AssocName}``: add associated object by creating a new one (saves associated object)
+
+Access collection of associated objects::
+
+    $documents = $folder->documents;
+
+Assign array of associated objects and save associations::
+
+    $folder->documents = array(Document::find(123), Document::find(234));
+    $folder->save();
+
+Access array of associated object's primary keys::
+
+    $documentIds = $folder->documentIds;
+
+Set associated objects by primary keys::
+
+    $folder->documentIds = array(123, 234);
+    $folder->save();
+
+Get the count of associated objects::
+
+    $docCount = $folder->documentCount;
+
+Add an associated object to the collection and save it::
+
+    $folder->addDocument(Document::find(123));
+    $folder->save();
+
+Replace the associated collection with the given list. Will only perform update/inserts when necessary::
+
+    $folder->replaceDocuments(array(Document::find(123), Document::find(234)));
+    $folder->replaceDocuments(array(123, 234));
+    $folder->save();
+
+Delete specific associated objects from the collection::
+
+    $folder->deleteDocuments(array(Document::find(123), Document::find(234)));
+    $folder->deleteDocuments(array(123, 234));
+    $folder->save();
+
+Clear all associated objects::
+
+    $folder->clearDocuments();
+    $folder->save();
+
+Search for a subset of documents within the associated collection::
+
+    $docs = $folder->findDocuments('all', array('conditions' => 'document_type_id = :type'),
+                                          array(':type' => 1));
+
+Build new object to add to association collection & save new object/association::
+
+    $document = $folder->buildDocument(array('name' => 'New Document'));
+    $document->save();
+
+    // build new object to add to association collection & save new association.
+    // This option will automatically save the associated object, but !not!
+    // the actual association with the current object until you use save().</em>
+    $document = $folder->createDocument(array('name' => 'New Document'));
+    $document->save();
+
+TODO has-many-through
+
+Validations
+===========
+
+When you are using the Model to insert or modify data in the database, most of
+the time you will need to validate data. The framework has a standard
+way to do this so that you can easily check the data given by a user and return
+a user-friendly message of any changes that need to be made to save the data.
+
+Validation are added to a model using validation in the ``_initialize()`` method.
+There are six types of validations supported:
+
+- ``validatesFormatOf``: validate format of attribute values
+- ``validatesInclusionOf``: validate that the value falls within a list of acceptable values
+- ``validatesLengthOf``: validate length of attribute values
+- ``validatesNumericalityOf``: validate that attribute values are numeric
+- ``validatesPresenceOf``: validate existence of value for attribute values
+- ``validatesUniquenessOf``: validate uniqueness of attribute value
+
+Validation Types
+----------------
+
+Format
+^^^^^^
+
+``validatesFormatOf`` can ensure that the value is alpha, digit,
+alnum, or that the value matches a given regexp pattern::
+
+    protected function _initialize()
+    {
+        $this->validatesFormatOf('date_value', array('with' => '/\d{4}-\d{2}-\d{2}/'),
+                                   'message' => 'has to be formatted (YYYY-MM-DD)');
+
+        $this->validatesFormatOf('number_value', array('on'   => 'update',
+                                                       'with' => '[digit]'));
+    }
+
+Options:
+
+- ``on``: validate on either save/insert/update (defaults to ``save``)
+- ``with``: The ctype/regex to validate against - ``[alpha]``, ``[digit]``, ``[alnum]``, or ``/regex/``
+- ``message``: Custom error message (default is: ``is invalid``)
+
+Inclusion
+^^^^^^^^^
+
+``validatesInclusionOf`` validates that the value falls within an array of
+acceptable values::
+
+    protected function _initialize()
+    {
+        $this->validatesInclusionOf('answer', array('in' => array('yes', 'no')));
+    }
+
+Options:
+
+- ``in``: validate that the submitted value falls within this array of values
+- ``on``: validate on either save/insert/update (defaults to ``save``)
+- ``allowNull``: Consider null values valid (defaults to ``false``)
+- ``strict``: Enforce identity when comparing values
+- ``message``: Custom error message (default is: ``is not included in the list``)
+
+TODO lengthOf
+
+Validation Methods
+------------------
+
+There are three different methods for validating data:
+
+- ``validate``: executed before all updates/inserts
+- ``validateOnCreate``: executed before all inserts
+- ``validateOnUpdate``: executed before all updates
+
+When you add one or more of the above methods to your model, it will automatically
+be registered to execute before data is saved.  Adding errors from within these methods
+is done via the ``errors->add()`` or ``errors->addToBase()`` methods::
+
+    Class Folder extends Mad_Model_Base
+    {
+        /**
+         * This method will execute before any update/insert operation
+         * it makes sure that the description is not empty, and that the name
+         * isn't changed.
+         */
+        public function validate()
+        {
+            // arguments of add() are the attribute name and message
+            if (empty($this->description)) {
+                $this->errors->add("description", "cannot be blank");
+            }
+
+            // we can also add errors not associated with a attributes
+            if (empty($this->name)) {
+                $this->errors->addToBase('Fix the name!');
+            }
+        }
+    }
+
+Validation Errors
+-----------------
+
+When a validation error is encountered during a save operation, a list
+of errors is added to the model in the object's ``errors`` property.
+The ``save()`` method will return false when errors are encountered.
+The ``errors`` property on the object is actually an instance of
+``Mad_Model_Errors``, which is an iterable list of errors. To
+get an array with the full error messages encountered, we will use the
+``$folder->errors->fullMessages()`` method::
+
+    $folder = Folder::find(123);
+    $folder->description = '';
+    if (!$folder->save()) {
+        $errors = $folder->errors->fullMessages();
+        foreach ($errors as $error) {
+          print "$error\n";
+        }
+    }
+
+Alternately, we can use exception handling to catch validation errors.
+This only works when we use the ``saveEx()`` method to save
+our object. It is preferred to not use exception handling when accessing
+errors. The ``errors`` attribute mentioned above is more useful when
+we are using form helpers to do the work of displaying errors::
+
+    try {
+        $folder = Folder::find(123);
+        $folder->description = '';
+        $folder->saveEx();
+
+    } catch (Mad_Model_Exception_Validation $e) {
+        foreach ($e->getMessages() as $message) {
+            print $message;
+        }
+    }
+
+Callbacks
+=========
+
+Mad_Model has ways of monitoring and intercepting the execution inserts, updates, and
+deletes via the standard Model methods. We can write code that gets invoked at
+any significant event in the life cycle of a model object:
+
+- ``beforeValidation``: executed before validation
+- ``afterValidation``: executed after validation
+- ``beforeSave``: executed before inserts/updates
+- ``afterSave``: executed after inserts/updates
+- ``beforeCreate``: executed before inserts
+- ``afterCreate``: executed after inserts
+- ``beforeUpdate``: executed before updates
+- ``afterUpdate``: executed after updates
+- ``beforeDestroy``: executed before deletes
+- ``afterDestroy``: executed after deletes
+
+A common use of callbacks is to perform pre-validation formatting of data::
+
+    public function User extends Mad_Model_Base
+    {
+        public function beforeValidation()
+        {
+            if (!strstr($this->url, '://')) {
+                $this->url = "http://" . $this->url;
+            }
+        }
+    }
 
