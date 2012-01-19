@@ -750,6 +750,8 @@ approach to creating many-to-many relationship, and should be used instead of
 the :ref:`habtm` association whenever possible. This declaration
 is made in both models in the relationship.
 
+.. image:: /images/has_many_through.gif
+
 Options are the same as ``hasMany`` but add:
 
  - ``through``: The join model used in the association
@@ -809,6 +811,8 @@ Has-And-Belongs-To-Many
 The ``hasAndBelongsToMany()`` method allows us to specify a ``many-to-many``
 relationship with another model using a join table. This declaration is made
 in both models in the relationship.
+
+.. image:: /images/habtm.gif
 
 Options:
 
