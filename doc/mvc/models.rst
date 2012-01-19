@@ -740,7 +740,180 @@ Build new object to add to association collection & save new object/association:
     $document = $folder->createDocument(array('name' => 'New Document'));
     $document->save();
 
-TODO has-many-through
+Has-Many-Through
+----------------
+
+The ``hasMany(Objects, array('through' => 'JoinTable'))`` method
+uses the ``hasMany()`` method with an additional ``through`` option to create
+a ``many-to-many`` relationship with an join model. This is the preferred
+approach to creating many-to-many relationship, and should be used instead of
+the :ref:`habtm` association whenever possible. This declaration
+is made in both models in the relationship.
+
+Options are the same as ``hasMany`` but add:
+
+ - ``through``: The join model used in the association
+
+The join table in this type of association is a model in itself, and should
+have a primary key. We make association declarations in all three models involved.
+The join model should have ``belongsTo`` declarations that refer back
+to the base models::
+
+    class Tag extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->hasMany('Documents', array('through' => 'Taggings'));
+        }
+    }
+
+    class Document extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->hasMany('Tags', array('through' => 'Taggings'));
+        }
+    }
+
+    class Tagging extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->belongsTo('Tag');
+            $this->belongsTo('Document');
+        }
+    }
+
+This sets up the association in both directions.
+We can now use the relationship referring to Tag's associated objects as
+``documents``, and Document's associated objects as or ``tags``::
+
+    $tag = Tag::find(123);
+    foreach ($tag->documents as $doc) {
+      print $doc->name;
+    }
+
+    $doc = Document::find(123);
+    foreach ($doc->tags as $tag) {
+      print $tag->name;
+    }
+
+The properties added with this association are the same as those added
+with a normal ``hasMany`` association.
+
+.. _habtm:
+
+Has-And-Belongs-To-Many
+-----------------------
+
+The ``hasAndBelongsToMany()`` method allows us to specify a ``many-to-many``
+relationship with another model using a join table. This declaration is made
+in both models in the relationship::
+
+Options:
+
+- ``className``: specify the model class of the associated object
+- ``foreignKey``: specify the foreign key column name used in the relationship
+- ``joinTable``: specify a join table to create the association
+- ``associationForeignKey``: specify a foreign key column for the join table used in the relationship
+- ``conditions``: conditions that the association must meet (WHERE conditions). These must be prefixed with table name.
+- ``order``: ordering of the results to bring back (ORDER BY statement). These must be prefixed with table name.
+
+Example::
+
+    class Tag extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->hasAndBelongsToMany('Documents')
+        }
+    }
+
+    class Document extends Mad_Model_Base
+    {
+        public function _initialize()
+        {
+            $this->hasAndBelongsToMany('Tags')
+        }
+    }
+
+This sets up the association in both directions.
+We can now use the relationship referring to Tag's associated objects as
+``documents``, and Document's associated objects as or ``tags``::
+
+    $tag = Tag::find(123);
+    foreach ($tag->documents as $doc) {
+        print $doc->name;
+    }
+
+    $doc = Document::find(123);
+    foreach ($doc->tags as $tag) {
+        print $tag->name;
+    }
+
+Properties/methods added with ``hasAndBelongsToMany``::
+
+- ``{assocName}s``: access array of associated objects
+- ``{assocName}s =``: assign array of associated objects
+- ``{assocName}Ids``: access array of associated object's primary keys
+- ``{assocName}Ids =``: assign array of associated primary keys
+- ``{assocName}Count``: count associated objects
+- ``add{assocName}``: add an object to the associated objects
+- ``replace{AssocName}s``: replace associated objects with new assignment of objects
+- ``delete{AssocName}s``: delete specific associated objects
+- ``clear{AssocName}s``: clear all associated objects
+- ``find{AssocName}s``: find subset of associated objects
+
+Access collection of associated objects::
+
+    $documents = $tag->documents;
+
+Assign array of associated objects and save associations::
+
+    $tag->documents = array(Document::find(123), Document::find(234));
+    $tag->save();
+
+Access array of associated object's primary keys::
+
+    $documentIds = $tag->documentIds;
+
+Set associated objects by primary keys::
+
+    $tag->documentIds = array(123, 234);
+    $tag->save();
+
+Get the count of associated objects::
+
+    $docCount = $tag->documentCount;
+
+Add an associated object to the collection and save association::
+
+    $tag->addDocument(Document::find(123));
+    $tag->save();
+
+Replace the associated collection with the given list::
+
+    // only performs update/inserts when necessary
+    $tag->replaceDocuments(array(Document::find(123), Document::find(234)));
+    $tag->replaceDocuments(array(123, 234));
+    $tag->save();
+
+Delete specific associated objects from the collection::
+
+    $tag->deleteDocuments(array(Document::find(123), Document::find(234)));
+    $tag->deleteDocuments(array(123, 234));
+    $tag->save();
+
+Clear all associated objects::
+
+    $tag->clearDocuments();
+    $tag->save();
+
+Search for a subset of documents within the associated collection::
+
+    $docs = $tag->findDocuments('all', array('conditions' => 'document_type_id = :type'),
+                                       array(':type' => 1));
+
 
 Validations
 ===========
