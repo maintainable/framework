@@ -808,7 +808,7 @@ Has-And-Belongs-To-Many
 
 The ``hasAndBelongsToMany()`` method allows us to specify a ``many-to-many``
 relationship with another model using a join table. This declaration is made
-in both models in the relationship::
+in both models in the relationship.
 
 Options:
 
@@ -939,7 +939,7 @@ Validation Types
 Format
 ^^^^^^
 
-``validatesFormatOf`` can ensure that the value is alpha, digit,
+``validatesFormatOf`` validates that the value is alpha, digit,
 alnum, or that the value matches a given regexp pattern::
 
     protected function _initialize()
@@ -976,7 +976,93 @@ Options:
 - ``strict``: Enforce identity when comparing values
 - ``message``: Custom error message (default is: ``is not included in the list``)
 
-TODO lengthOf
+Length
+^^^^^^
+
+``validatesLengthOf`` validates that the string length of the value is
+above, below, exactly matches, or within a range of sizes::
+
+    protected function _initialize()
+    {
+        $this->validatesLengthOf(array('name', 'description'),
+                                 array('maximum' => 3000));
+
+        $this->validatesLengthOf('description', array('minimum'  => 10,
+                                 'tooShort' => 'must have a better description'));
+    }
+
+Options:
+
+- ``on``: Validate on either save/insert/update (defaults to ``save``)
+- ``minimum``: Value may not be less than this int
+- ``maximum``: Value may not be greater than this int
+- ``is``: Value must be specific length
+- ``within``: The length of value must be in range: eg. ``array(3, 5)``
+- ``allowNull``: Consider null values valid (defaults to ``false``)
+- ``tooLong``: Message when ``maximum`` is violated (default: ``is too long (maximum is %d characters)``)
+- ``tooShort``: Message when ``minimum`` is violated (default: ``is too short (minimum is %d characters)``)
+- ``wrongLength``: Message when ``is`` is invalid. (default: ``is the wrong length (should be %d characters)``)
+
+Numeric
+^^^^^^^
+
+``validatesNumericalityOf`` validates that the value is numeric, and can
+optionally allow decimals in the number::
+
+    protected function _initialize()
+    {
+        $this->validatesNumericalityOf('number_value');
+
+        $this->validatesNumericalityOf('age', array('allowNull' => true));
+    }
+
+Options:
+
+- ``on``: validate on either save/insert/update (defaults to ``save``)
+- ``onlyInteger``: Don't allow floats. (defaults to ``true``)
+- ``allowNull``: Consider null values valid (defaults to ``false``)
+- ``message``: Custom error message (default: ``is not a number``)
+
+Presence
+^^^^^^^^
+
+``validatesPresenceOf`` validates that a value is not blank (``null`` or an empty string)::
+
+    protected function _initialize()
+    {
+        $this->validatesPresenceOf('name');
+    }
+
+Options:
+
+- ``on``: validate on either save/insert/update (defaults to ``save``)
+- ``message``: Custom error message (default: ``can't be blank``)
+
+Uniqueness
+^^^^^^^^^^
+
+``validatesUniquenessOf`` validates that the value doesn't already
+exist in the database. It can also scope this uniqueness only validate when in
+combination with another column's value::
+
+    protected function _initialize()
+    {
+        $this->validatesUniquenessOf('name', array('scope' => 'parent_id'));
+    }
+
+Options:
+
+- ``on``: validate on either save/insert/update (defaults to ``save``)
+- ``scope``: An attribute by which to limit the scope of the uniqueness
+- ``message``: Custom error message (default is: ``has already been taken``)
+
+.. note::
+
+  This validation works by performing a SQL ``SELECT`` to check for the value
+  before saving with ``INSERT`` or ``UPDATE``.  Since many instances of your
+  application may be accessing the database concurrently, a race condition exists
+  where another instance may insert a duplicate value.  If no duplicate values can
+  be tolerated, a unique index must also be created in the database.
 
 Validation Methods
 ------------------
