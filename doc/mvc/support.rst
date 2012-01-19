@@ -186,8 +186,45 @@ as ``array_merge()``::
 There are other useful methods available in Mad_Support_ArrayObject
 for getting the keys and values, popping off values, clearing the array, and more.
 
+Extension Proxy
+===============
 
+One of the problems that hampers the testability of PHP code is the coupling
+created by accessing all of the PHP global functions. This happens often
+because a large number of useful extensions are accessed only through global
+functions. Consider the following code snippet::
 
+    $res = ldap_connect($host, $port);
+    if (! $res) {
+      // error logging
+      return false;
+    }
 
+There are two code paths shown above: the connection succeeding, and it
+failing. Both of them are very difficult to test because of the coupling to
+the global function ``ldap_connect()`` provided by the LDAP extension.
 
+To make it succeed, you’d need an LDAP server. Causing it to fail is easier
+but the could take a very long time until the connection timeout occurs. Also,
+the code can’t be tested at all without the LDAP extension. All of these
+problems are unacceptable.
 
+The solution is to use to the extension through an object instead
+of calling the extension function directly. Since most PHP
+extensions prefix all of their functions with the name followed by
+an underscore, it’s easy to wrap them. This is what
+Mad_Support_ExtensionProxy provides.
+
+Our connection example becomes::
+
+    $ldap = new Mad_Support_ExtensionProxy('ldap');
+
+    $res = $ldap->connect($host, $port);
+    if (! $res) {
+      // error logging
+      return false;
+    }
+
+The difference in usage is trivial but this version is easily testable. It now
+depends only on an ``$ldap`` instance, which the class needing LDAP can receive in
+its constructor. To test, now just pass a mock object for ``$ldap``.
