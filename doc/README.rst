@@ -18,7 +18,7 @@ On many systems with Python installed, Sphinx can be installed with::
 
     $ easy_install sphinx
 
-Thus documentation can then be built in HTML format by running ``make html``::
+This documentation can then be built in HTML format by running ``make html``::
 
     $ cd doc
     $ make html
