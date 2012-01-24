@@ -9,5 +9,6 @@ MVC
     mvc/introduction.rst
     mvc/models.rst
     mvc/controllers.rst
+    mvc/views.rst
     mvc/support.rst
     mvc/unit_testing.rst
