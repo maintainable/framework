@@ -12,3 +12,4 @@ MVC
     mvc/views.rst
     mvc/support.rst
     mvc/unit_testing.rst
+    mvc/model_testing.rst
