@@ -13,3 +13,4 @@ MVC
     mvc/support.rst
     mvc/unit_testing.rst
     mvc/model_testing.rst
+    mvc/functional_testing.rst
