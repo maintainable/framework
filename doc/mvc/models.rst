@@ -57,7 +57,7 @@ model class name.
 We can create an object to access data in this table by
 instantiating a new ``User`` object::
 
-    // wrap the 'users' table by creating a User object</em>
+    // wrap the 'users' table by creating a User object
     $user = new User;
 
 Columns and Attributes
@@ -736,7 +736,7 @@ Build new object to add to association collection & save new object/association:
 
     // build new object to add to association collection & save new association.
     // This option will automatically save the associated object, but !not!
-    // the actual association with the current object until you use save().</em>
+    // the actual association with the current object until you use save().
     $document = $folder->createDocument(array('name' => 'New Document'));
     $document->save();
 

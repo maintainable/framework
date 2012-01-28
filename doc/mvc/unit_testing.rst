@@ -39,7 +39,7 @@ greater, please see the installation instructions in the
 Running a Single Test
 ^^^^^^^^^^^^^^^^^^^^^
 
-You can run any single test file in the <em>test/unit/</em> or
+You can run any single test file in the ``test/unit/`` or
 ``test/functional/`` directories::
 
     $> cd /your-application/test/unit
