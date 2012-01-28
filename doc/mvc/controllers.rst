@@ -684,14 +684,3 @@ Execute ``_logUser()`` after `download`` and ``print`` actions::
                                        array('download', 'print')));
     }
 
-
-
-
-
-
-
-
-
-
-
-
