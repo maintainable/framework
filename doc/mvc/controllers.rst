@@ -79,7 +79,7 @@ Route Components
 ^^^^^^^^^^^^^^^^
 
 The patterns accepted in the route string are composed of route components. Each
-component is separated by a forward-slash(``/``), and is matched to one or
+component is separated by a forward-slash (``/``), and is matched to one or
 more URL components. The components can be 1 of 3 variations:
 
 - ``:name``
