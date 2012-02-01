@@ -17,7 +17,7 @@ the application is run:
 - Production log data is sent to ``/log/production.log``
 
 The logger is a preconfigured instance of
-`Zend_Log <http://framework.zend.com/manual/en/zend.log.html>`_.
+`Horde_Log <http://www.horde.org/libraries/Horde_Log>`_.
 See its documentation for details on its standard log levels, usage, etc.
 
 You can access the logger instance from a controller
