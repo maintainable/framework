@@ -31,7 +31,7 @@ class Mad_Task_BuiltinSet_Testing extends Mad_Task_Set
     public function test_units()
     {
         chdir(MAD_ROOT . '/test');
-        passthru('phpunit --group functional AllTests');
+        passthru('phpunit --group unit AllTests');
     }
 
     /**
@@ -40,7 +40,7 @@ class Mad_Task_BuiltinSet_Testing extends Mad_Task_Set
     public function test_functionals()
     {
         chdir(MAD_ROOT . '/test');
-        passthru('phpunit --group unit AllTests');        
+        passthru('phpunit --group functional AllTests');        
     }
 
 }
