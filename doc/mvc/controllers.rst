@@ -370,7 +370,7 @@ Both ``sendFile`` and ``sendData`` take an array of options as a second argument
 
 - ``type``: the content type, defaulting to 'application/octet-stream'
 
-- ``disposition``: Suggest to the browser that th file should be displayed inline
+- ``disposition``: Suggest to the browser that the file should be displayed inline
   (option ``inline``) or downloaded and saved (option ``attachment``, the default)
 
 Send a JPEG and display it inline::
