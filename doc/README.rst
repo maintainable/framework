@@ -3,12 +3,6 @@ Documentation
 
 This directory contains documentation for the framework.
 
-Read
-----
-
-You can `read the documentation <http://php-framework.readthedocs.org>`_ hosted
-at `Read the Docs <http://readthedocs.org/>`_.
-
 Build
 -----
 

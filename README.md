@@ -3,8 +3,7 @@ Maintainable PHP Framework
 
 This is a framework based around the Model-View-Controller pattern
 and modeled after Ruby on Rails 1.2.  It is compatible with PHP
-version 5.1.4 and later.  Documentation can be found at:
-[http://php-framework.readthedocs.org](http://php-framework.readthedocs.org).
+version 5.1.4 and later.
 
 
 Repository Layout
