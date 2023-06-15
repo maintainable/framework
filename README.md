@@ -80,36 +80,11 @@ using the file `db/tests/madmodel_test.sql`.
 State of Development
 --------------------
 
+This framework is no longer developed and is not recommended for new projects.
+
 Most of the development was done around the time of Rails 1.2.  As such,
 Rails developers will notice many of the important additions since
 Rails 2.0 are not implemented.
-
-
-Contributing Patches
---------------------
-
-The best way to contribute patches is to fork the repository on GitHub and
-then send us a pull request with your changes.
-
-It's unlikely that we'll accept patches that deviate from the "Rails way".
-For example, a patch that implements support for Smarty templates will not
-be accepted.  It's best to make your own fork for those kinds of changes.
-
-If you implement a useful Rails feature that we have not yet implemented,
-it's more likely your patch will be accepted.  We will also accept patches
-that improve the implementation of existing features.
-
-We will not accept patches unless they use the same coding standards and
-include reasonable test coverage.  Please refrain from sending us huge
-patches.  Incremental improvements are best.
-
-
-Developers
-----------
-
-* [Mike Naberezny](http://github.com/mnaberez)
-* [Derek DeVries](http://github.com/devrieda)
-
 
 Acknowledgements
 ----------------
